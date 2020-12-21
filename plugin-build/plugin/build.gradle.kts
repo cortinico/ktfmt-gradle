@@ -1,19 +1,36 @@
 plugins {
+    `maven-publish`
     kotlin("jvm")
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish")
 }
 
-dependencies {
-    implementation(kotlin("stdlib-jdk7"))
-    implementation(gradleApi())
-
-    testImplementation(TestingLib.JUNIT)
-}
-
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType<PluginUnderTestMetadata>().configureEach {
+    pluginClasspath.from(configurations.compileOnly)
+}
+
+dependencies {
+    implementation(kotlin("stdlib"))
+    implementation(Libs.COROUTINES_CORE)
+    implementation(Libs.KTFMT)
+    implementation(Libs.DIFF_UTILS)
+
+    compileOnly(gradleApi())
+    compileOnly(kotlin("gradle-plugin"))
+    compileOnly(Libs.AGP)
+
+    testImplementation(TestingLib.COROUTINES_TEST)
+    testImplementation(kotlin("gradle-plugin"))
+    testImplementation(Libs.AGP)
+
+    testImplementation(platform(TestingLib.JUNIT_BOM))
+    testImplementation(TestingLib.JUPITER)
+    testImplementation(TestingLib.TRUTH)
 }
 
 gradlePlugin {
@@ -38,6 +55,10 @@ pluginBundle {
             displayName = PluginBundle.DISPLAY_NAME
         }
     }
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 tasks.create("setupPluginUploadFromEnvironment") {

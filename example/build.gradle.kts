@@ -1,8 +1,19 @@
 plugins {
-    java
-    id("com.ncorti.kotlin.gradle.template.plugin")
+    kotlin("jvm")
+    id("com.ncorti.ktfmt.gradle")
 }
 
-templateExampleConfig {
-    message.set("Just trying this gradle plugin...")
+ktfmt {
+    dropboxStyle()
+}
+
+dependencies {
+    implementation(kotlin("stdlib"))
+
+    testImplementation(platform(TestingLib.JUNIT_BOM))
+    testImplementation(TestingLib.JUPITER)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

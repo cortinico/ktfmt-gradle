@@ -1,0 +1,38 @@
+public abstract class com/ncorti/ktfmt/gradle/KtfmtExtension {
+	public static final field Companion Lcom/ncorti/ktfmt/gradle/KtfmtExtension$Companion;
+	public fun <init> (Lorg/gradle/api/Project;)V
+	public final fun dropboxStyle ()V
+	public final fun getBlockIndent ()Lorg/gradle/api/provider/Property;
+	public final fun getContinuationIndent ()Lorg/gradle/api/provider/Property;
+	public final fun getDebuggingPrintOpsAfterFormatting ()Lorg/gradle/api/provider/Property;
+	public final fun getMaxWidth ()Lorg/gradle/api/provider/Property;
+	public final fun getRemoveUnusedImports ()Lorg/gradle/api/provider/Property;
+}
+
+public abstract class com/ncorti/ktfmt/gradle/KtfmtPlugin : org/gradle/api/Plugin {
+	public static final field Companion Lcom/ncorti/ktfmt/gradle/KtfmtPlugin$Companion;
+	public fun <init> ()V
+	public synthetic fun apply (Ljava/lang/Object;)V
+	public fun apply (Lorg/gradle/api/Project;)V
+}
+
+public final class com/ncorti/ktfmt/gradle/KtfmtPlugin$Companion {
+}
+
+public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask : org/gradle/api/tasks/SourceTask {
+	public fun <init> ()V
+	protected abstract fun execute (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun getInputFiles ()Lorg/gradle/api/file/FileCollection;
+	protected final fun getOutputFiles ()Lorg/gradle/api/file/FileCollection;
+}
+
+public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtCheckTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {
+	public fun <init> ()V
+	protected fun execute (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtFormatTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {
+	public fun <init> ()V
+	protected fun execute (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+

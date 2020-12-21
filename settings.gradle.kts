@@ -6,7 +6,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = ("kotlin-gradle-plugin-template")
+rootProject.name = ("ktfmt-gradle")
 
 include(":example")
 includeBuild("plugin-build")
