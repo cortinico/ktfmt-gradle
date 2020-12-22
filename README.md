@@ -60,7 +60,7 @@ will be added as well.
 #### Android Modules
 
 Kotlin Android modules will also have separate tasks for **every source set**. Due to how source sets are handled on
-Android, you can expect ktftm tasks to follow the convention: `ktfmt[Check|Format][SourceSet][Variant]JavaSource`. For
+Android, you can expect ktfmt tasks to follow the convention: `ktfmt[Check|Format][SourceSet][Variant]JavaSource`. For
 example, the `ktfmtCheckAndroidTestDebugJavaSource`.
 
 ## Features 🎨

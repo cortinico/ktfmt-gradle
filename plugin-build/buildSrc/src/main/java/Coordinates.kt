@@ -9,10 +9,10 @@ object PluginBundle {
     const val VCS = "https://github.com/cortinico/ktfmt-gradle"
     const val WEBSITE = "https://github.com/cortinico/ktfmt-gradle"
     const val DESCRIPTION = "A Gradle plugin to run ktfmt formatter on your build"
-    const val DISPLAY_NAME = "ktftm-gradle"
+    const val DISPLAY_NAME = "ktfmt-gradle"
 
     val TAGS = listOf(
-        "ktftm",
+        "ktfmt",
         "kotlin",
         "formatter",
         "reformat",
