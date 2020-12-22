@@ -32,6 +32,10 @@ jobs:
           path: ~/.gradle/wrapper/
           key: cache-gradle-wrapper
 
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+
       - name: Run Gradle tasks
         run: ./gradlew preMerge --continue
 
