@@ -1,90 +1,109 @@
-# kotlin-gradle-plugin-template 🐘
+# ktfmt-gradle 🧹🐘
 
-[![Use this template](https://img.shields.io/badge/-Use%20this%20template-brightgreen)](https://github.com/cortinico/kotlin-gradle-plugin-template/generate) [![Pre Merge Checks](https://github.com/cortinico/kotlin-gradle-plugin-template/workflows/Pre%20Merge%20Checks/badge.svg)](https://github.com/cortinico/kotlin-gradle-plugin-template/actions?query=workflow%3A%22Pre+Merge+Checks%22)  [![License](https://img.shields.io/github/license/cortinico/kotlin-android-template.svg)](LICENSE) ![Language](https://img.shields.io/github/languages/top/cortinico/kotlin-android-template?color=blue&logo=kotlin)
+A wrapper to apply [ktfmt](https://github.com/facebookincubator/ktfmt) to your Gradle builds, and reformat you Kotlin
+source code like a glimpse.
 
-A simple Github template that lets you create a **Gradle Plugin** 🐘 project using **100% Kotlin** and be up and running in a **few seconds**. 
-
-This template is focused on delivering a project with **static analysis** and **continuous integration** already in place.
+[![Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/com/ncorti/ktfmt/gradle/com.ncorti.ktfmt.gradle.gradle.plugin/maven-metadata.xml.svg?label=Gradle%20Plugin%20Portal&colorB=brightgreen&logo=gradle)](https://plugins.gradle.org/plugin/com.ncorti.ktfmt.gradle) [![Pre Merge Checks](https://github.com/cortinico/ktfmt-gradle/workflows/Pre%20Merge%20Checks/badge.svg)](https://github.com/cortinico/ktfmt-gradle/actions?query=workflow%3A%22Pre+Merge+Checks%22) ![Language](https://img.shields.io/github/languages/top/cortinico/kotlin-android-template?color=blue&logo=kotlin) [![License](https://img.shields.io/github/license/cortinico/kotlin-android-template.svg)](LICENSE) [![Use this template](https://img.shields.io/badge/from-kotlin--gradle--plugin--template-brightgreen?logo=dropbox)](https://github.com/cortinico/kotlin-gradle-plugin-template/generate) [![Twitter](https://img.shields.io/badge/Twitter-@cortinico-blue.svg?style=flat&logo=twitter)](http://twitter.com/cortinico)
 
 ## How to use 👣
 
-Just click on [![Use this template](https://img.shields.io/badge/-Use%20this%20template-brightgreen)](https://github.com/cortinico/kotlin-gradle-plugin-template/generate) button to create a new repo starting from this template.
+**ktfmt-gradle** is distributed through [Gradle Plugin Portal](https://plugins.gradle.org/). To use it you need to add
+the following dependency to your gradle files.
 
-Once created don't forget to update the:
-- [Plugin Coordinates](plugin-build/buildSrc/src/main/java/Coordinates.kt)
-- Plugin Usages (search for [com.ncorti.kotlin.gradle.template](https://github.com/cortinico/kotlin-gradle-plugin-template/search?q=com.ncorti.kotlin.gradle.template&unscoped_q=com.ncorti.kotlin.gradle.template) in the repo and replace it with your ID).
+Please note that those code needs to be added the gradle file of the **module** where you want to reformat the code (**
+not the top level** build.gradle[.kts] file).
+
+If you're using the `plugin{}` blocks in your Gradle file:
+
+```kotlin
+plugins {
+    id("com.ncorti.ktfmt.gradle") version "<latest_version>"
+}
+```
+
+If you're instead using the Groovy Gradle files and the old `buildscript` block:
+
+```groovy
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath "com.ncorti.ktfmt.gradle:plugin:<latest_version>"
+    }
+}
+
+apply plugin: "com.ncorti.ktfmt.gradle"
+```
+
+### Task
+
+By default, `ktfmt-gradle` will add two Gradle tasks to your build:
+
+- `ktfmtCheck` that will check if the code in your module is ktfmt-compliant
+- `ktfmtFormat` that will reformat your code with ktfmt
+
+Those two tasks will invoke `ktfmt` on the **whole module**. More specific tasks are avialable based on the module type.
+
+#### Jvm/Js Modules
+
+For Jvm/Js modules, the plugin will create a check/format task for **every source set**. For example, jvm modules will
+have a `ktfmtCheckMain` and `ktfmtCheckTest` tasks for the `main` and `test` source sets.
+
+#### Multiplatform Modules
+
+Kotlin Multiplatform modules will have separate tasks for **every target/source set**. You will have tasks
+like `ktfmtCheckCommonMain` and `ktfmtCheckCommonTest` and so on. If you target also Android, the tasks explained below
+will be added as well.
+
+#### Android Modules
+
+Kotlin Android modules will also have separate tasks for **every source set**. Due to how source sets are handled on
+Android, you can expect ktftm tasks to follow the convention: `ktfmt[Check|Format][SourceSet][Variant]JavaSource`. For
+example, the `ktfmtCheckAndroidTestDebugJavaSource`.
 
 ## Features 🎨
 
-- **100% Kotlin-only template**.
-- Plugin build setup with **composite build**.
-- 100% Gradle Kotlin DSL setup.
-- Dependency versions managed via `buildSrc`.
-- CI Setup with GitHub Actions.
-- Kotlin Static Analysis via `ktlint` and `detekt`.
-- Publishing-ready to Gradle Portal.
-- Issues Template (bug report + feature request)
-- Pull Request Template.
+- 100% Kotlin-only plugin.
+- **Parallel** file processing with Kotlin Coroutines.
+- Supports **incremental** builds (i.e. checks tasks won't rerun if source is unchanged).
+- Configurable thanks to the `ktfmt{}` block.
+- Integrated with Jvm/Android/KMM modules.
 
-## Composite Build 📦
+The minimum supported runtime version is **JDK 11**, released September 2018.
 
-This template is using a [Gradle composite build](https://docs.gradle.org/current/userguide/composite_builds.html) to build, test and publish the plugin. This means that you don't need to run Gradle twice to test the changes on your Gradle plugin (no more `publishToMavenLocal` tricks or so).
- 
-The included build is inside the [plugin-build](plugin-build) folder. 
+## Configuring 🛠
 
-### `preMerge` task
+You can configure the behavior of the `ktfmt` invocation with the `ktfmt` block in your `build.gradle.[kts]` file.
 
-A `preMerge` task on the top level build is already provided in the template. This allows you to run all the `check` tasks both in the top level and in the included build.
+To enable **dropbox style** (4 spaces indentation) you should simply:
 
-You can easily invoke it with:
-
-```
-./gradlew preMerge
+```kotlin
+ktfmt {
+    dropboxStyle()
+}
 ```
 
-If you need to invoke a task inside the included build with:
+If you wish to have further control on the tool you can instead:
 
+```kotlin
+ktfmt {
+    // Breaks lines longer than maxWidth. Default 100.
+    maxWidth.set(80)
+    // blockIndent is the indent size used when a new block is opened, in spaces.
+    blockIndent.set(8)
+    // continuationIndent is the indent size used when a line is broken because it's too
+    continuationIndent.set(8)
+    // Whether ktfmt should remove imports that are not used.
+    removeUnusedImports.set(false)
+}
 ```
-./gradlew -p plugin-build <task-name>
-```
-
-
-### Dependency substitution
-
-Please note that the project relies on module name/group in order for [dependency substitution](https://docs.gradle.org/current/userguide/resolution_rules.html#sec:dependency_substitution_rules) to work properly. If you change only the plugin ID everything will work as expected. If you change module name/group, things might break and you probably have to specify a [substitution rule](https://docs.gradle.org/current/userguide/resolution_rules.html#sub:project_to_module_substitution).
-
-
-## Publishing 🚀
-
-This template is ready to let you publish to [Gradle Portal](https://plugins.gradle.org/).
-
-The [![Publish Plugin to Portal](https://github.com/cortinico/kotlin-gradle-plugin-template/workflows/Publish%20Plugin%20to%20Portal/badge.svg?branch=1.0.0)](https://github.com/cortinico/kotlin-gradle-plugin-template/actions?query=workflow%3A%22Publish+Plugin+to+Portal%22) Github Action will take care of the publishing whenever you **push a tag**.
-
-Please note that you need to configure two secrets: `GRADLE_PUBLISH_KEY` and `GRADLE_PUBLISH_SECRET` with the credetials you can get from your profile on the Gradle Portal.
-
-## 100% Kotlin 🅺
-
-This template is designed to use Kotlin everywhere. The build files are written using [**Gradle Kotlin DSL**](https://docs.gradle.org/current/userguide/kotlin_dsl.html) as well as the [Plugin DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block) to setup the build.
-
-Dependencies are centralized inside the [Dependencies.kt](buildSrc/src/main/java/Dependencies.kt) file in the `buildSrc` folder. Please note that there is another [Dependencies.kt](plugin-build/buildSrc/src/main/java/Dependencies.kt) inside the included build to keep the versions isolated.
-
-Moreover, a minimalistic Gradle Plugin is already provided in Kotlin to let you easily start developing your own around it.
-
-## Static Analysis 🔍
-
-This template is using [**ktlint**](https://github.com/pinterest/ktlint) with the [ktlint-gradle](https://github.com/jlleitschuh/ktlint-gradle) plugin to format your code. To reformat all the source code as well as the buildscript you can run the `ktlintFormat` gradle task.
-
-This template is also using [**detekt**](https://github.com/arturbosch/detekt) to analyze the source code, with the configuration that is stored in the [detekt.yml](config/detekt/detekt.yml) file (the file has been generated with the `detektGenerateConfig` task).
-
-## CI ⚙️
-
-This template is using [**GitHub Actions**](https://github.com/cortinico/kotlin-android-template/actions) as CI. You don't need to setup any external service and you should have a running CI once you start using this template.
-
-There are currently the following workflows available:
-- [Validate Gradle Wrapper](.github/workflows/gradle-wrapper-validation.yml) - Will check that the gradle wrapper has a valid checksum
-- [Pre Merge Checks](.github/workflows/pre-merge.yaml) - Will run the `preMerge` tasks as well as trying to run the Gradle plugin.
-- [Publish to Plugin Portal](.github/workflows/pre-merge.yaml) - Will run the `publishPlugin` task when pushing a new tag.
 
 ## Contributing 🤝
 
 Feel free to open a issue or submit a pull request for any bugs/improvements.
+
+## License 📄
+
+This project is licensed under the MIT License - see the [License](License) file for details
