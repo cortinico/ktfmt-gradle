@@ -7,6 +7,7 @@ public abstract class com/ncorti/ktfmt/gradle/KtfmtExtension {
 	public final fun getDebuggingPrintOpsAfterFormatting ()Lorg/gradle/api/provider/Property;
 	public final fun getMaxWidth ()Lorg/gradle/api/provider/Property;
 	public final fun getRemoveUnusedImports ()Lorg/gradle/api/provider/Property;
+	public final fun googleStyle ()V
 }
 
 public abstract class com/ncorti/ktfmt/gradle/KtfmtPlugin : org/gradle/api/Plugin {
