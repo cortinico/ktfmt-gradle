@@ -3,7 +3,7 @@
 This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
-## Unreleased
+## Version 0.2.0 *(2020-12-24)*
 
 ### Added
 
@@ -11,7 +11,9 @@ Please add your entries according to this format.
 
 ### Dependencies Update
 
-- Kt
+- Ktfmt to 0.19
+- Kotlin to 1.4.21
+- kotlinx-coroutines to 1.4.2 
 
 ## Version 0.1.0 *(2020-12-22)*
 
