@@ -57,6 +57,16 @@ class KtfmtExtensionTest {
     }
 
     @Test
+    fun `googleStyle configures correctly`() {
+        val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
+
+        extension.googleStyle()
+
+        assertThat(extension.blockIndent.get()).isEqualTo(2)
+        assertThat(extension.continuationIndent.get()).isEqualTo(2)
+    }
+
+    @Test
     fun `toBean copies fields correctly`() {
         val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
 
