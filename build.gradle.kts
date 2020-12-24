@@ -45,8 +45,8 @@ tasks.register("clean", Delete::class.java) {
 tasks.register("reformatAll") {
     description = "Reformat all the Kotlin Code"
 
-    dependsOn("ktlintFormat")
-    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:ktlintFormat"))
+    dependsOn(":example:ktfmtFormat")
+    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:ktfmtFormat"))
 }
 
 tasks.register("preMerge") {
