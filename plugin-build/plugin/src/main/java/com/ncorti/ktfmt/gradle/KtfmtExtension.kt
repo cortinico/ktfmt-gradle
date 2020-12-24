@@ -61,6 +61,15 @@ abstract class KtfmtExtension @Inject constructor(project: Project) {
         continuationIndent.set(4)
     }
 
+    /**
+     * Sets the Google style (equivalent to set blockIndent to 2 and continuationIndent to 2).
+     */
+    @Suppress("MagicNumber")
+    fun googleStyle() {
+        blockIndent.set(2)
+        continuationIndent.set(2)
+    }
+
     internal fun toBean(): FormattingOptionsBean = FormattingOptionsBean(
         maxWidth = maxWidth.get(),
         blockIndent = blockIndent.get(),
