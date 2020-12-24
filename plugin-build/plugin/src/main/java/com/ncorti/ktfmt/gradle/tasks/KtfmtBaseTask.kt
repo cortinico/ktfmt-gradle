@@ -5,6 +5,8 @@ import com.facebook.ktfmt.format
 import com.google.common.annotations.VisibleForTesting
 import com.google.googlejavaformat.FormattingError
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
+import java.io.File
+import java.io.IOException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -23,19 +25,16 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
-import java.io.File
-import java.io.IOException
 
 /**
- * ktfmt-gradle base Gradle tasks. Handles a coroutine scope and contains method to
- * propertly process a single file with ktfmt
+ * ktfmt-gradle base Gradle tasks. Handles a coroutine scope and contains method to propertly
+ * process a single file with ktfmt
  */
 abstract class KtfmtBaseTask : SourceTask() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    @get:Input
-    internal lateinit var bean: FormattingOptionsBean
+    @get:Input internal lateinit var bean: FormattingOptionsBean
 
     @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFiles
@@ -50,9 +49,7 @@ abstract class KtfmtBaseTask : SourceTask() {
     @TaskAction
     @VisibleForTesting
     internal fun taskAction() {
-        runBlocking(scope.coroutineContext) {
-            execute()
-        }
+        runBlocking(scope.coroutineContext) { execute() }
         scope.cancel()
     }
 
@@ -67,27 +64,22 @@ abstract class KtfmtBaseTask : SourceTask() {
             val isCorrectlyFormatted = originCode == formattedCode
             KtfmtSuccess(input, isCorrectlyFormatted, formattedCode)
         } catch (cause: Exception) {
-            val message = when (cause) {
-                is IOException -> "Unable to read file: $input"
-                is ParseError -> "Failed to parse file: $input"
-                is FormattingError ->
-                    "Formatting error found in: $input\n"
-                        .plus(cause.diagnostics().map { "$input:$it\n" })
-                else -> "Generic error while processing $input"
-            }
+            val message =
+                when (cause) {
+                    is IOException -> "Unable to read file: $input"
+                    is ParseError -> "Failed to parse file: $input"
+                    is FormattingError ->
+                        "Formatting error found in: $input\n".plus(
+                            cause.diagnostics().map { "$input:$it\n" })
+                    else -> "Generic error while processing $input"
+                }
             KtfmtFailure(input, message, cause)
         }
     }
 
     internal suspend fun processFileCollection(input: FileCollection): List<KtfmtResult> {
-        return input.map {
-            scope.async {
-                processFile(it)
-            }
-        }.awaitAll()
+        return input.map { scope.async { processFile(it) } }.awaitAll()
     }
 
-    @VisibleForTesting
-    @Internal
-    internal fun isScopeActive() = scope.isActive
+    @VisibleForTesting @Internal internal fun isScopeActive() = scope.isActive
 }

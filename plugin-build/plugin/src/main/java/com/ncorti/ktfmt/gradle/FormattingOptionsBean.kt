@@ -6,9 +6,7 @@ import java.io.Serializable
 
 internal data class FormattingOptionsBean(
 
-    /**
-     * ktfmt breaks lines longer than maxWidth.
-     */
+    /** ktfmt breaks lines longer than maxWidth. */
     val maxWidth: Int = DEFAULT_MAX_WIDTH,
 
     /**
@@ -43,13 +41,12 @@ internal data class FormattingOptionsBean(
      * newline) decisions
      */
     val debuggingPrintOpsAfterFormatting: Boolean = false
-
 ) : Serializable {
-    fun toFormattingOptions(): FormattingOptions = FormattingOptions(
-        maxWidth = maxWidth,
-        blockIndent = blockIndent,
-        continuationIndent = continuationIndent,
-        removeUnusedImports = removeUnusedImports,
-        debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting
-    )
+    fun toFormattingOptions(): FormattingOptions =
+        FormattingOptions(
+            maxWidth = maxWidth,
+            blockIndent = blockIndent,
+            continuationIndent = continuationIndent,
+            removeUnusedImports = removeUnusedImports,
+            debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting)
 }

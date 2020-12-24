@@ -12,6 +12,7 @@ import com.android.build.api.variant.VariantProperties
 import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
 import com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask
 import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
+import java.util.concurrent.Callable
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -21,10 +22,11 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import java.util.concurrent.Callable
 
 private const val EXTENSION_NAME = "ktfmt"
+
 private const val TASK_NAME_FORMAT = "ktfmtFormat"
+
 private const val TASK_NAME_CHECK = "ktfmtCheck"
 
 /**
@@ -38,7 +40,8 @@ abstract class KtfmtPlugin : Plugin<Project> {
     private lateinit var topLevelCheck: TaskProvider<Task>
 
     override fun apply(project: Project) {
-        ktfmtExtension = project.extensions.create(EXTENSION_NAME, KtfmtExtension::class.java, project)
+        ktfmtExtension =
+            project.extensions.create(EXTENSION_NAME, KtfmtExtension::class.java, project)
 
         topLevelFormat = createTopLevelFormatTask(project)
         topLevelCheck = createTopLevelCheckTask(project)
@@ -46,28 +49,22 @@ abstract class KtfmtPlugin : Plugin<Project> {
         project.plugins.withId("kotlin") { applyKtfmt(project) }
         project.plugins.withId("kotlin-android") { applyKtfmtToAndroidProject(project) }
         project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project) }
-        project.plugins.withId("org.jetbrains.kotlin.multiplatform") { applyKtfmtToMultiplatformProject(project) }
+        project.plugins.withId("org.jetbrains.kotlin.multiplatform") {
+            applyKtfmtToMultiplatformProject(project)
+        }
     }
 
     private fun applyKtfmt(project: Project) {
         val extension = project.extensions.getByType(KotlinProjectExtension::class.java)
         extension.sourceSets.all {
-            createTasksForSourceSet(
-                project,
-                it.name,
-                it.kotlin.sourceDirectories
-            )
+            createTasksForSourceSet(project, it.name, it.kotlin.sourceDirectories)
         }
     }
 
     private fun applyKtfmtToMultiplatformProject(project: Project) {
         val extension = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
         extension.sourceSets.all {
-            createTasksForSourceSet(
-                project,
-                it.name,
-                it.kotlin.sourceDirectories
-            )
+            createTasksForSourceSet(project, it.name, it.kotlin.sourceDirectories)
         }
 
         extension.targets.all { kotlinTarget ->
@@ -100,25 +97,18 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 createTasksForSourceSet(
                     project,
                     androidSourceSet.name,
-                    project.files(Callable { androidSourceSet.srcDirs })
-                )
+                    project.files(Callable { androidSourceSet.srcDirs }))
             }
         }
     }
 
-    private fun createTasksForSourceSet(project: Project, srcSetName: String, srcSetDir: FileCollection) {
-        val srcCheckTask = createCheckTask(
-            project,
-            ktfmtExtension,
-            srcSetName,
-            srcSetDir
-        )
-        val srcFormatTask = createFormatTask(
-            project,
-            ktfmtExtension,
-            srcSetName,
-            srcSetDir
-        )
+    private fun createTasksForSourceSet(
+        project: Project,
+        srcSetName: String,
+        srcSetDir: FileCollection
+    ) {
+        val srcCheckTask = createCheckTask(project, ktfmtExtension, srcSetName, srcSetDir)
+        val srcFormatTask = createFormatTask(project, ktfmtExtension, srcSetName, srcSetDir)
         topLevelFormat.configure { task -> task.dependsOn(srcFormatTask) }
         topLevelCheck.configure { task -> task.dependsOn(srcCheckTask) }
 
@@ -139,7 +129,8 @@ abstract class KtfmtPlugin : Plugin<Project> {
     private fun createTopLevelCheckTask(project: Project): TaskProvider<Task> {
         return project.tasks.register(TASK_NAME_CHECK) {
             it.group = "verification"
-            it.description = "Run Ktfmt validation for all source sets for project '${project.name}'"
+            it.description =
+                "Run Ktfmt validation for all source sets for project '${project.name}'"
         }
     }
 
@@ -152,7 +143,8 @@ abstract class KtfmtPlugin : Plugin<Project> {
         val capitalizedName = name.split(" ").joinToString("") { it.capitalize() }
         val taskName = "$TASK_NAME_CHECK$capitalizedName"
         return project.tasks.register(taskName, KtfmtCheckTask::class.java) {
-            it.description = "Run Ktfmt formatter for sourceSet '$name' on project '${project.name}'"
+            it.description =
+                "Run Ktfmt formatter for sourceSet '$name' on project '${project.name}'"
             it.setSource(srcDir)
             it.setIncludes(defaultIncludes)
             it.setExcludes(defaultExcludes)
@@ -169,7 +161,8 @@ abstract class KtfmtPlugin : Plugin<Project> {
         val srcSetName = name.split(" ").joinToString("") { it.capitalize() }
         val taskName = "$TASK_NAME_FORMAT$srcSetName"
         return project.tasks.register(taskName, KtfmtFormatTask::class.java) {
-            it.description = "Run Ktfmt formatter validation for sourceSet '$name' on project '${project.name}'"
+            it.description =
+                "Run Ktfmt formatter validation for sourceSet '$name' on project '${project.name}'"
             it.setSource(srcDir)
             it.setIncludes(defaultIncludes)
             it.setExcludes(defaultExcludes)
@@ -184,12 +177,13 @@ abstract class KtfmtPlugin : Plugin<Project> {
 }
 
 @Suppress("UnstableApiUsage")
-private typealias AndroidCommonExtension = CommonExtension<
-    AndroidSourceSet,
-    BuildFeatures,
-    BuildType,
-    DefaultConfig,
-    ProductFlavor,
-    SigningConfig,
-    Variant<VariantProperties>,
-    VariantProperties>
+private typealias AndroidCommonExtension =
+    CommonExtension<
+        AndroidSourceSet,
+        BuildFeatures,
+        BuildType,
+        DefaultConfig,
+        ProductFlavor,
+        SigningConfig,
+        Variant<VariantProperties>,
+        VariantProperties>

@@ -1,20 +1,16 @@
 package com.ncorti.ktfmt.gradle
 
+import javax.inject.Inject
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
-import javax.inject.Inject
 
-/**
- * Gradle Extension to help you configure ktfmt-gradle
- */
+/** Gradle Extension to help you configure ktfmt-gradle */
 @Suppress("UnnecessaryAbstractClass")
 abstract class KtfmtExtension @Inject constructor(project: Project) {
 
     private val objects = project.objects
 
-    /**
-     * ktfmt breaks lines longer than maxWidth. Default 100.
-     */
+    /** ktfmt breaks lines longer than maxWidth. Default 100. */
     val maxWidth: Property<Int> = objects.property(Int::class.java).convention(DEFAULT_MAX_WIDTH)
 
     /**
@@ -27,7 +23,8 @@ abstract class KtfmtExtension @Inject constructor(project: Project) {
      * }
      * ```
      */
-    val blockIndent: Property<Int> = objects.property(Int::class.java).convention(DEFAULT_BLOCK_INDENT)
+    val blockIndent: Property<Int> =
+        objects.property(Int::class.java).convention(DEFAULT_BLOCK_INDENT)
 
     /**
      * continuationIndent is the size of the indent used when a line is broken because it's too
@@ -39,7 +36,8 @@ abstract class KtfmtExtension @Inject constructor(project: Project) {
      *     1)
      * ```
      */
-    val continuationIndent: Property<Int> = objects.property(Int::class.java).convention(DEFAULT_CONTINUATION_INDENT)
+    val continuationIndent: Property<Int> =
+        objects.property(Int::class.java).convention(DEFAULT_CONTINUATION_INDENT)
 
     /** Whether ktfmt should remove imports that are not used. */
     val removeUnusedImports: Property<Boolean> =
@@ -52,31 +50,27 @@ abstract class KtfmtExtension @Inject constructor(project: Project) {
     val debuggingPrintOpsAfterFormatting: Property<Boolean> =
         objects.property(Boolean::class.java).convention(DEFAULT_DEBUGGING_PRINT_OPTS)
 
-    /**
-     * Enables --dropbox-style (equivalent to set blockIndent to 4 and continuationIndent to 4).
-     */
+    /** Enables --dropbox-style (equivalent to set blockIndent to 4 and continuationIndent to 4). */
     @Suppress("MagicNumber")
     fun dropboxStyle() {
         blockIndent.set(4)
         continuationIndent.set(4)
     }
 
-    /**
-     * Sets the Google style (equivalent to set blockIndent to 2 and continuationIndent to 2).
-     */
+    /** Sets the Google style (equivalent to set blockIndent to 2 and continuationIndent to 2). */
     @Suppress("MagicNumber")
     fun googleStyle() {
         blockIndent.set(2)
         continuationIndent.set(2)
     }
 
-    internal fun toBean(): FormattingOptionsBean = FormattingOptionsBean(
-        maxWidth = maxWidth.get(),
-        blockIndent = blockIndent.get(),
-        continuationIndent = continuationIndent.get(),
-        removeUnusedImports = removeUnusedImports.get(),
-        debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting.get()
-    )
+    internal fun toBean(): FormattingOptionsBean =
+        FormattingOptionsBean(
+            maxWidth = maxWidth.get(),
+            blockIndent = blockIndent.get(),
+            continuationIndent = continuationIndent.get(),
+            removeUnusedImports = removeUnusedImports.get(),
+            debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting.get())
 
     internal companion object {
         internal const val DEFAULT_MAX_WIDTH: Int = 100

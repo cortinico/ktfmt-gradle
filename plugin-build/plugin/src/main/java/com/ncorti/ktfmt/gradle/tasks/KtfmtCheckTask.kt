@@ -6,9 +6,7 @@ import com.ncorti.ktfmt.gradle.util.KtfmtUtils
 import com.ncorti.ktfmt.gradle.util.e
 import com.ncorti.ktfmt.gradle.util.i
 
-/**
- * ktfmt-gradle Check task. Verifies if the output of ktfmt is the same as the input
- */
+/** ktfmt-gradle Check task. Verifies if the output of ktfmt is the same as the input */
 abstract class KtfmtCheckTask : KtfmtBaseTask() {
 
     init {
@@ -19,12 +17,14 @@ abstract class KtfmtCheckTask : KtfmtBaseTask() {
         val result = processFileCollection(inputFiles)
         result.forEach {
             when {
-                it is KtfmtSuccess && it.isCorrectlyFormatted -> logger.i("Valid formatting for: ${it.input}")
+                it is KtfmtSuccess && it.isCorrectlyFormatted ->
+                    logger.i("Valid formatting for: ${it.input}")
                 it is KtfmtSuccess && !it.isCorrectlyFormatted -> {
                     logger.e("Invalid formatting for: ${it.input}")
                     printDiff(computeDiff(it), logger)
                 }
-                it is KtfmtFailure -> logger.e("Failing to format: ${it.input}\nError: ${it.message}", it.reason)
+                it is KtfmtFailure ->
+                    logger.e("Failing to format: ${it.input}\nError: ${it.message}", it.reason)
             }
         }
 
@@ -34,12 +34,13 @@ abstract class KtfmtCheckTask : KtfmtBaseTask() {
             error("Ktfmt failed to run with ${failures.size} failures")
         }
 
-        val notFormattedFiles = result.filterIsInstance<KtfmtSuccess>()
-            .filterNot(KtfmtSuccess::isCorrectlyFormatted)
+        val notFormattedFiles =
+            result.filterIsInstance<KtfmtSuccess>().filterNot(KtfmtSuccess::isCorrectlyFormatted)
 
         if (notFormattedFiles.isNotEmpty()) {
             val fileList = notFormattedFiles.map { it.input }.joinToString("\n")
-            error("[ktfmt] Found ${notFormattedFiles.size} files that are not properly formatted:\n$fileList")
+            error(
+                "[ktfmt] Found ${notFormattedFiles.size} files that are not properly formatted:\n$fileList")
         }
 
         logger.i("Successfully checked ${result.count()} files with Ktfmt")

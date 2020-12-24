@@ -43,7 +43,8 @@ class KtfmtExtensionTest {
     fun `debuggingPrintOpsAfterFormatting has default value`() {
         val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
 
-        assertThat(extension.debuggingPrintOpsAfterFormatting.get()).isEqualTo(DEFAULT_DEBUGGING_PRINT_OPTS)
+        assertThat(extension.debuggingPrintOpsAfterFormatting.get())
+            .isEqualTo(DEFAULT_DEBUGGING_PRINT_OPTS)
     }
 
     @Test

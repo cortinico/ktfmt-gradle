@@ -14,12 +14,13 @@ internal object KtfmtDiffer {
         val output = formatterResult.formattedCode
         return DiffUtils.diff(input, output, null).deltas.map {
             val line = it.source.position + 1
-            val message: String = when (it) {
-                is ChangeDelta -> "Line changed: ${it.source.lines.first()}"
-                is DeleteDelta -> "Line deleted"
-                is InsertDelta -> "Line added"
-                else -> ""
-            }
+            val message: String =
+                when (it) {
+                    is ChangeDelta -> "Line changed: ${it.source.lines.first()}"
+                    is DeleteDelta -> "Line deleted"
+                    is InsertDelta -> "Line added"
+                    else -> ""
+                }
             KtfmtDiffEntry(formatterResult.input, line, message)
         }
     }
