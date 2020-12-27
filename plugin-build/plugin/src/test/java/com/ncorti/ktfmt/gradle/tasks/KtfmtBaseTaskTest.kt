@@ -2,6 +2,7 @@ package com.ncorti.ktfmt.gradle.tasks
 
 import com.facebook.ktfmt.ParseError
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import kotlinx.coroutines.runBlocking
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
@@ -9,14 +10,12 @@ import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
 
 internal class KtfmtBaseTaskTest {
 
     private lateinit var project: Project
 
-    @TempDir
-    lateinit var tempDir: File
+    @TempDir lateinit var tempDir: File
 
     @BeforeEach
     fun setUp() {
@@ -103,40 +102,43 @@ internal class KtfmtBaseTaskTest {
     }
 
     @Test
-    fun `processFileCollection with multiple files works correctly`() = runBlocking {
-        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+    fun `processFileCollection with multiple files works correctly`() =
+        runBlocking {
+            val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
-        val input1 = createTempFile(fileName = "file1.kt", content = "val hello = 1\n")
-        val input2 = createTempFile(fileName = "file2.kt", content = "val hello = 2")
+            val input1 = createTempFile(fileName = "file1.kt", content = "val hello = 1\n")
+            val input2 = createTempFile(fileName = "file2.kt", content = "val hello = 2")
 
-        val result = underTest.processFileCollection(project.files(input1, input2))
+            val result = underTest.processFileCollection(project.files(input1, input2))
 
-        assertThat(result).hasSize(2)
-        assertThat(result.filterIsInstance<KtfmtSuccess>()).hasSize(2)
-        assertThat((result[0] as KtfmtSuccess).isCorrectlyFormatted).isTrue()
-        assertThat((result[1] as KtfmtSuccess).isCorrectlyFormatted).isFalse()
-    }
+            assertThat(result).hasSize(2)
+            assertThat(result.filterIsInstance<KtfmtSuccess>()).hasSize(2)
+            assertThat((result[0] as KtfmtSuccess).isCorrectlyFormatted).isTrue()
+            assertThat((result[1] as KtfmtSuccess).isCorrectlyFormatted).isFalse()
+        }
 
     @Test
-    fun `processFileCollection with a failure keeps on formatting`() = runBlocking {
-        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+    fun `processFileCollection with a failure keeps on formatting`() =
+        runBlocking {
+            val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
-        val input1 = createTempFile(fileName = "file1.kt", content = "val hello = 1\n")
-        val input2 = createTempFile(fileName = "file2.kt", content = "val hello=`")
+            val input1 = createTempFile(fileName = "file1.kt", content = "val hello = 1\n")
+            val input2 = createTempFile(fileName = "file2.kt", content = "val hello=`")
 
-        val result = underTest.processFileCollection(project.files(input1, input2))
+            val result = underTest.processFileCollection(project.files(input1, input2))
 
-        assertThat(result).hasSize(2)
-        assertThat(result.filterIsInstance<KtfmtSuccess>()).hasSize(1)
-        assertThat((result[0] as KtfmtSuccess).isCorrectlyFormatted).isTrue()
-        assertThat((result[1] as KtfmtFailure).reason).isInstanceOf(ParseError::class.java)
-    }
+            assertThat(result).hasSize(2)
+            assertThat(result.filterIsInstance<KtfmtSuccess>()).hasSize(1)
+            assertThat((result[0] as KtfmtSuccess).isCorrectlyFormatted).isTrue()
+            assertThat((result[1] as KtfmtFailure).reason).isInstanceOf(ParseError::class.java)
+        }
 
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt"
-    ): File = File(tempDir, fileName).apply {
-        createNewFile()
-        writeText(content)
-    }
+    ): File =
+        File(tempDir, fileName).apply {
+            createNewFile()
+            writeText(content)
+        }
 }

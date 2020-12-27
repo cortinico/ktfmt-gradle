@@ -1,6 +1,7 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -9,12 +10,10 @@ import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
 
 internal class KtfmtFormatTaskIntegrationTest {
 
-    @TempDir
-    lateinit var tempDir: File
+    @TempDir lateinit var tempDir: File
 
     @BeforeEach
     fun setUp() {
@@ -25,10 +24,12 @@ internal class KtfmtFormatTaskIntegrationTest {
     @Test
     fun `format task fails if there is invalid code`() {
         createTempFile(content = "val answer = `")
-        val result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .buildAndFail()
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .buildAndFail()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(FAILED)
         assertThat(result.output).contains("Error: Failed to parse file")
@@ -37,10 +38,12 @@ internal class KtfmtFormatTaskIntegrationTest {
     @Test
     fun `format formats correctly`() {
         val tempFile = createTempFile(content = "val answer=42")
-        val result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .build()
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
         assertThat(tempFile.readText()).isEqualTo("val answer = 42\n")
@@ -49,10 +52,12 @@ internal class KtfmtFormatTaskIntegrationTest {
     @Test
     fun `format task succeed if code is formatted`() {
         createTempFile(content = "val answer = 42\n")
-        val result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .build()
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
     }
@@ -60,17 +65,21 @@ internal class KtfmtFormatTaskIntegrationTest {
     @Test
     fun `format task is up to date after subsequent execution`() {
         createTempFile(content = "val answer = 42\n")
-        var result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .build()
+        var result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
 
-        result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .build()
+        result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(UP_TO_DATE)
     }
@@ -78,50 +87,62 @@ internal class KtfmtFormatTaskIntegrationTest {
     @Test
     fun `format task is up to date after subsequent execution when formatting`() {
         createTempFile(content = "val answer=42")
-        var result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .build()
+        var result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .build()
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
 
         // This run will be triggered as we modified the input (reformatting the file)
-        result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .build()
+        result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .build()
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
 
-        result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .build()
+        result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .build()
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(UP_TO_DATE)
     }
 
     @Test
     fun `format task is up to executed again after edit`() {
         val tempFile = createTempFile(content = "val answer = 42\n")
-        var result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .build()
+        var result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
 
-        result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .build()
+        result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(UP_TO_DATE)
 
         // Let's change file content
         tempFile.writeText("val answer=42\n")
 
-        result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain")
-            .build()
+        result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain")
+                .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
         assertThat(tempFile.readText()).isEqualTo("val answer = 42\n")
@@ -130,11 +151,12 @@ internal class KtfmtFormatTaskIntegrationTest {
     @Test
     fun `format task prints formatted files with --info`() {
         createTempFile(content = "val answer=42\n")
-        val result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-
-            .withArguments("ktfmtFormatMain", "--info")
-            .build()
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain", "--info")
+                .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
         assertThat(result.output).contains("[ktfmt] Reformatting...")
@@ -146,10 +168,12 @@ internal class KtfmtFormatTaskIntegrationTest {
         val file1 = createTempFile(content = "val answer = `", fileName = "File1.kt")
         val file2 = createTempFile(content = "val answer=42", fileName = "File2.kt")
 
-        val result = GradleRunner.create().withProjectDir(tempDir)
-            .withPluginClasspath()
-            .withArguments("ktfmtFormatMain", "--info")
-            .buildAndFail()
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain", "--info")
+                .buildAndFail()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(FAILED)
 
@@ -164,8 +188,9 @@ internal class KtfmtFormatTaskIntegrationTest {
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
         path: String = "src/main/java"
-    ) = File(File(tempDir, path), fileName).apply {
-        createNewFile()
-        writeText(content)
-    }
+    ) =
+        File(File(tempDir, path), fileName).apply {
+            createNewFile()
+            writeText(content)
+        }
 }
