@@ -3,6 +3,14 @@
 This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
+## Version 0.3.0 *(2021-02-23)*
+
+### Dependencies Update
+
+- Ktfmt to 0.20
+- Gradle to 6.8.2
+- AGP to 4.1.2
+
 ## Version 0.2.0 *(2020-12-24)*
 
 ### Added
