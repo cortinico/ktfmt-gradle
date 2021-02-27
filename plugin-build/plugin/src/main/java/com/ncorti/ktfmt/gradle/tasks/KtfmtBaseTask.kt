@@ -70,7 +70,8 @@ abstract class KtfmtBaseTask : SourceTask() {
                     is ParseError -> "Failed to parse file: $input"
                     is FormattingError ->
                         "Formatting error found in: $input\n".plus(
-                            cause.diagnostics().map { "$input:$it\n" })
+                            cause.diagnostics().map { "$input:$it\n" }
+                        )
                     else -> "Generic error while processing $input"
                 }
             KtfmtFailure(input, message, cause)

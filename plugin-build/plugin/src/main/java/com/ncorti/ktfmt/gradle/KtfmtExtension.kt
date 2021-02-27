@@ -89,7 +89,8 @@ abstract class KtfmtExtension @Inject constructor(project: Project) {
             blockIndent = blockIndent.get(),
             continuationIndent = continuationIndent.get(),
             removeUnusedImports = removeUnusedImports.get(),
-            debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting.get())
+            debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting.get()
+        )
 
     internal companion object {
         internal const val DEFAULT_MAX_WIDTH: Int = 100

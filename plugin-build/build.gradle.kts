@@ -25,7 +25,7 @@ allprojects {
     }
 
     ktfmt {
-        dropboxStyle()
+        kotlinLangStyle()
     }
 
     detekt {

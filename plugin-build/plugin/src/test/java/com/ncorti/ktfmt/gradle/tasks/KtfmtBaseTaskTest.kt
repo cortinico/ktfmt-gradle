@@ -102,36 +102,34 @@ internal class KtfmtBaseTaskTest {
     }
 
     @Test
-    fun `processFileCollection with multiple files works correctly`() =
-        runBlocking {
-            val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+    fun `processFileCollection with multiple files works correctly`() = runBlocking {
+        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
-            val input1 = createTempFile(fileName = "file1.kt", content = "val hello = 1\n")
-            val input2 = createTempFile(fileName = "file2.kt", content = "val hello = 2")
+        val input1 = createTempFile(fileName = "file1.kt", content = "val hello = 1\n")
+        val input2 = createTempFile(fileName = "file2.kt", content = "val hello = 2")
 
-            val result = underTest.processFileCollection(project.files(input1, input2))
+        val result = underTest.processFileCollection(project.files(input1, input2))
 
-            assertThat(result).hasSize(2)
-            assertThat(result.filterIsInstance<KtfmtSuccess>()).hasSize(2)
-            assertThat((result[0] as KtfmtSuccess).isCorrectlyFormatted).isTrue()
-            assertThat((result[1] as KtfmtSuccess).isCorrectlyFormatted).isFalse()
-        }
+        assertThat(result).hasSize(2)
+        assertThat(result.filterIsInstance<KtfmtSuccess>()).hasSize(2)
+        assertThat((result[0] as KtfmtSuccess).isCorrectlyFormatted).isTrue()
+        assertThat((result[1] as KtfmtSuccess).isCorrectlyFormatted).isFalse()
+    }
 
     @Test
-    fun `processFileCollection with a failure keeps on formatting`() =
-        runBlocking {
-            val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+    fun `processFileCollection with a failure keeps on formatting`() = runBlocking {
+        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
-            val input1 = createTempFile(fileName = "file1.kt", content = "val hello = 1\n")
-            val input2 = createTempFile(fileName = "file2.kt", content = "val hello=`")
+        val input1 = createTempFile(fileName = "file1.kt", content = "val hello = 1\n")
+        val input2 = createTempFile(fileName = "file2.kt", content = "val hello=`")
 
-            val result = underTest.processFileCollection(project.files(input1, input2))
+        val result = underTest.processFileCollection(project.files(input1, input2))
 
-            assertThat(result).hasSize(2)
-            assertThat(result.filterIsInstance<KtfmtSuccess>()).hasSize(1)
-            assertThat((result[0] as KtfmtSuccess).isCorrectlyFormatted).isTrue()
-            assertThat((result[1] as KtfmtFailure).reason).isInstanceOf(ParseError::class.java)
-        }
+        assertThat(result).hasSize(2)
+        assertThat(result.filterIsInstance<KtfmtSuccess>()).hasSize(1)
+        assertThat((result[0] as KtfmtSuccess).isCorrectlyFormatted).isTrue()
+        assertThat((result[1] as KtfmtFailure).reason).isInstanceOf(ParseError::class.java)
+    }
 
     private fun createTempFile(
         @Language("kotlin") content: String,
