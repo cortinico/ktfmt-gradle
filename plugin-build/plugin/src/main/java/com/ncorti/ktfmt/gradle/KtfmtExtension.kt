@@ -1,7 +1,8 @@
 package com.ncorti.ktfmt.gradle
 
-import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style
-import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.*
+import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.DROPBOX
+import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.FACEBOOK
+import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.GOOGLE
 import javax.inject.Inject
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
@@ -71,8 +72,8 @@ abstract class KtfmtExtension @Inject constructor(project: Project) {
     }
 
     /**
-     * Sets the KotlinLang style.
-     * A format that attempts to reflect https://kotlinlang.org/docs/coding-conventions.html.
+     * Sets the KotlinLang style. A format that attempts to reflect
+     * https://kotlinlang.org/docs/coding-conventions.html.
      */
     @Suppress("MagicNumber")
     fun kotlinLangStyle() {

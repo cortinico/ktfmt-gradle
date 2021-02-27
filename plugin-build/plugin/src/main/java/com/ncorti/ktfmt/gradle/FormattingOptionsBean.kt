@@ -8,7 +8,7 @@ import java.io.Serializable
 internal data class FormattingOptionsBean(
 
     /** The style used by ktfmt */
-    val style : Style = Style.FACEBOOK,
+    val style: Style = Style.FACEBOOK,
 
     /** ktfmt breaks lines longer than maxWidth. */
     val maxWidth: Int = DEFAULT_MAX_WIDTH,
@@ -59,10 +59,11 @@ internal data class FormattingOptionsBean(
         FACEBOOK,
         DROPBOX,
         GOOGLE;
-        fun toKtfmtStyle() : KtfmtStyle = when(this) {
-            FACEBOOK -> KtfmtStyle.FACEBOOK
-            DROPBOX -> KtfmtStyle.DROPBOX
-            GOOGLE -> KtfmtStyle.GOOGLE
-        }
+        fun toKtfmtStyle(): KtfmtStyle =
+            when (this) {
+                FACEBOOK -> KtfmtStyle.FACEBOOK
+                DROPBOX -> KtfmtStyle.DROPBOX
+                GOOGLE -> KtfmtStyle.GOOGLE
+            }
     }
 }
