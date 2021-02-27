@@ -53,7 +53,8 @@ internal data class FormattingOptionsBean(
             blockIndent = blockIndent,
             continuationIndent = continuationIndent,
             removeUnusedImports = removeUnusedImports,
-            debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting)
+            debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting
+        )
 
     enum class Style {
         FACEBOOK,

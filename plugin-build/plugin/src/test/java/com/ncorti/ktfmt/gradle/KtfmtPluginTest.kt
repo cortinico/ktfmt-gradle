@@ -140,7 +140,8 @@ class KtfmtPluginTest {
                 "ktfmtCheckTestJavaSource",
                 "ktfmtCheckDebugJavaSource",
                 "ktfmtCheckReleaseJavaSource",
-                "ktfmtCheckMainJavaSource")
+                "ktfmtCheckMainJavaSource"
+            )
         assertThat(project["ktfmtFormat"].dependencies)
             .containsExactly(
                 "ktfmtFormatAndroidTestDebugJavaSource",
@@ -151,7 +152,8 @@ class KtfmtPluginTest {
                 "ktfmtFormatTestJavaSource",
                 "ktfmtFormatDebugJavaSource",
                 "ktfmtFormatReleaseJavaSource",
-                "ktfmtFormatMainJavaSource")
+                "ktfmtFormatMainJavaSource"
+            )
     }
 
     private operator fun Project.get(value: String): Task = this.tasks.getByName(value)

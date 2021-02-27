@@ -97,7 +97,8 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 createTasksForSourceSet(
                     project,
                     androidSourceSet.name,
-                    project.files(Callable { androidSourceSet.srcDirs }))
+                    project.files(Callable { androidSourceSet.srcDirs })
+                )
             }
         }
     }

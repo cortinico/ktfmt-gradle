@@ -13,7 +13,8 @@ class FormattingOptionsBeanTest {
                 blockIndent = 43,
                 continuationIndent = 44,
                 removeUnusedImports = false,
-                debuggingPrintOpsAfterFormatting = true)
+                debuggingPrintOpsAfterFormatting = true
+            )
 
         val opts = bean.toFormattingOptions()
 

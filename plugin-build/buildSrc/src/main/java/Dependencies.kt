@@ -11,7 +11,7 @@ object BuildPluginsVersion {
     const val BINARY_COMPATIBILITY_VALIDATOR = "0.4.0"
     const val DETEKT = "1.15.0"
     const val KOTLIN = "1.4.21"
-    const val KTFMT = "0.2.0"
+    const val KTFMT = "0.4.0"
     const val PLUGIN_PUBLISH = "0.13.0"
     const val VERSIONS_PLUGIN = "0.36.0"
 }

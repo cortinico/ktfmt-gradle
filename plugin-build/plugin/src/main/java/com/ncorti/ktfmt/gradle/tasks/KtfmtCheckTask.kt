@@ -40,7 +40,8 @@ abstract class KtfmtCheckTask : KtfmtBaseTask() {
         if (notFormattedFiles.isNotEmpty()) {
             val fileList = notFormattedFiles.map { it.input }.joinToString("\n")
             error(
-                "[ktfmt] Found ${notFormattedFiles.size} files that are not properly formatted:\n$fileList")
+                "[ktfmt] Found ${notFormattedFiles.size} files that are not properly formatted:\n$fileList"
+            )
         }
 
         logger.i("Successfully checked ${result.count()} files with Ktfmt")
