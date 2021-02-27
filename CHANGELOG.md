@@ -3,6 +3,16 @@
 This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
+## Unreleased
+
+### New features
+
+- Added the `kotlinLangStyle()` function to the `ktfmt{}` extension. This will allow you to apply a format that attempts to reflect the [official kotlin convetions](https://kotlinlang.org/docs/coding-conventions.html).
+
+### Dependencies Update
+
+- Ktfmt to 0.21
+
 ## Version 0.3.0 *(2021-02-23)*
 
 ### Dependencies Update

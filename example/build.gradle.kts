@@ -4,7 +4,7 @@ plugins {
 }
 
 ktfmt {
-    dropboxStyle()
+    kotlinLangStyle()
 }
 
 dependencies {

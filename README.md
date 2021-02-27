@@ -85,11 +85,18 @@ example, the `ktfmtCheckAndroidTestDebugJavaSource`.
 
 You can configure the behavior of the `ktfmt` invocation with the `ktfmt` block in your `build.gradle.[kts]` file.
 
-To enable **dropbox style** (4 spaces indentation) you should simply:
+To enable different styles you can simply:
 
 ```kotlin
 ktfmt {
+    // Dropbox style - 4 space indentation
     dropboxStyle()
+    
+    // Google style - 2 space indentation
+    googleStyle()
+    
+    // KotlinLang style - 4 space indentation - From kotlinlang.org/docs/coding-conventions.html
+    kotlinLangStyle()
 }
 ```
 
