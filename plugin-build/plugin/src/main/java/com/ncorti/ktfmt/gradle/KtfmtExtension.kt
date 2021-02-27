@@ -1,5 +1,8 @@
 package com.ncorti.ktfmt.gradle
 
+import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.DROPBOX
+import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.FACEBOOK
+import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.GOOGLE
 import javax.inject.Inject
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
@@ -9,6 +12,8 @@ import org.gradle.api.provider.Property
 abstract class KtfmtExtension @Inject constructor(project: Project) {
 
     private val objects = project.objects
+
+    internal var ktfmtStyle = FACEBOOK
 
     /** ktfmt breaks lines longer than maxWidth. Default 100. */
     val maxWidth: Property<Int> = objects.property(Int::class.java).convention(DEFAULT_MAX_WIDTH)
@@ -53,6 +58,7 @@ abstract class KtfmtExtension @Inject constructor(project: Project) {
     /** Enables --dropbox-style (equivalent to set blockIndent to 4 and continuationIndent to 4). */
     @Suppress("MagicNumber")
     fun dropboxStyle() {
+        ktfmtStyle = DROPBOX
         blockIndent.set(4)
         continuationIndent.set(4)
     }
@@ -60,12 +66,25 @@ abstract class KtfmtExtension @Inject constructor(project: Project) {
     /** Sets the Google style (equivalent to set blockIndent to 2 and continuationIndent to 2). */
     @Suppress("MagicNumber")
     fun googleStyle() {
+        ktfmtStyle = GOOGLE
         blockIndent.set(2)
         continuationIndent.set(2)
     }
 
+    /**
+     * Sets the KotlinLang style. A format that attempts to reflect
+     * https://kotlinlang.org/docs/coding-conventions.html.
+     */
+    @Suppress("MagicNumber")
+    fun kotlinLangStyle() {
+        ktfmtStyle = GOOGLE
+        blockIndent.set(4)
+        continuationIndent.set(4)
+    }
+
     internal fun toBean(): FormattingOptionsBean =
         FormattingOptionsBean(
+            style = ktfmtStyle,
             maxWidth = maxWidth.get(),
             blockIndent = blockIndent.get(),
             continuationIndent = continuationIndent.get(),
