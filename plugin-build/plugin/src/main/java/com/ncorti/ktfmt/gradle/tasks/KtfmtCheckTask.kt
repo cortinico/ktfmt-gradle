@@ -23,6 +23,7 @@ abstract class KtfmtCheckTask : KtfmtBaseTask() {
                     logger.e("Invalid formatting for: ${it.input}")
                     printDiff(computeDiff(it), logger)
                 }
+                it is KtfmtSkipped -> logger.i("Skipping for: ${it.input} because: ${it.reason}")
                 it is KtfmtFailure -> {
                     logger.e("Failed to analyse: ${it.input}")
                     it.message.split("\n").forEach { line -> logger.e("e: $line") }

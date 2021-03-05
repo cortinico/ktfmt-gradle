@@ -1,3 +1,4 @@
+
 plugins {
     kotlin("jvm")
     id("com.ncorti.ktfmt.gradle")

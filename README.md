@@ -115,6 +115,29 @@ ktfmt {
 }
 ```
 
+## Using with a pre-commit hook 🎣
+
+You can leverage the `--include-only` to let ktfmt-gradle run only on a specific subset of files.
+
+To this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as follows:
+
+```kotlin
+import com.ncorti.ktfmt.gradle.tasks.*
+
+tasks.register<KtfmtFormatTask>("ktfmtPrecommit") {
+    source = project.fileTree(rootDir)
+    include("**/*.kt")
+}
+```
+
+You can then invoke the task with `--include-only` and a comma separated list of relative path of files:
+
+```
+./gradlew ktfmtPrecommit --include-only=src/main/java/File1.kt:src/main/java/File2.kt
+```
+
+The task will execute only on the file you passed and will skip all the others.
+
 ## Contributing 🤝
 
 Feel free to open a issue or submit a pull request for any bugs/improvements.
