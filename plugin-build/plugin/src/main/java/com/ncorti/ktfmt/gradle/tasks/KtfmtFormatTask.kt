@@ -22,8 +22,10 @@ abstract class KtfmtFormatTask : KtfmtBaseTask() {
                     logger.i("Reformatting...: ${it.input}")
                     it.input.writeText(it.formattedCode, Charset.defaultCharset())
                 }
-                it is KtfmtFailure ->
-                    logger.e("Failing to format: ${it.input}\nError: ${it.message}")
+                it is KtfmtFailure -> {
+                    logger.e("Failed to analyse: ${it.input}")
+                    it.message.split("\n").forEach { line -> logger.e("e: $line") }
+                }
             }
         }
 

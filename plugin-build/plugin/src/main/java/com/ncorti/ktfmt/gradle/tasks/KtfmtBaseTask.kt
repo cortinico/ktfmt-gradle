@@ -63,16 +63,13 @@ abstract class KtfmtBaseTask : SourceTask() {
             val formattedCode = format(bean.toFormattingOptions(), originCode)
             val isCorrectlyFormatted = originCode == formattedCode
             KtfmtSuccess(input, isCorrectlyFormatted, formattedCode)
-        } catch (cause: Exception) {
+        } catch (cause: Throwable) {
             val message =
                 when (cause) {
-                    is IOException -> "Unable to read file: $input"
-                    is ParseError -> "Failed to parse file: $input"
-                    is FormattingError ->
-                        "Formatting error found in: $input\n".plus(
-                            cause.diagnostics().map { "$input:$it\n" }
-                        )
-                    else -> "Generic error while processing $input"
+                    is IOException -> "Unable to read file"
+                    is ParseError -> "Failed to parse file"
+                    is FormattingError -> cause.diagnostics().joinToString("\n") { "$input:$it" }
+                    else -> "Generic error during file processing"
                 }
             KtfmtFailure(input, message, cause)
         }
