@@ -32,7 +32,7 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
-        assertThat(result.output).contains("Error: Failed to parse file")
+        assertThat(result.output).contains("e: Failed to parse file")
     }
 
     @Test
@@ -47,6 +47,30 @@ internal class KtfmtCheckTaskIntegrationTest {
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
         assertThat(result.output).contains("[ktfmt] Invalid formatting")
+    }
+
+    @Test
+    fun `check task fails if ktfmt fails to process the code`() {
+        // The following code will case ktfmt to fail with error: did not generate token ";"
+        createTempFile(
+            """
+            val res = when {
+                true -> "1"; false -> "0"
+                else -> "-1"
+            }
+            """.trimIndent()
+        )
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheckMain")
+                .buildAndFail()
+
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
+        assertThat(result.output).contains("[ktfmt] Failed to analyse:")
+        assertThat(result.output).contains("TestFile.kt:2:18: error: did not generate token \";\"")
     }
 
     @Test
@@ -146,7 +170,7 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
-        assertThat(result.output).contains("Failed to parse file:")
+        assertThat(result.output).contains("Failed to parse file")
         assertThat(result.output).contains("Valid formatting for:")
     }
 

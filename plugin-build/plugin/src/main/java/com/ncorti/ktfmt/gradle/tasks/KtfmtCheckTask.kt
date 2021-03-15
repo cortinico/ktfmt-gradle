@@ -15,7 +15,7 @@ abstract class KtfmtCheckTask : KtfmtBaseTask() {
 
     override suspend fun execute() {
         val result = processFileCollection(inputFiles)
-        result.forEach {
+        result.forEach { it ->
             when {
                 it is KtfmtSuccess && it.isCorrectlyFormatted ->
                     logger.i("Valid formatting for: ${it.input}")
@@ -23,8 +23,10 @@ abstract class KtfmtCheckTask : KtfmtBaseTask() {
                     logger.e("Invalid formatting for: ${it.input}")
                     printDiff(computeDiff(it), logger)
                 }
-                it is KtfmtFailure ->
-                    logger.e("Failing to format: ${it.input}\nError: ${it.message}", it.reason)
+                it is KtfmtFailure -> {
+                    logger.e("Failed to analyse: ${it.input}")
+                    it.message.split("\n").forEach { line -> logger.e("e: $line") }
+                }
             }
         }
 

@@ -32,7 +32,7 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(FAILED)
-        assertThat(result.output).contains("Error: Failed to parse file")
+        assertThat(result.output).contains("e: Failed to parse file")
     }
 
     @Test
@@ -180,7 +180,7 @@ internal class KtfmtFormatTaskIntegrationTest {
         // File 1 contains a parsing error and is untouched.
         assertThat(file1.readText()).isEqualTo("val answer = `")
         assertThat(file2.readText()).isEqualTo("val answer = 42\n")
-        assertThat(result.output).contains("Failing to format:")
+        assertThat(result.output).contains("Failed to analyse:")
         assertThat(result.output).contains("Reformatting...:")
     }
 

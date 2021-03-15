@@ -97,7 +97,7 @@ internal class KtfmtBaseTaskTest {
         val result = underTest.processFile(input) as KtfmtFailure
 
         assertThat(result.input).isEqualTo(input)
-        assertThat(result.message).isEqualTo("Failed to parse file: $input")
+        assertThat(result.message).isEqualTo("Failed to parse file")
         assertThat(result.reason).isInstanceOf(ParseError::class.java)
     }
 
