@@ -1,7 +1,7 @@
 object PluginCoordinates {
     const val ID = "com.ncorti.ktfmt.gradle"
     const val GROUP = "com.ncorti.ktfmt.gradle"
-    const val VERSION = "0.4.0"
+    const val VERSION = "0.5.0"
     const val IMPLEMENTATION_CLASS = "com.ncorti.ktfmt.gradle.KtfmtPlugin"
 }
 

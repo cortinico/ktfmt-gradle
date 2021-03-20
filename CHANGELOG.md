@@ -3,6 +3,23 @@
 This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
+## Unreleased
+
+## Version 0.5.0 *(2021-03-20)*
+
+### New features
+
+- Added `--include-only` flag to support pre-commit hooks
+- Improved error reporting for scenarios where KtFmt fail to parse
+- Added example on how to apply the plugin to the `buildSrc` project
+
+### Dependencies Update
+
+- KtFmt to `0.22`
+- Coroutines to `1.4.3`
+- AGP to `4.1.3`
+- Gradle to `6.8.3`
+
 ## Version 0.4.0 *(2021-02-27)*
 
 ### New features
