@@ -184,6 +184,29 @@ internal class KtfmtFormatTaskIntegrationTest {
         assertThat(result.output).contains("Reformatting...:")
     }
 
+    @Test
+    fun `format task skips a file if with --include-only`() {
+        val file1 = createTempFile(content = "val answer = `\n", fileName = "File1.kt")
+        val file2 = createTempFile(content = "val answer=42\n", fileName = "File2.kt")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments(
+                    "ktfmtFormatMain",
+                    "--info",
+                    "--include-only=${file2.relativeTo(tempDir)}"
+                )
+                .build()
+
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
+        assertThat(result.output).contains("[ktfmt] Skipping for:")
+        assertThat(result.output).contains("Not included inside --include-only")
+        assertThat(result.output).contains("[ktfmt] Reformatting...")
+        assertThat(result.output).contains("[ktfmt] Successfully reformatted 1 files with Ktfmt")
+    }
+
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",

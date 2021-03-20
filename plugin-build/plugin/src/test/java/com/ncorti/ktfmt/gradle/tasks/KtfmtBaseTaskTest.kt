@@ -19,7 +19,7 @@ internal class KtfmtBaseTaskTest {
 
     @BeforeEach
     fun setUp() {
-        project = ProjectBuilder.builder().build()
+        project = ProjectBuilder.builder().withProjectDir(tempDir).build()
         project.pluginManager.apply("org.jetbrains.kotlin.jvm")
         project.pluginManager.apply("com.ncorti.ktfmt.gradle")
     }
@@ -99,6 +99,63 @@ internal class KtfmtBaseTaskTest {
         assertThat(result.input).isEqualTo(input)
         assertThat(result.message).isEqualTo("Failed to parse file")
         assertThat(result.reason).isInstanceOf(ParseError::class.java)
+    }
+
+    @Test
+    fun `processFile skips file outside include-only`() {
+        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+
+        val input1 = createTempFile(content = "val hello=`", fileName = "file1.kt")
+        val input2 = createTempFile(content = "val hello=\"world\"", fileName = "file2.kt")
+
+        underTest.includeOnly.set(input1.relativeTo(tempDir).toString())
+
+        val result = underTest.processFile(project.file("file2.kt")) as KtfmtSkipped
+
+        assertThat(result.input.name).isEqualTo("file2.kt")
+        assertThat(result.reason).isEqualTo("Not included inside --include-only")
+    }
+
+    @Test
+    fun `processFile does not skip file inside include-only`() {
+        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+
+        val input1 = createTempFile(content = "val hello=`", fileName = "file1.kt")
+        val input2 = createTempFile(content = "val hello=\"world\"", fileName = "file2.kt")
+
+        underTest.includeOnly.set(input2.relativeTo(tempDir).toString())
+
+        val result = underTest.processFile(project.file("file2.kt")) as KtfmtSuccess
+
+        assertThat(result.isCorrectlyFormatted).isFalse()
+        assertThat(result.input.name).isEqualTo("file2.kt")
+        assertThat(result.formattedCode).isEqualTo("val hello = \"world\"\n")
+    }
+
+    @Test
+    fun `processFile skips file inside comma separated include-only`() {
+        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+
+        val input1 = createTempFile(content = "val hello=`", fileName = "file1.kt")
+        val input2 = createTempFile(content = "val hello=\"world\"", fileName = "file2.kt")
+
+        underTest.includeOnly.set("${input1.relativeTo(tempDir)},${input2.relativeTo(tempDir)}")
+
+        underTest.processFile(project.file("file1.kt")) as KtfmtFailure
+        underTest.processFile(project.file("file2.kt")) as KtfmtSuccess
+    }
+
+    @Test
+    fun `processFile skips file inside colon separated include-only`() {
+        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+
+        val input1 = createTempFile(content = "val hello=`", fileName = "file1.kt")
+        val input2 = createTempFile(content = "val hello=\"world\"", fileName = "file2.kt")
+
+        underTest.includeOnly.set("${input1.relativeTo(tempDir)}:${input2.relativeTo(tempDir)}")
+
+        underTest.processFile(project.file("file1.kt")) as KtfmtFailure
+        underTest.processFile(project.file("file2.kt")) as KtfmtSuccess
     }
 
     @Test

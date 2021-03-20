@@ -22,6 +22,7 @@ abstract class KtfmtFormatTask : KtfmtBaseTask() {
                     logger.i("Reformatting...: ${it.input}")
                     it.input.writeText(it.formattedCode, Charset.defaultCharset())
                 }
+                it is KtfmtSkipped -> logger.i("Skipping for: ${it.input} because: ${it.reason}")
                 it is KtfmtFailure -> {
                     logger.e("Failed to analyse: ${it.input}")
                     it.message.split("\n").forEach { line -> logger.e("e: $line") }

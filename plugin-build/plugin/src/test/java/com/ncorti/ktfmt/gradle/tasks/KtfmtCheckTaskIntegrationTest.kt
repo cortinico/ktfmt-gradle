@@ -174,6 +174,28 @@ internal class KtfmtCheckTaskIntegrationTest {
         assertThat(result.output).contains("Valid formatting for:")
     }
 
+    @Test
+    fun `check task skips a file if with --include-only`() {
+        val file1 = createTempFile(content = "val answer = `\n", fileName = "File1.kt")
+        val file2 = createTempFile(content = "val answer = 42\n", fileName = "File2.kt")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments(
+                    "ktfmtCheckMain",
+                    "--info",
+                    "--include-only=${file2.relativeTo(tempDir)}"
+                )
+                .build()
+
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
+        assertThat(result.output).contains("Skipping for:")
+        assertThat(result.output).contains("Not included inside --include-only")
+        assertThat(result.output).contains("Valid formatting for:")
+    }
+
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",

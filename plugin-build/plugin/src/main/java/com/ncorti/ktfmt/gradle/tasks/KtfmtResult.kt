@@ -16,3 +16,5 @@ internal data class KtfmtFailure(
     val message: String,
     val reason: Throwable
 ) : KtfmtResult(input)
+
+internal data class KtfmtSkipped(override val input: File, val reason: String) : KtfmtResult(input)

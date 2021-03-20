@@ -16,6 +16,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
 import org.gradle.api.file.FileCollection
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
@@ -25,6 +26,7 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.options.Option
 
 /**
  * ktfmt-gradle base Gradle tasks. Handles a coroutine scope and contains method to propertly
@@ -34,7 +36,17 @@ abstract class KtfmtBaseTask : SourceTask() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    @get:Input internal lateinit var bean: FormattingOptionsBean
+    @get:Input internal var bean = FormattingOptionsBean()
+
+    @get:Option(
+        option = "include-only",
+        description =
+            "A comma separate list of relative file paths to include exclusively. " +
+                "If set the task will run the processing only on such files."
+    )
+    @get:Input
+    open val includeOnly: Property<String> =
+        project.objects.property(String::class.java).convention("")
 
     @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFiles
@@ -58,6 +70,13 @@ abstract class KtfmtBaseTask : SourceTask() {
     @VisibleForTesting
     @Suppress("TooGenericExceptionCaught")
     internal fun processFile(input: File): KtfmtResult {
+        if (includeOnly.orNull?.isNotEmpty() == true) {
+            val includeOnlyPaths = includeOnly.get().split(',', ':').map(String::trim)
+            val relativePath = input.relativeTo(project.projectDir).toString()
+            if (relativePath !in includeOnlyPaths) {
+                return KtfmtSkipped(input, "Not included inside --include-only")
+            }
+        }
         return try {
             val originCode = input.readText()
             val formattedCode = format(bean.toFormattingOptions(), originCode)
