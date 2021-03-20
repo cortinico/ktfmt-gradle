@@ -50,13 +50,12 @@ internal class KtfmtCheckTaskIntegrationTest {
     }
 
     @Test
-    fun `check task fails if ktfmt fails to process the code`() {
-        // The following code will case ktfmt to fail with error: did not generate token ";"
+    fun `check task fails if ktfmt fails to parse the code`() {
+        // The following code will case ktfmt to fail with error: Failed to parse file
         createTempFile(
             """
             val res = when {
-                true -> "1"; false -> "0"
-                else -> "-1"
+                ````
             }
             """.trimIndent()
         )
@@ -70,7 +69,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
         assertThat(result.output).contains("[ktfmt] Failed to analyse:")
-        assertThat(result.output).contains("TestFile.kt:2:18: error: did not generate token \";\"")
+        assertThat(result.output).contains("e: Failed to parse file")
     }
 
     @Test

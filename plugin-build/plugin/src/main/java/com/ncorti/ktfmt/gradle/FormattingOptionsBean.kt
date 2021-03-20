@@ -67,4 +67,8 @@ internal data class FormattingOptionsBean(
                 GOOGLE -> KtfmtStyle.GOOGLE
             }
     }
+
+    companion object {
+        private const val serialVersionUID: Long = 1L
+    }
 }
