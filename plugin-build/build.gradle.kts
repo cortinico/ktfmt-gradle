@@ -6,7 +6,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version BuildPluginsVersion.DETEKT
     id("com.ncorti.ktfmt.gradle") version BuildPluginsVersion.KTFMT
     id("com.github.ben-manes.versions") version BuildPluginsVersion.VERSIONS_PLUGIN
-    id("binary-compatibility-validator") version BuildPluginsVersion.BINARY_COMPATIBILITY_VALIDATOR
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version BuildPluginsVersion.BINARY_COMPATIBILITY_VALIDATOR
 }
 
 allprojects {
