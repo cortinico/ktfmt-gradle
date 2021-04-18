@@ -143,7 +143,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task prints formatted files with --info`() {
-        val tempFile = createTempFile(content = "val answer = 42\n")
+        createTempFile(content = "val answer = 42\n")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -175,7 +175,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task skips a file if with --include-only`() {
-        val file1 = createTempFile(content = "val answer = `\n", fileName = "File1.kt")
+        createTempFile(content = "val answer = `\n", fileName = "File1.kt")
         val file2 = createTempFile(content = "val answer = 42\n", fileName = "File2.kt")
 
         val result =

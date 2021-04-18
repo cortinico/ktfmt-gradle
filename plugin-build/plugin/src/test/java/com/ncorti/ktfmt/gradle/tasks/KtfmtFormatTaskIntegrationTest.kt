@@ -186,7 +186,7 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task skips a file if with --include-only`() {
-        val file1 = createTempFile(content = "val answer = `\n", fileName = "File1.kt")
+        createTempFile(content = "val answer = `\n", fileName = "File1.kt")
         val file2 = createTempFile(content = "val answer=42\n", fileName = "File2.kt")
 
         val result =
