@@ -106,7 +106,7 @@ internal class KtfmtBaseTaskTest {
         val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
         val input1 = createTempFile(content = "val hello=`", fileName = "file1.kt")
-        val input2 = createTempFile(content = "val hello=\"world\"", fileName = "file2.kt")
+        createTempFile(content = "val hello=\"world\"", fileName = "file2.kt")
 
         underTest.includeOnly.set(input1.relativeTo(tempDir).toString())
 
@@ -120,7 +120,7 @@ internal class KtfmtBaseTaskTest {
     fun `processFile does not skip file inside include-only`() {
         val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
-        val input1 = createTempFile(content = "val hello=`", fileName = "file1.kt")
+        createTempFile(content = "val hello=`", fileName = "file1.kt")
         val input2 = createTempFile(content = "val hello=\"world\"", fileName = "file2.kt")
 
         underTest.includeOnly.set(input2.relativeTo(tempDir).toString())
