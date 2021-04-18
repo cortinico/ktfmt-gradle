@@ -5,7 +5,6 @@ import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -86,7 +85,7 @@ internal class KtfmtCheckTaskIntegrationTest {
     }
 
     @Test
-    fun `check task is up to date after subsequent execution`() {
+    fun `check task is always executed on subsequent execution`() {
         createTempFile(content = "val answer = 42\n")
         var result =
             GradleRunner.create()
@@ -104,41 +103,23 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .withArguments("ktfmtCheckMain")
                 .build()
 
-        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(UP_TO_DATE)
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
     }
 
     @Test
-    fun `check task is up to executed again after edit`() {
-        val tempFile = createTempFile(content = "val answer = 42\n")
-        var result =
+    fun `check task runs before compilation`() {
+        createTempFile(content = "val answer = 42\n")
+        val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("ktfmtCheckMain")
+                .withArguments("compileKotlin", "ktfmtCheckMain")
                 .build()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
-
-        result =
-            GradleRunner.create()
-                .withProjectDir(tempDir)
-                .withPluginClasspath()
-                .withArguments("ktfmtCheckMain")
-                .build()
-
-        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(UP_TO_DATE)
-
-        // Let's change file content
-        tempFile.writeText("val answer = 43\n")
-
-        result =
-            GradleRunner.create()
-                .withProjectDir(tempDir)
-                .withPluginClasspath()
-                .withArguments("ktfmtCheckMain")
-                .build()
-
-        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
+        assertThat(result.task(":compileKotlin")?.outcome).isEqualTo(SUCCESS)
+        assertThat(result.tasks.first().path).isEqualTo(":ktfmtCheckMain")
+        assertThat(result.tasks.last().path).isEqualTo(":compileKotlin")
     }
 
     @Test

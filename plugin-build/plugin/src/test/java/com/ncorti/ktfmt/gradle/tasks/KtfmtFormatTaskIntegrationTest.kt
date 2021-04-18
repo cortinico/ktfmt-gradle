@@ -185,6 +185,22 @@ internal class KtfmtFormatTaskIntegrationTest {
     }
 
     @Test
+    fun `format task runs before compilation`() {
+        createTempFile(content = "val answer = 42\n")
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("compileKotlin", "ktfmtFormatMain")
+                .build()
+
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
+        assertThat(result.task(":compileKotlin")?.outcome).isEqualTo(SUCCESS)
+        assertThat(result.tasks.first().path).isEqualTo(":ktfmtFormatMain")
+        assertThat(result.tasks.last().path).isEqualTo(":compileKotlin")
+    }
+
+    @Test
     fun `format task skips a file if with --include-only`() {
         val file1 = createTempFile(content = "val answer = `\n", fileName = "File1.kt")
         val file2 = createTempFile(content = "val answer=42\n", fileName = "File2.kt")

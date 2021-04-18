@@ -4,9 +4,15 @@ import com.ncorti.ktfmt.gradle.util.KtfmtUtils
 import com.ncorti.ktfmt.gradle.util.e
 import com.ncorti.ktfmt.gradle.util.i
 import java.nio.charset.Charset
+import org.gradle.api.file.FileCollection
+import org.gradle.api.tasks.OutputFiles
 
 /** ktfmt-gradle Format task. Replaces input file content with its formatted equivalent. */
 abstract class KtfmtFormatTask : KtfmtBaseTask() {
+
+    @get:OutputFiles
+    protected val outputFiles: FileCollection
+        get() = inputFiles
 
     init {
         group = KtfmtUtils.GROUP_FORMATTING
