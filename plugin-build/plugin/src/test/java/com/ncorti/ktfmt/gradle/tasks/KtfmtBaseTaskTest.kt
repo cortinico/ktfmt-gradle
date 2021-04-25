@@ -159,6 +159,22 @@ internal class KtfmtBaseTaskTest {
     }
 
     @Test
+    fun `processFile deal with the windows file separator in include-only`() {
+        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+
+        val input1 = createTempFile(content = "val hello=`", fileName = "file1.kt", dirName = "tmp")
+        val input2 =
+            createTempFile(content = "val hello=\"world\"", fileName = "file2.kt", dirName = "tmp")
+        val includePath =
+            "${input1.relativeTo(tempDir)}:${input2.relativeTo(tempDir)}".replace('\\', '/')
+
+        underTest.includeOnly.set(includePath)
+
+        underTest.processFile(project.file("tmp${File.separator}file1.kt")) as KtfmtFailure
+        underTest.processFile(project.file("tmp${File.separator}file2.kt")) as KtfmtSuccess
+    }
+
+    @Test
     fun `processFileCollection with multiple files works correctly`() = runBlocking {
         val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
@@ -190,10 +206,16 @@ internal class KtfmtBaseTaskTest {
 
     private fun createTempFile(
         @Language("kotlin") content: String,
-        fileName: String = "TestFile.kt"
-    ): File =
-        File(tempDir, fileName).apply {
+        fileName: String = "TestFile.kt",
+        dirName: String? = null
+    ): File {
+        var dir = tempDir
+        if (!dirName.isNullOrBlank()) {
+            dir = File(tempDir, dirName).apply { mkdirs() }
+        }
+        return File(dir, fileName).apply {
             createNewFile()
             writeText(content)
         }
+    }
 }

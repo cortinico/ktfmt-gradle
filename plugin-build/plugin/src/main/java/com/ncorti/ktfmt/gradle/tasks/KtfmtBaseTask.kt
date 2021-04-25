@@ -27,6 +27,7 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 /**
  * ktfmt-gradle base Gradle tasks. Handles a coroutine scope and contains method to propertly
@@ -71,7 +72,10 @@ abstract class KtfmtBaseTask : SourceTask() {
     @Suppress("TooGenericExceptionCaught")
     internal fun processFile(input: File): KtfmtResult {
         if (includeOnly.orNull?.isNotEmpty() == true) {
-            val includeOnlyPaths = includeOnly.get().split(',', ':').map(String::trim)
+            val includeOnlyPaths =
+                includeOnly.get().split(',', ':').map(String::trim).map {
+                    handleWindowsFileSeparator(it)
+                }
             val relativePath = input.relativeTo(project.projectDir).toString()
             if (relativePath !in includeOnlyPaths) {
                 return KtfmtSkipped(input, "Not included inside --include-only")
@@ -92,6 +96,13 @@ abstract class KtfmtBaseTask : SourceTask() {
                 }
             KtfmtFailure(input, message, cause)
         }
+    }
+
+    private fun handleWindowsFileSeparator(path: String): String {
+        if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows) {
+            return path.replace('/', '\\')
+        }
+        return path
     }
 
     internal suspend fun processFileCollection(input: FileCollection): List<KtfmtResult> {
