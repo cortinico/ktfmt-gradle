@@ -22,6 +22,7 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 private const val EXTENSION_NAME = "ktfmt"
 
@@ -110,6 +111,13 @@ abstract class KtfmtPlugin : Plugin<Project> {
     ) {
         val srcCheckTask = createCheckTask(project, ktfmtExtension, srcSetName, srcSetDir)
         val srcFormatTask = createFormatTask(project, ktfmtExtension, srcSetName, srcSetDir)
+
+        // When running together with compileKotlin, ktfmt tasks should have precedence as
+        // they're editing the source code
+        project.tasks.withType(KotlinCompile::class.java).all {
+            it.mustRunAfter(srcCheckTask, srcFormatTask)
+        }
+
         topLevelFormat.configure { task -> task.dependsOn(srcFormatTask) }
         topLevelCheck.configure { task -> task.dependsOn(srcCheckTask) }
 

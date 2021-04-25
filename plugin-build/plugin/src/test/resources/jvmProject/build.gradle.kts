@@ -6,3 +6,7 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib"))
 }
+
+repositories {
+    mavenCentral()
+}
