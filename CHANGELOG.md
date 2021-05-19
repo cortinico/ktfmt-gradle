@@ -5,12 +5,12 @@ Please add your entries according to this format.
 
 ## Unreleased
 
-- Added support for Gradle 7.0
+- Added support for Gradle 7.0+
 - Added task ordering between `ktfmt*` tasks and `compileKotlin` tasks. This fix the correctness warning introduced with Gradle 7.0
 
 ### Dependencies Update
 
-- Gradle to `7.0`
+- Gradle to `7.0.2`
 
 ## Version 0.5.0 *(2021-03-20)*
 
