@@ -11,6 +11,7 @@ Please add your entries according to this format.
 ### Dependencies Update
 
 - Gradle to `7.0.2`
+- KtFmt to `0.24`
 
 ## Version 0.5.0 *(2021-03-20)*
 
