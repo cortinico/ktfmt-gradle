@@ -117,6 +117,34 @@ internal class KtfmtBaseTaskTest {
     }
 
     @Test
+    fun `processFile skips file regardless of file separator`() {
+        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+
+        val input1 =
+            createTempFile(
+                content = "val hello=`",
+                fileName = "src/main/file1.kt",
+                root = project.projectDir
+            )
+        val input2 =
+            createTempFile(
+                content = "val hello=\"world\"",
+                fileName = "src/main/file2.kt",
+                root = project.projectDir
+            )
+
+        val path = input1.relativeTo(project.projectDir).toString()
+        val slashPath = path.replace("\\", "/")
+        val backSlashPath = path.replace("/", "\\")
+        underTest.includeOnly.set("$slashPath:$backSlashPath")
+
+        val result = underTest.processFile(input2) as KtfmtSkipped
+
+        assertThat(result.input.name).isEqualTo("file2.kt")
+        assertThat(result.reason).isEqualTo("Not included inside --include-only")
+    }
+
+    @Test
     fun `processFile does not skip file inside include-only`() {
         val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
@@ -133,7 +161,61 @@ internal class KtfmtBaseTaskTest {
     }
 
     @Test
-    fun `processFile skips file inside comma separated include-only`() {
+    fun `processFile does not skip file inside include-only with slashes`() {
+        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+
+        createTempFile(
+            content = "val hello=`",
+            fileName = "src/main/file1.kt",
+            root = project.projectDir
+        )
+        val input2 =
+            createTempFile(
+                content = "val hello=\"world\"",
+                fileName = "src/main/file2.kt",
+                root = project.projectDir
+            )
+
+        val path = input2.relativeTo(project.projectDir).toString()
+        val slashPath = path.replace("\\", "/")
+        underTest.includeOnly.set(slashPath)
+
+        val result = underTest.processFile(input2) as KtfmtSuccess
+
+        assertThat(result.isCorrectlyFormatted).isFalse()
+        assertThat(result.input.name).isEqualTo("file2.kt")
+        assertThat(result.formattedCode).isEqualTo("val hello = \"world\"\n")
+    }
+
+    @Test
+    fun `processFile does not skip file inside include-only with backslashes`() {
+        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
+
+        createTempFile(
+            content = "val hello=`",
+            fileName = "src/main/file1.kt",
+            root = project.projectDir
+        )
+        val input2 =
+            createTempFile(
+                content = "val hello=\"world\"",
+                fileName = "src/main/file2.kt",
+                root = project.projectDir
+            )
+
+        val path = input2.relativeTo(project.projectDir).toString()
+        val backSlashPath = path.replace("/", "\\")
+        underTest.includeOnly.set(backSlashPath)
+
+        val result = underTest.processFile(input2) as KtfmtSuccess
+
+        assertThat(result.isCorrectlyFormatted).isFalse()
+        assertThat(result.input.name).isEqualTo("file2.kt")
+        assertThat(result.formattedCode).isEqualTo("val hello = \"world\"\n")
+    }
+
+    @Test
+    fun `processFile does not skip file inside comma separated include-only`() {
         val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
         val input1 = createTempFile(content = "val hello=`", fileName = "file1.kt")
@@ -146,7 +228,7 @@ internal class KtfmtBaseTaskTest {
     }
 
     @Test
-    fun `processFile skips file inside colon separated include-only`() {
+    fun `processFile does not skip file inside colon separated include-only`() {
         val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
         val input1 = createTempFile(content = "val hello=`", fileName = "file1.kt")
@@ -190,9 +272,11 @@ internal class KtfmtBaseTaskTest {
 
     private fun createTempFile(
         @Language("kotlin") content: String,
-        fileName: String = "TestFile.kt"
+        fileName: String = "TestFile.kt",
+        root: File = tempDir
     ): File =
-        File(tempDir, fileName).apply {
+        File(root, fileName).apply {
+            parentFile.mkdirs()
             createNewFile()
             writeText(content)
         }
