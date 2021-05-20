@@ -76,6 +76,7 @@ class KtfmtPluginTest {
             .containsExactly("ktfmtFormatCommonMain", "ktfmtFormatCommonTest")
     }
 
+    @Suppress("LongMethod")
     @Test
     fun `plugin is applied correctly to a kotlin android project`() {
         val project = ProjectBuilder.builder().build()
@@ -156,6 +157,7 @@ class KtfmtPluginTest {
             )
     }
 
+    @Suppress("UnusedPrivateMember")
     private operator fun Project.get(value: String): Task = this.tasks.getByName(value)
     private val Task.dependencies: List<String>
         get() = this.dependsOn.filterIsInstance<TaskProvider<*>>().map { it.name }
