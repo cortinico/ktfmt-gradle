@@ -5,6 +5,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.6.0 *(2021-05-20)*
+
 - `--include-only` now works with paths that are file-separator independent.
 - Added support for Gradle 7.0+
 - Added task ordering between `ktfmt*` tasks and `compileKotlin` tasks. This fix the correctness warning introduced with Gradle 7.0
