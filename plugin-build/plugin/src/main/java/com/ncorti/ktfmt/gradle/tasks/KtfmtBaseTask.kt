@@ -7,6 +7,9 @@ import com.google.googlejavaformat.FormattingError
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
 import java.io.File
 import java.io.IOException
+import java.nio.file.Path
+import kotlin.io.path.ExperimentalPathApi
+import kotlin.io.path.Path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -62,12 +65,20 @@ abstract class KtfmtBaseTask : SourceTask() {
 
     protected abstract suspend fun execute()
 
+    @OptIn(ExperimentalPathApi::class)
     @VisibleForTesting
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "SpreadOperator")
     internal fun processFile(input: File): KtfmtResult {
         if (includeOnly.orNull?.isNotEmpty() == true) {
-            val includeOnlyPaths = includeOnly.get().split(',', ':').map(String::trim)
-            val relativePath = input.relativeTo(project.projectDir).toString()
+            val includeOnlyPaths =
+                includeOnly
+                    .get()
+                    .split(',', ':')
+                    .map {
+                        Path("", *it.trim().split(File.separatorChar, '\\', '/').toTypedArray())
+                    }
+                    .toSet()
+            val relativePath = input.relativeTo(project.projectDir).toPath()
             if (relativePath !in includeOnlyPaths) {
                 return KtfmtSkipped(input, "Not included inside --include-only")
             }
