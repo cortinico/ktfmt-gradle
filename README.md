@@ -10,8 +10,8 @@ source code like a glimpse.
 **ktfmt-gradle** is distributed through [Gradle Plugin Portal](https://plugins.gradle.org/). To use it you need to add
 the following dependency to your gradle files.
 
-Please note that those code needs to be added the gradle file of the **module** where you want to reformat the code (**
-not the top level** build.gradle[.kts] file).
+Please note that those code needs to be added the gradle file of the **module** where you want to reformat the code
+(**not the top level** build.gradle[.kts] file).
 
 If you're using the `plugin{}` blocks in your Gradle file:
 
