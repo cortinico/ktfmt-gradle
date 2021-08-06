@@ -5,9 +5,9 @@ import com.facebook.ktfmt.format
 import com.google.common.annotations.VisibleForTesting
 import com.google.googlejavaformat.FormattingError
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
+import com.ncorti.ktfmt.gradle.KtfmtExtension
 import java.io.File
 import java.io.IOException
-import java.nio.file.Path
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.Path
 import kotlinx.coroutines.CoroutineScope
@@ -18,12 +18,14 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
+import org.gradle.api.UnknownDomainObjectException
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SourceTask
@@ -38,7 +40,7 @@ abstract class KtfmtBaseTask : SourceTask() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    @get:Input internal var bean = FormattingOptionsBean()
+    @get:Input @get:Optional internal var bean: FormattingOptionsBean? = null
 
     @get:Option(
         option = "include-only",
@@ -59,6 +61,7 @@ abstract class KtfmtBaseTask : SourceTask() {
     @TaskAction
     @VisibleForTesting
     internal fun taskAction() {
+
         runBlocking(scope.coroutineContext) { execute() }
         scope.cancel()
     }
@@ -69,6 +72,18 @@ abstract class KtfmtBaseTask : SourceTask() {
     @VisibleForTesting
     @Suppress("TooGenericExceptionCaught", "SpreadOperator")
     internal fun processFile(input: File): KtfmtResult {
+
+        // The task should try to read from the ktfmt{} extension before falling back to default
+        // values.
+        if (bean == null) {
+            bean =
+                try {
+                    project.extensions.getByType(KtfmtExtension::class.java).toBean()
+                } catch (ignored: UnknownDomainObjectException) {
+                    FormattingOptionsBean()
+                }
+        }
+
         if (includeOnly.orNull?.isNotEmpty() == true) {
             val includeOnlyPaths =
                 includeOnly
@@ -85,7 +100,7 @@ abstract class KtfmtBaseTask : SourceTask() {
         }
         return try {
             val originCode = input.readText()
-            val formattedCode = format(bean.toFormattingOptions(), originCode)
+            val formattedCode = format(bean!!.toFormattingOptions(), originCode)
             val isCorrectlyFormatted = originCode == formattedCode
             KtfmtSuccess(input, isCorrectlyFormatted, formattedCode)
         } catch (cause: Throwable) {
