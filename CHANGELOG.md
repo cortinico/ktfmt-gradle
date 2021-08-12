@@ -5,6 +5,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- Tasks should fallback to extension value before defaults
+
 ## Version 0.6.0 *(2021-05-20)*
 
 - `--include-only` now works with paths that are file-separator independent.
