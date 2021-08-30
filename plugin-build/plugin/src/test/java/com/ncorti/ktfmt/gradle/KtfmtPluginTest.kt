@@ -78,7 +78,7 @@ class KtfmtPluginTest {
 
     @Suppress("LongMethod")
     @Test
-    fun `plugin is applied correctly to a kotlin android project`() {
+    fun `plugin is applied correctly to an android application project`() {
         val project = ProjectBuilder.builder().build()
         project.pluginManager.apply("com.android.application")
         project.pluginManager.apply("org.jetbrains.kotlin.android")
@@ -90,70 +90,70 @@ class KtfmtPluginTest {
         }
 
         // AndroidTest
-        assertThat(project.tasks.getByName("ktfmtCheckAndroidTestDebugJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtCheckAndroidTestDebug"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtCheckAndroidTestReleaseJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtCheckAndroidTestRelease"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtCheckAndroidTestJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtCheckAndroidTest"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatAndroidTestDebugJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtFormatAndroidTestDebug"))
             .isInstanceOf(KtfmtFormatTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatAndroidTestReleaseJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtFormatAndroidTestRelease"))
             .isInstanceOf(KtfmtFormatTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatAndroidTestJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtFormatAndroidTest"))
             .isInstanceOf(KtfmtFormatTask::class.java)
 
         // Test
-        assertThat(project.tasks.getByName("ktfmtCheckTestDebugJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtCheckTestDebug"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtCheckTestReleaseJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtCheckTestRelease"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtCheckTestJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtCheckTest"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatTestDebugJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtFormatTestDebug"))
             .isInstanceOf(KtfmtFormatTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatTestReleaseJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtFormatTestRelease"))
             .isInstanceOf(KtfmtFormatTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatTestJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtFormatTest"))
             .isInstanceOf(KtfmtFormatTask::class.java)
 
         // Prod
-        assertThat(project.tasks.getByName("ktfmtCheckDebugJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtCheckDebug"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtCheckReleaseJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtCheckRelease"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtCheckMainJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtCheckMain"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatDebugJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtFormatDebug"))
             .isInstanceOf(KtfmtFormatTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatReleaseJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtFormatRelease"))
             .isInstanceOf(KtfmtFormatTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatMainJavaSource"))
+        assertThat(project.tasks.getByName("ktfmtFormatMain"))
             .isInstanceOf(KtfmtFormatTask::class.java)
 
         assertThat(project["ktfmtCheck"].dependencies)
             .containsExactly(
-                "ktfmtCheckAndroidTestDebugJavaSource",
-                "ktfmtCheckAndroidTestReleaseJavaSource",
-                "ktfmtCheckAndroidTestJavaSource",
-                "ktfmtCheckTestDebugJavaSource",
-                "ktfmtCheckTestReleaseJavaSource",
-                "ktfmtCheckTestJavaSource",
-                "ktfmtCheckDebugJavaSource",
-                "ktfmtCheckReleaseJavaSource",
-                "ktfmtCheckMainJavaSource"
+                "ktfmtCheckAndroidTestDebug",
+                "ktfmtCheckAndroidTestRelease",
+                "ktfmtCheckAndroidTest",
+                "ktfmtCheckTestDebug",
+                "ktfmtCheckTestRelease",
+                "ktfmtCheckTest",
+                "ktfmtCheckDebug",
+                "ktfmtCheckRelease",
+                "ktfmtCheckMain"
             )
         assertThat(project["ktfmtFormat"].dependencies)
             .containsExactly(
-                "ktfmtFormatAndroidTestDebugJavaSource",
-                "ktfmtFormatAndroidTestReleaseJavaSource",
-                "ktfmtFormatAndroidTestJavaSource",
-                "ktfmtFormatTestDebugJavaSource",
-                "ktfmtFormatTestReleaseJavaSource",
-                "ktfmtFormatTestJavaSource",
-                "ktfmtFormatDebugJavaSource",
-                "ktfmtFormatReleaseJavaSource",
-                "ktfmtFormatMainJavaSource"
+                "ktfmtFormatAndroidTestDebug",
+                "ktfmtFormatAndroidTestRelease",
+                "ktfmtFormatAndroidTest",
+                "ktfmtFormatTestDebug",
+                "ktfmtFormatTestRelease",
+                "ktfmtFormatTest",
+                "ktfmtFormatDebug",
+                "ktfmtFormatRelease",
+                "ktfmtFormatMain"
             )
     }
 

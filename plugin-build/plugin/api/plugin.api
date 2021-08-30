@@ -1,5 +1,4 @@
 public abstract class com/ncorti/ktfmt/gradle/KtfmtExtension {
-	public static final field Companion Lcom/ncorti/ktfmt/gradle/KtfmtExtension$Companion;
 	public fun <init> (Lorg/gradle/api/Project;)V
 	public final fun dropboxStyle ()V
 	public final fun getBlockIndent ()Lorg/gradle/api/provider/Property;

@@ -5,6 +5,11 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- KtFmt to 0.28
+- Gradle to 7.2
+- Kotlin to 1.5.21
+- Android Gradle Plugin to 4.2.2
+- Android Ktfmt Tasks will not have `JavaSource` as postfix anymore
 - Tasks should fallback to extension value before defaults
 
 ## Version 0.6.0 *(2021-05-20)*

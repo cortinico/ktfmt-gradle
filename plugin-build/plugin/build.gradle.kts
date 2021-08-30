@@ -1,3 +1,5 @@
+import org.gradle.api.internal.classpath.ModuleRegistry
+import org.gradle.configurationcache.extensions.serviceOf
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -37,6 +39,13 @@ dependencies {
     testImplementation(platform(TestingLib.JUNIT_BOM))
     testImplementation(TestingLib.JUPITER)
     testImplementation(TestingLib.TRUTH)
+
+    testRuntimeOnly(
+        files(
+            serviceOf<ModuleRegistry>().getModule("gradle-tooling-api-builders")
+                .classpath.asFiles.first()
+        )
+    )
 }
 
 gradlePlugin {

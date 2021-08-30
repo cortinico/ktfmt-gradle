@@ -191,13 +191,14 @@ internal class KtfmtFormatTaskIntegrationTest {
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("compileKotlin", "ktfmtFormatMain")
+                .withArguments("compileKotlin", "ktfmtFormatMain", "--dry-run")
                 .build()
 
-        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
-        assertThat(result.task(":compileKotlin")?.outcome).isEqualTo(SUCCESS)
-        assertThat(result.tasks.first().path).isEqualTo(":ktfmtFormatMain")
-        assertThat(result.tasks.last().path).isEqualTo(":compileKotlin")
+        assertThat(result.output).contains(":ktfmtFormatMain SKIPPED")
+        assertThat(result.output).contains(":compileKotlin SKIPPED")
+        val lines = result.output.split("\n")
+        assertThat(lines.indexOf(":ktfmtFormatMain SKIPPED"))
+            .isLessThan(lines.indexOf(":compileKotlin SKIPPED"))
     }
 
     @Test
