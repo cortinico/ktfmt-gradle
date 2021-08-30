@@ -5,6 +5,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.7.0 *(2021-08-30)*
+
 - KtFmt to 0.28
 - Gradle to 7.2
 - Kotlin to 1.5.21
