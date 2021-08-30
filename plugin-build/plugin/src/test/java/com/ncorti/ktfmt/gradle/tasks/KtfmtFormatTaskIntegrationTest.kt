@@ -196,9 +196,8 @@ internal class KtfmtFormatTaskIntegrationTest {
 
         assertThat(result.output).contains(":ktfmtFormatMain SKIPPED")
         assertThat(result.output).contains(":compileKotlin SKIPPED")
-        val lines = result.output.split("\n")
-        assertThat(lines.indexOf(":ktfmtFormatMain SKIPPED"))
-            .isLessThan(lines.indexOf(":compileKotlin SKIPPED"))
+        assertThat(result.output.indexOf(":ktfmtCheckMain SKIPPED"))
+            .isLessThan(result.output.indexOf(":compileKotlin SKIPPED"))
     }
 
     @Test
