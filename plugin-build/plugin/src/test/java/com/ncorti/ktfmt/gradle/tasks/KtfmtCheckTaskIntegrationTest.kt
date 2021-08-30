@@ -113,13 +113,14 @@ internal class KtfmtCheckTaskIntegrationTest {
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("compileKotlin", "ktfmtCheckMain")
+                .withArguments("compileKotlin", "ktfmtCheckMain", "--dry-run")
                 .build()
 
-        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
-        assertThat(result.task(":compileKotlin")?.outcome).isEqualTo(SUCCESS)
-        assertThat(result.tasks.first().path).isEqualTo(":ktfmtCheckMain")
-        assertThat(result.tasks.last().path).isEqualTo(":compileKotlin")
+        assertThat(result.output).contains(":ktfmtCheckMain SKIPPED")
+        assertThat(result.output).contains(":compileKotlin SKIPPED")
+        val lines = result.output.split("\n")
+        assertThat(lines.indexOf(":ktfmtCheckMain SKIPPED"))
+            .isLessThan(lines.indexOf(":compileKotlin SKIPPED"))
     }
 
     @Test
