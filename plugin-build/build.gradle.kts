@@ -20,12 +20,12 @@ allprojects {
 
     apply {
         plugin("io.gitlab.arturbosch.detekt")
-//        plugin("com.ncorti.ktfmt.gradle")
+        plugin("com.ncorti.ktfmt.gradle")
     }
 
-//    ktfmt {
-//        kotlinLangStyle()
-//    }
+    ktfmt {
+        kotlinLangStyle()
+    }
 
     detekt {
         config = rootProject.files("../config/detekt/detekt.yml")
