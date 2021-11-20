@@ -5,6 +5,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- KtFmt to 0.30
+
 ## Version 0.7.0 *(2021-08-30)*
 
 - KtFmt to 0.28
