@@ -5,7 +5,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 
-- KtFmt to 0.30
+- KtFmt to 0.31
+- Kotlin to 1.6.10
 
 ## Version 0.7.0 *(2021-08-30)*
 
