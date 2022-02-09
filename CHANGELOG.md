@@ -7,6 +7,7 @@ Please add your entries according to this format.
 
 - KtFmt to 0.31
 - Kotlin to 1.6.10
+- Coroutines to 1.6.0
 
 ## Version 0.7.0 *(2021-08-30)*
 
