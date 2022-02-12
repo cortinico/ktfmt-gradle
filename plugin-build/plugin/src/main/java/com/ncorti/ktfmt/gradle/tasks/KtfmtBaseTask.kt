@@ -1,7 +1,7 @@
 package com.ncorti.ktfmt.gradle.tasks
 
-import com.facebook.ktfmt.ParseError
-import com.facebook.ktfmt.format
+import com.facebook.ktfmt.format.Formatter.format
+import com.facebook.ktfmt.format.ParseError
 import com.google.common.annotations.VisibleForTesting
 import com.google.googlejavaformat.FormattingError
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
