@@ -6,7 +6,8 @@ Please add your entries according to this format.
 ## Unreleased
 
 - KtFmt to 0.32
-- Kotlin to 1.5.31
+- Kotlin to 1.6.10
+- COROUTINES to 1.6.0
 - Gradle to 7.4
 
 ## Version 0.7.0 *(2021-08-30)*
