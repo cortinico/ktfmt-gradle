@@ -5,7 +5,7 @@ Please add your entries according to this format.
 
 ## Unreleased
 
-
+- Kotlin to 1.6.10
 
 ## Version 0.8.0 *(2022-02-19)*
 

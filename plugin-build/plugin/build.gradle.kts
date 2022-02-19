@@ -14,8 +14,16 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+/**
+ * We create a configuration that we can resolve by extending [compileOnly].
+ * Here we inject the dependencies into TestKit plugin
+ * classpath via [PluginUnderTestMetadata] to make them available for testing.
+ */
+val integrationTestRuntime: Configuration by configurations.creating
+integrationTestRuntime.extendsFrom(configurations.getByName("compileOnly"))
+
 tasks.withType<PluginUnderTestMetadata>().configureEach {
-    pluginClasspath.from(configurations.compileOnly)
+    pluginClasspath.from(integrationTestRuntime)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
