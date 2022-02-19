@@ -5,6 +5,7 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- Set Kotlin jvmTarget to 11
 - KtFmt to 0.32
 - Kotlin to 1.5.31
 - Gradle to 7.4
