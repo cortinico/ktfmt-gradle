@@ -1,6 +1,6 @@
 object Versions {
     const val AGP = "4.2.2"
-    const val COROUTINES = "1.5.1"
+    const val COROUTINES = "1.6.0"
     const val DIFF_UTIL = "4.9"
     const val JUPITER = "5.7.2"
     const val KTFMT = "0.32"
@@ -10,7 +10,7 @@ object Versions {
 object BuildPluginsVersion {
     const val BINARY_COMPATIBILITY_VALIDATOR = "0.7.1"
     const val DETEKT = "1.17.0"
-    const val KOTLIN = "1.5.31"
+    const val KOTLIN = "1.6.10"
     const val KTFMT = "0.7.0"
     const val PLUGIN_PUBLISH = "0.14.0"
     const val VERSIONS_PLUGIN = "0.39.0"
