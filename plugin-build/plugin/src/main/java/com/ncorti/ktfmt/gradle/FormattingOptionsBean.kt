@@ -1,8 +1,8 @@
 package com.ncorti.ktfmt.gradle
 
-import com.facebook.ktfmt.DEFAULT_MAX_WIDTH
-import com.facebook.ktfmt.FormattingOptions
-import com.facebook.ktfmt.FormattingOptions.Style as KtfmtStyle
+import com.facebook.ktfmt.format.FormattingOptions
+import com.facebook.ktfmt.format.FormattingOptions.Companion.DEFAULT_MAX_WIDTH
+import com.facebook.ktfmt.format.FormattingOptions.Style as KtfmtStyle
 import java.io.Serializable
 
 internal data class FormattingOptionsBean(
