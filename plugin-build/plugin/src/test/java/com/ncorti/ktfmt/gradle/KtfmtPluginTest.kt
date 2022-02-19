@@ -131,6 +131,19 @@ class KtfmtPluginTest {
         assertThat(project.tasks.getByName("ktfmtFormatMain"))
             .isInstanceOf(KtfmtFormatTask::class.java)
 
+        assertThat(project.tasks.getByName("ktfmtCheckTestFixtures"))
+            .isInstanceOf(KtfmtCheckTask::class.java)
+        assertThat(project.tasks.getByName("ktfmtCheckTestFixturesRelease"))
+            .isInstanceOf(KtfmtCheckTask::class.java)
+        assertThat(project.tasks.getByName("ktfmtCheckTestFixturesDebug"))
+            .isInstanceOf(KtfmtCheckTask::class.java)
+        assertThat(project.tasks.getByName("ktfmtFormatTestFixtures"))
+            .isInstanceOf(KtfmtFormatTask::class.java)
+        assertThat(project.tasks.getByName("ktfmtFormatTestFixturesRelease"))
+            .isInstanceOf(KtfmtFormatTask::class.java)
+        assertThat(project.tasks.getByName("ktfmtFormatTestFixturesDebug"))
+            .isInstanceOf(KtfmtFormatTask::class.java)
+
         assertThat(project["ktfmtCheck"].dependencies)
             .containsExactly(
                 "ktfmtCheckAndroidTestDebug",
@@ -141,7 +154,10 @@ class KtfmtPluginTest {
                 "ktfmtCheckTest",
                 "ktfmtCheckDebug",
                 "ktfmtCheckRelease",
-                "ktfmtCheckMain"
+                "ktfmtCheckMain",
+                "ktfmtCheckTestFixtures",
+                "ktfmtCheckTestFixturesRelease",
+                "ktfmtCheckTestFixturesDebug"
             )
         assertThat(project["ktfmtFormat"].dependencies)
             .containsExactly(
@@ -153,7 +169,10 @@ class KtfmtPluginTest {
                 "ktfmtFormatTest",
                 "ktfmtFormatDebug",
                 "ktfmtFormatRelease",
-                "ktfmtFormatMain"
+                "ktfmtFormatMain",
+                "ktfmtFormatTestFixtures",
+                "ktfmtFormatTestFixturesRelease",
+                "ktfmtFormatTestFixturesDebug"
             )
     }
 
