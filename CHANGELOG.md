@@ -5,6 +5,10 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+
+
+## Version 0.8.0 *(2022-02-19)*
+
 - Set Kotlin jvmTarget to 11
 - KtFmt to 0.32
 - Kotlin to 1.5.31
