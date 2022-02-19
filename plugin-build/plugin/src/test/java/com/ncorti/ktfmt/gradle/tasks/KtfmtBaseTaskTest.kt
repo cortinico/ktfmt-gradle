@@ -1,6 +1,6 @@
 package com.ncorti.ktfmt.gradle.tasks
 
-import com.facebook.ktfmt.ParseError
+import com.facebook.ktfmt.format.ParseError
 import com.google.common.truth.Truth.assertThat
 import java.io.File
 import kotlinx.coroutines.runBlocking
