@@ -19,10 +19,14 @@ internal object KtfmtAndroidUtils {
         fun applyKtfmtForAndroid() {
             project.extensions.configure(BaseExtension::class.java) {
                 it.sourceSets.all { sourceSet ->
-                    val srcDirs = sourceSet.java.srcDirs + runCatching {
-                        // As sourceSet.kotlin doesn't exist before AGP 7
-                        (sourceSet.kotlin as? DefaultAndroidSourceDirectorySet)?.srcDirs
-                    }.getOrNull().orEmpty()
+                    val srcDirs =
+                        sourceSet.java.srcDirs +
+                            runCatching {
+                                    // As sourceSet.kotlin doesn't exist before AGP 7
+                                    (sourceSet.kotlin as? DefaultAndroidSourceDirectorySet)?.srcDirs
+                                }
+                                .getOrNull()
+                                .orEmpty()
                     // Passing Callable, so returned FileCollection, will lazy evaluate it
                     // only when task will need it.
                     // Solves the problem of having additional source dirs in
