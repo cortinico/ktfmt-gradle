@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
-    id("com.ncorti.ktfmt.gradle") version "0.7.0"
+    id("com.ncorti.ktfmt.gradle") version "0.8.0"
 }
 
 repositories {
