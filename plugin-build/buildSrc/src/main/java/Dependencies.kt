@@ -1,5 +1,5 @@
 object Versions {
-    const val AGP = "4.2.2"
+    const val AGP = "7.1.2"
     const val COROUTINES = "1.6.0"
     const val DIFF_UTIL = "4.9"
     const val JUPITER = "5.7.2"
