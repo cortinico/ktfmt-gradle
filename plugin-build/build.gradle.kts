@@ -29,12 +29,6 @@ allprojects {
 
     detekt {
         config = rootProject.files("../config/detekt/detekt.yml")
-        reports {
-            html {
-                enabled = true
-                destination = file("build/reports/detekt.html")
-            }
-        }
     }
 }
 

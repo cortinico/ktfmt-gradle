@@ -34,7 +34,6 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
     implementation(Libs.COROUTINES_CORE)
     implementation(Libs.KTFMT)
     implementation(Libs.DIFF_UTILS)

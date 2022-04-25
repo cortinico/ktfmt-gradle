@@ -1,11 +1,11 @@
 object Versions {
-    const val JUPITER = "5.7.2"
+    const val JUPITER = "5.8.2"
 }
 
 object BuildPluginsVersion {
-    const val DETEKT = "1.17.0"
-    const val KOTLIN = "1.6.10"
-    const val VERSIONS_PLUGIN = "0.38.0"
+    const val DETEKT = "1.20.0"
+    const val KOTLIN = "1.6.21"
+    const val VERSIONS_PLUGIN = "0.42.0"
 }
 
 object TestingLib {
