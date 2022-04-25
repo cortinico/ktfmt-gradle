@@ -5,7 +5,9 @@ Please add your entries according to this format.
 
 ## Unreleased
 
-- Kotlin to 1.6.10
+- Kotlin to 1.6.21
+- AGP to 7.1.3
+- Kotlinx Coroutines to 1.6.1
 
 ## Version 0.8.0 *(2022-02-19)*
 
