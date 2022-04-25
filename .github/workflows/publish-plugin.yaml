@@ -15,23 +15,18 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-      - name: Cache Gradle Caches
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches/
-          key: cache-gradle-cache
-      - name: Cache Gradle Wrapper
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/wrapper/
-          key: cache-gradle-wrapper
       - uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: '11'
+
       - name: Run Gradle tasks
-        run: ./gradlew preMerge --continue
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: preMerge --continue
+
       - name: Publish on Plugin Portal
-        run: ./gradlew --project-dir plugin-build setupPluginUploadFromEnvironment publishPlugins
-        if: success()
-      - name: Stop Gradle
-        run: ./gradlew --stop
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: setupPluginUploadFromEnvironment publishPlugins
+          build-root-directory: plugin-build
