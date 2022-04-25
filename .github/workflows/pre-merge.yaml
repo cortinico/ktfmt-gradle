@@ -33,12 +33,6 @@ jobs:
         with:
           arguments: preMerge --continue
 
-      - name: Publish on Plugin Portal
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: setupPluginUploadFromEnvironment publishPlugins
-          build-root-directory: plugin-build
-
       - name: Verify that the plugin runs
         uses: gradle/gradle-build-action@v2
         with:
