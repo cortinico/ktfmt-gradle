@@ -3,7 +3,7 @@ object Versions {
     const val COROUTINES = "1.6.1"
     const val DIFF_UTIL = "4.11"
     const val JUPITER = "5.8.2"
-    const val KTFMT = "0.36"
+    const val KTFMT = "0.39"
     const val TRUTH = "1.1.3"
 }
 
