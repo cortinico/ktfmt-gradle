@@ -1,0 +1,31 @@
+[versions]
+agp = "7.1.3"
+binaryCompatibilityValidator = "0.11.0"
+coroutines = "1.6.4"
+detekt = "1.21.0"
+diffUtils = "4.12"
+junit = "5.8.2"
+kotlin = "1.7.10"
+ktfmt-plugin = "0.8.0"
+ktfmt = "0.39"
+pluginPublish = "1.0.0"
+truth = "1.1.3"
+versionCheck = "0.42.0"
+
+[plugins]
+binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibilityValidator" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt-plugin" }
+pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish" }
+versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck" }
+
+[libraries]
+agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+diffUtils = { module = "io.github.java-diff-utils:java-diff-utils", version.ref = "diffUtils" }
+ktfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }

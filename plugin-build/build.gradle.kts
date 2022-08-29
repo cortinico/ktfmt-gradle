@@ -1,26 +1,21 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-    kotlin("jvm") version BuildPluginsVersion.KOTLIN apply false
-    id("com.gradle.plugin-publish") version BuildPluginsVersion.PLUGIN_PUBLISH apply false
-    id("io.gitlab.arturbosch.detekt") version BuildPluginsVersion.DETEKT
-    id("com.ncorti.ktfmt.gradle") version BuildPluginsVersion.KTFMT
-    id("com.github.ben-manes.versions") version BuildPluginsVersion.VERSIONS_PLUGIN
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version BuildPluginsVersion.BINARY_COMPATIBILITY_VALIDATOR
+    alias(libs.plugins.kotlin) apply false
+    alias(libs.plugins.pluginPublish) apply false
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.ktfmt)
+    alias(libs.plugins.versionCheck)
+    alias(libs.plugins.binaryCompatibilityValidator)
 }
 
 allprojects {
-    group = PluginCoordinates.GROUP
-    version = PluginCoordinates.VERSION
-
-    repositories {
-        google()
-        mavenCentral()
-    }
+    group = property("GROUP").toString()
+    version = property("VERSION").toString()
 
     apply {
-        plugin("io.gitlab.arturbosch.detekt")
-        plugin("com.ncorti.ktfmt.gradle")
+        plugin(rootProject.libs.plugins.detekt.get().pluginId)
+        plugin(rootProject.libs.plugins.ktfmt.get().pluginId)
     }
 
     ktfmt {

@@ -3,10 +3,9 @@ import org.gradle.configurationcache.extensions.serviceOf
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    `maven-publish`
     kotlin("jvm")
     id("java-gradle-plugin")
-    id("com.gradle.plugin-publish")
+    alias(libs.plugins.pluginPublish)
 }
 
 java {
@@ -20,7 +19,13 @@ java {
  * classpath via [PluginUnderTestMetadata] to make them available for testing.
  */
 val integrationTestRuntime: Configuration by configurations.creating
-integrationTestRuntime.extendsFrom(configurations.getByName("compileOnly"))
+integrationTestRuntime.apply {
+    extendsFrom(configurations.getByName("compileOnly"))
+    attributes {
+        attribute(Attribute.of("org.gradle.usage", String::class.java), "java-runtime")
+        attribute(Attribute.of("org.gradle.category", String::class.java), "library")
+    }
+}
 
 tasks.withType<PluginUnderTestMetadata>().configureEach {
     pluginClasspath.from(integrationTestRuntime)
@@ -28,27 +33,27 @@ tasks.withType<PluginUnderTestMetadata>().configureEach {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 }
 
 dependencies {
-    implementation(Libs.COROUTINES_CORE)
-    implementation(Libs.KTFMT)
-    implementation(Libs.DIFF_UTILS)
+    implementation(libs.coroutines.core)
+    implementation(libs.ktfmt)
+    implementation(libs.diffUtils)
 
     compileOnly(gradleApi())
     compileOnly(kotlin("gradle-plugin"))
-    compileOnly(Libs.AGP)
+    compileOnly(libs.agp)
 
-    testImplementation(TestingLib.COROUTINES_TEST)
+    testImplementation(libs.coroutines.test)
     testImplementation(kotlin("gradle-plugin"))
-    testImplementation(Libs.AGP)
+    testImplementation(libs.agp)
 
-    testImplementation(platform(TestingLib.JUNIT_BOM))
-    testImplementation(TestingLib.JUPITER)
-    testImplementation(TestingLib.TRUTH)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.jupiter)
+    testImplementation(libs.truth)
 
     testRuntimeOnly(
         files(
@@ -60,26 +65,21 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        create(PluginCoordinates.ID) {
-            id = PluginCoordinates.ID
-            implementationClass = PluginCoordinates.IMPLEMENTATION_CLASS
-            version = PluginCoordinates.VERSION
+        create(property("ID").toString()) {
+            id = property("ID").toString()
+            implementationClass = property("IMPLEMENTATION_CLASS").toString()
+            version = property("VERSION").toString()
+            displayName = property("DISPLAY_NAME").toString()
         }
     }
 }
 
 // Configuration Block for the Plugin Marker artifact on Plugin Central
 pluginBundle {
-    website = PluginBundle.WEBSITE
-    vcsUrl = PluginBundle.VCS
-    description = PluginBundle.DESCRIPTION
-    tags = PluginBundle.TAGS
-
-    plugins {
-        getByName(PluginCoordinates.ID) {
-            displayName = PluginBundle.DISPLAY_NAME
-        }
-    }
+    website = property("WEBSITE").toString()
+    vcsUrl = property("VCS_URL").toString()
+    description = property("DESCRIPTION").toString()
+    tags = listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter", "plugin", "gradle")
 }
 
 tasks.withType<Test> {
