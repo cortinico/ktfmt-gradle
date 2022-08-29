@@ -5,7 +5,10 @@ Please add your entries according to this format.
 
 ## Unreleased
 
-- Kotlin to 1.6.21
+- Move to Version Catalog
+- KtFmt to 0.39
+- Gradle to 7.5.1
+- Kotlin to 1.7.10
 - AGP to 7.1.3
 - Kotlinx Coroutines to 1.6.1
 

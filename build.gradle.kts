@@ -1,21 +1,14 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-    kotlin("jvm") version BuildPluginsVersion.KOTLIN apply false
-    id("io.gitlab.arturbosch.detekt") version BuildPluginsVersion.DETEKT
-    id("com.github.ben-manes.versions") version BuildPluginsVersion.VERSIONS_PLUGIN
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+    alias(libs.plugins.kotlin) apply false
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.versionCheck)
 }
 
 subprojects {
     apply {
-        plugin("io.gitlab.arturbosch.detekt")
+        plugin(rootProject.libs.plugins.detekt.get().pluginId)
     }
 
     detekt {
