@@ -79,7 +79,7 @@ pluginBundle {
     website = property("WEBSITE").toString()
     vcsUrl = property("VCS_URL").toString()
     description = property("DESCRIPTION").toString()
-    tags = listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter", "plugin", "gradle")
+    tags = listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter")
 }
 
 tasks.withType<Test> {
