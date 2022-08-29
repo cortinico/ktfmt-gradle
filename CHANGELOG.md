@@ -5,12 +5,14 @@ Please add your entries according to this format.
 
 ## Unreleased
 
-- Move to Version Catalog
+## Version 0.9.0 *(2022-08-29)*
+
 - KtFmt to 0.39
 - Gradle to 7.5.1
 - Kotlin to 1.7.10
-- AGP to 7.1.3
+- AGP to 7.2.2
 - Kotlinx Coroutines to 1.6.1
+- Moved to Version Catalog
 
 ## Version 0.8.0 *(2022-02-19)*
 
