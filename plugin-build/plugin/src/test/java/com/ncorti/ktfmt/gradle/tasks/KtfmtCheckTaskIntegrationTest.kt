@@ -138,6 +138,25 @@ internal class KtfmtCheckTaskIntegrationTest {
     }
 
     @Test
+    fun `format task uses configuration cache correctly`() {
+        createTempFile(content = "val answer = 42\n")
+        GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("--configuration-cache", "ktfmtCheckMain")
+            .build()
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("--configuration-cache", "ktfmtCheckMain")
+                .build()
+
+        assertThat(result.output).contains("Reusing configuration cache.")
+    }
+
+    @Test
     fun `check task validates all the file with a failure`() {
         createTempFile(content = "val answer = `\n", fileName = "File1.kt")
         createTempFile(content = "val answer = 42\n", fileName = "File2.kt")

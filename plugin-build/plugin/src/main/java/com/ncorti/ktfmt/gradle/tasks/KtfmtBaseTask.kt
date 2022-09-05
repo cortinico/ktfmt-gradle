@@ -8,15 +8,11 @@ import com.ncorti.ktfmt.gradle.FormattingOptionsBean
 import com.ncorti.ktfmt.gradle.KtfmtExtension
 import java.io.File
 import java.io.IOException
-import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.Path
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import org.gradle.api.UnknownDomainObjectException
 import org.gradle.api.file.FileCollection
@@ -24,7 +20,6 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -37,8 +32,6 @@ import org.gradle.api.tasks.options.Option
  * process a single file with ktfmt
  */
 abstract class KtfmtBaseTask : SourceTask() {
-
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     @get:Input @get:Optional internal var bean: FormattingOptionsBean? = null
 
@@ -61,20 +54,16 @@ abstract class KtfmtBaseTask : SourceTask() {
     @TaskAction
     @VisibleForTesting
     internal fun taskAction() {
-
-        runBlocking(scope.coroutineContext) { execute() }
-        scope.cancel()
+        runBlocking(Dispatchers.IO) { execute() }
     }
 
     protected abstract suspend fun execute()
 
-    @OptIn(ExperimentalPathApi::class)
     @VisibleForTesting
     @Suppress("TooGenericExceptionCaught", "SpreadOperator")
     internal fun processFile(input: File): KtfmtResult {
-
-        // The task should try to read from the ktfmt{} extension before falling back to default
-        // values.
+        // The task should try to read from the ktfmt{} extension
+        // before falling back to default values.
         if (bean == null) {
             bean =
                 try {
@@ -115,9 +104,8 @@ abstract class KtfmtBaseTask : SourceTask() {
         }
     }
 
-    internal suspend fun processFileCollection(input: FileCollection): List<KtfmtResult> {
-        return input.map { scope.async { processFile(it) } }.awaitAll()
-    }
-
-    @VisibleForTesting @Internal internal fun isScopeActive() = scope.isActive
+    internal suspend fun processFileCollection(input: FileCollection): List<KtfmtResult> =
+        coroutineScope {
+            input.map { async { processFile(it) } }.awaitAll()
+        }
 }

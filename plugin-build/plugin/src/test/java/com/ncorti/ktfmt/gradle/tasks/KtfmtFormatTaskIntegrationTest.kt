@@ -164,6 +164,25 @@ internal class KtfmtFormatTaskIntegrationTest {
     }
 
     @Test
+    fun `format task uses configuration cache correctly`() {
+        createTempFile(content = "val answer = 42\n")
+        GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("--configuration-cache", "ktfmtFormatMain")
+            .build()
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("--configuration-cache", "ktfmtFormatMain")
+                .build()
+
+        assertThat(result.output).contains("Reusing configuration cache.")
+    }
+
+    @Test
     fun `format task reformats all the file even with a failure`() {
         val file1 = createTempFile(content = "val answer = `", fileName = "File1.kt")
         val file2 = createTempFile(content = "val answer=42", fileName = "File2.kt")

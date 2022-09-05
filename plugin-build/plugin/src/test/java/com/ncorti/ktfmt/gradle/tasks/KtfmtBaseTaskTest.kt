@@ -43,29 +43,6 @@ internal class KtfmtBaseTaskTest {
     }
 
     @Test
-    fun `scope is not canceled before running`() {
-        val project = ProjectBuilder.builder().build()
-        project.pluginManager.apply("org.jetbrains.kotlin.jvm")
-        project.pluginManager.apply("com.ncorti.ktfmt.gradle")
-
-        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
-
-        assertThat(underTest.isScopeActive()).isTrue()
-    }
-
-    @Test
-    fun `scope is canceled after running`() {
-        val project = ProjectBuilder.builder().build()
-        project.pluginManager.apply("org.jetbrains.kotlin.jvm")
-        project.pluginManager.apply("com.ncorti.ktfmt.gradle")
-
-        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
-        underTest.taskAction()
-
-        assertThat(underTest.isScopeActive()).isFalse()
-    }
-
-    @Test
     fun `processFile returns success for valid file`() {
         val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
