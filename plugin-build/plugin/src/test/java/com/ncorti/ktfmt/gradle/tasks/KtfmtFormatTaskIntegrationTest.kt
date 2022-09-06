@@ -169,14 +169,14 @@ internal class KtfmtFormatTaskIntegrationTest {
         GradleRunner.create()
             .withProjectDir(tempDir)
             .withPluginClasspath()
-            .withArguments("--configuration-cache", "ktfmtFormatMain")
+            .withArguments("--configuration-cache", "--rerun-tasks", "ktfmtFormatMain")
             .build()
 
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("--configuration-cache", "ktfmtFormatMain")
+                .withArguments("--configuration-cache", "--rerun-tasks", "ktfmtFormatMain")
                 .build()
 
         assertThat(result.output).contains("Reusing configuration cache.")

@@ -143,14 +143,14 @@ internal class KtfmtCheckTaskIntegrationTest {
         GradleRunner.create()
             .withProjectDir(tempDir)
             .withPluginClasspath()
-            .withArguments("--configuration-cache", "ktfmtCheckMain")
+            .withArguments("--configuration-cache", "--rerun-tasks", "ktfmtCheckMain")
             .build()
 
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("--configuration-cache", "ktfmtCheckMain")
+                .withArguments("--configuration-cache", "--rerun-tasks", "ktfmtCheckMain")
                 .build()
 
         assertThat(result.output).contains("Reusing configuration cache.")
