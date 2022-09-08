@@ -5,6 +5,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.10.0 *(2022-09-09)*
+
 - Add support for Gradle Configuration Cache 
 - KtFmt to 0.40
 
