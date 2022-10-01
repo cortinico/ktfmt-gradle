@@ -5,6 +5,11 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.11.0 *(2022-10-01)*
+
+- KtFmt to 0.41 
+- AGP to 7.3.0
+
 ## Version 0.10.0 *(2022-09-09)*
 
 - Add support for Gradle Configuration Cache 
