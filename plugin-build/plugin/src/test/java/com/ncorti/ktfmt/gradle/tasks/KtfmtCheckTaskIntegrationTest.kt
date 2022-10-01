@@ -56,8 +56,8 @@ internal class KtfmtCheckTaskIntegrationTest {
             val res = when {
                 ````
             }
-            """.trimIndent(
-            )
+            """
+                .trimIndent()
         )
 
         val result =
