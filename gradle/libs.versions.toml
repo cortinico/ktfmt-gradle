@@ -10,7 +10,7 @@ ktfmt-plugin = "0.11.0"
 ktfmt = "0.41"
 pluginPublish = "1.0.0"
 truth = "1.1.3"
-versionCheck = "0.42.0"
+versionCheck = "0.43.0"
 
 [plugins]
 binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibilityValidator" }
