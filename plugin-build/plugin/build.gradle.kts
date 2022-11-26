@@ -46,7 +46,7 @@ dependencies {
     compileOnly(gradleApi())
     compileOnly(kotlin("gradle-plugin"))
     compileOnly(libs.agp)
-
+    
     testImplementation(libs.coroutines.test)
     testImplementation(kotlin("gradle-plugin"))
     testImplementation(libs.agp)
@@ -61,6 +61,11 @@ dependencies {
                 .classpath.asFiles.first()
         )
     )
+    constraints {
+        implementation(libs.kotlin.compiler.embeddable) {
+            because("Clash in Kotlin compiler versions - See https://youtrack.jetbrains.com/issue/KT-54236")
+        }
+    }
 }
 
 gradlePlugin {
