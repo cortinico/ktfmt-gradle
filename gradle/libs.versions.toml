@@ -5,7 +5,7 @@ coroutines = "1.6.4"
 detekt = "1.22.0"
 diffUtils = "4.12"
 junit = "5.9.1"
-kotlin = "1.7.10"
+kotlin = "1.7.21"
 ktfmt-plugin = "0.11.0"
 ktfmt = "0.41"
 pluginPublish = "1.1.0"
@@ -24,6 +24,7 @@ versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionChe
 agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+kotlin-compiler-embeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
