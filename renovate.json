@@ -1,11 +1,6 @@
 {
   "extends": [
-    "config:base"
+    "config:base",
+    ":automergeMinor"
   ]
-  "automerge": true,
-  "automergeType": "pr",
-  "platformAutomerge": true
-  "major": {
-    "automerge": false
-  },
 }
