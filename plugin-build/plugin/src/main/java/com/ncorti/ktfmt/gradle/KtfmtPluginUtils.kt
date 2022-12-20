@@ -2,7 +2,6 @@ package com.ncorti.ktfmt.gradle
 
 import com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask
 import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
-import java.util.Locale
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
@@ -54,9 +53,14 @@ internal object KtfmtPluginUtils {
     ): TaskProvider<KtfmtCheckTask> {
         val capitalizedName =
             name.split(" ").joinToString("") {
-                it.replaceFirstChar { char ->
-                    if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
+                val charArray = it.toCharArray()
+                if (charArray[0].isLowerCase()) {
+                    // We use toUpperCase here to retain compatibility with Gradle 6.9 and Kotlin
+                    // 1.4
+                    @Suppress("DEPRECATION")
+                    charArray[0] = charArray[0].toUpperCase()
                 }
+                charArray.concatToString()
             }
         val taskName = "$TASK_NAME_CHECK$capitalizedName"
         return project.tasks.register(taskName, KtfmtCheckTask::class.java) {
@@ -77,9 +81,14 @@ internal object KtfmtPluginUtils {
     ): TaskProvider<KtfmtFormatTask> {
         val srcSetName =
             name.split(" ").joinToString("") {
-                it.replaceFirstChar { char ->
-                    if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
+                val charArray = it.toCharArray()
+                if (charArray[0].isLowerCase()) {
+                    // We use toUpperCase here to retain compatibility with Gradle 6.9 and Kotlin
+                    // 1.4
+                    @Suppress("DEPRECATION")
+                    charArray[0] = charArray[0].toUpperCase()
                 }
+                charArray.concatToString()
             }
         val taskName = "$TASK_NAME_FORMAT$srcSetName"
         return project.tasks.register(taskName, KtfmtFormatTask::class.java) {

@@ -8,7 +8,7 @@ import com.ncorti.ktfmt.gradle.FormattingOptionsBean
 import com.ncorti.ktfmt.gradle.KtfmtExtension
 import java.io.File
 import java.io.IOException
-import kotlin.io.path.Path
+import java.nio.file.Paths
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -79,7 +79,10 @@ abstract class KtfmtBaseTask : SourceTask() {
                     .get()
                     .split(',', ':')
                     .map {
-                        Path("", *it.trim().split(File.separatorChar, '\\', '/').toTypedArray())
+                        Paths.get(
+                            "",
+                            *it.trim().split(File.separatorChar, '\\', '/').toTypedArray()
+                        )
                     }
                     .toSet()
             val relativePath = input.relativeTo(project.projectDir).toPath()
