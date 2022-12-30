@@ -35,6 +35,8 @@ tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
         jvmTarget = JavaVersion.VERSION_11.toString()
+        apiVersion = "1.4"
+        languageVersion = "1.4"
     }
 }
 
