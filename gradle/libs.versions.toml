@@ -1,5 +1,5 @@
 [versions]
-agp = "7.3.1"
+agp = "7.4.0"
 binaryCompatibilityValidator = "0.12.1"
 coroutines = "1.6.4"
 detekt = "1.22.0"
