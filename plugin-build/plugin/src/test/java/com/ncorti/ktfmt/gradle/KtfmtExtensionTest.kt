@@ -1,7 +1,8 @@
 package com.ncorti.ktfmt.gradle
 
 import com.google.common.truth.Truth.assertThat
-import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.*
+import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.DROPBOX
+import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.GOOGLE
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_BLOCK_INDENT
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_CONTINUATION_INDENT
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_DEBUGGING_PRINT_OPTS
