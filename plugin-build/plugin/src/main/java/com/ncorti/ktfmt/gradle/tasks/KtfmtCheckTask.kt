@@ -15,7 +15,7 @@ abstract class KtfmtCheckTask : KtfmtBaseTask() {
 
     override suspend fun execute() {
         val result = processFileCollection(inputFiles)
-        result.forEach { it ->
+        result.forEach {
             when {
                 it is KtfmtSuccess && it.isCorrectlyFormatted ->
                     logger.i("Valid formatting for: ${it.input}")

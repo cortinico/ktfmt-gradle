@@ -13,6 +13,12 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+}
+
 /**
  * We create a configuration that we can resolve by extending [compileOnly].
  * Here we inject the dependencies into TestKit plugin
@@ -77,16 +83,15 @@ gradlePlugin {
             implementationClass = property("IMPLEMENTATION_CLASS").toString()
             version = property("VERSION").toString()
             displayName = property("DISPLAY_NAME").toString()
+            description = property("DESCRIPTION").toString()
+            tags.set(listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter"))
         }
     }
 }
 
-// Configuration Block for the Plugin Marker artifact on Plugin Central
-pluginBundle {
-    website = property("WEBSITE").toString()
-    vcsUrl = property("VCS_URL").toString()
-    description = property("DESCRIPTION").toString()
-    tags = listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter")
+gradlePlugin {
+    website.set(property("WEBSITE").toString())
+    vcsUrl.set(property("VCS_URL").toString())
 }
 
 tasks.withType<Test> {
