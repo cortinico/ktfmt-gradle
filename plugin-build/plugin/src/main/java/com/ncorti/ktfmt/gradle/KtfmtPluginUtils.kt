@@ -24,8 +24,14 @@ internal object KtfmtPluginUtils {
         srcSetDir: FileCollection,
         ktfmtExtension: KtfmtExtension,
         topLevelFormat: TaskProvider<Task>,
-        topLevelCheck: TaskProvider<Task>
+        topLevelCheck: TaskProvider<Task>,
+        visitedSourceSets : MutableSet<VisitedSourceSets>
     ) {
+        val visited = VisitedSourceSets(srcSetName, project)
+        if (visitedSourceSets.contains(visited)) {
+            return
+        }
+        visitedSourceSets.add(visited)
         val srcCheckTask = createCheckTask(project, ktfmtExtension, srcSetName, srcSetDir)
         val srcFormatTask = createFormatTask(project, ktfmtExtension, srcSetName, srcSetDir)
 

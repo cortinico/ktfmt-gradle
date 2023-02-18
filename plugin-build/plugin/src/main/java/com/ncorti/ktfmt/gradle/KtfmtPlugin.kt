@@ -24,23 +24,25 @@ abstract class KtfmtPlugin : Plugin<Project> {
     private lateinit var topLevelCheck: TaskProvider<Task>
 
     override fun apply(project: Project) {
+        val visitedSourceSets = mutableSetOf<VisitedSourceSets>()
+
         ktfmtExtension =
             project.extensions.create(EXTENSION_NAME, KtfmtExtension::class.java, project)
 
         topLevelFormat = createTopLevelFormatTask(project)
         topLevelCheck = createTopLevelCheckTask(project)
 
-        project.plugins.withId("kotlin") { applyKtfmt(project) }
+        project.plugins.withId("kotlin") { applyKtfmt(project, visitedSourceSets) }
         project.plugins.withId("kotlin-android") {
-            applyKtfmtToAndroidProject(project, ktfmtExtension, topLevelFormat, topLevelCheck)
+            applyKtfmtToAndroidProject(project, ktfmtExtension, topLevelFormat, topLevelCheck, visitedSourceSets)
         }
-        project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project) }
+        project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project, visitedSourceSets) }
         project.plugins.withId("org.jetbrains.kotlin.multiplatform") {
-            applyKtfmtToMultiplatformProject(project)
+            applyKtfmtToMultiplatformProject(project, visitedSourceSets)
         }
     }
 
-    private fun applyKtfmt(project: Project) {
+    private fun applyKtfmt(project: Project, visitedSourceSets : MutableSet<VisitedSourceSets>) {
         val extension = project.extensions.getByType(KotlinProjectExtension::class.java)
         extension.sourceSets.all {
             createTasksForSourceSet(
@@ -49,12 +51,13 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 it.kotlin.sourceDirectories,
                 ktfmtExtension,
                 topLevelFormat,
-                topLevelCheck
+                topLevelCheck,
+                visitedSourceSets
             )
         }
     }
 
-    private fun applyKtfmtToMultiplatformProject(project: Project) {
+    private fun applyKtfmtToMultiplatformProject(project: Project, visitedSourceSets : MutableSet<VisitedSourceSets>) {
         val extension = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
         extension.sourceSets.all {
             createTasksForSourceSet(
@@ -63,13 +66,14 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 it.kotlin.sourceDirectories,
                 ktfmtExtension,
                 topLevelFormat,
-                topLevelCheck
+                topLevelCheck,
+                visitedSourceSets
             )
         }
 
         extension.targets.all { kotlinTarget ->
             if (kotlinTarget.platformType == KotlinPlatformType.androidJvm) {
-                applyKtfmtToAndroidProject(project, ktfmtExtension, topLevelFormat, topLevelCheck)
+                applyKtfmtToAndroidProject(project, ktfmtExtension, topLevelFormat, topLevelCheck, visitedSourceSets)
             }
         }
     }
@@ -94,3 +98,5 @@ abstract class KtfmtPlugin : Plugin<Project> {
         internal val defaultIncludes = listOf("**/*.kt", "**/*.kts")
     }
 }
+
+internal data class VisitedSourceSets(val sourceSetName: String, val project: Project)

@@ -14,7 +14,8 @@ internal object KtfmtAndroidUtils {
         project: Project,
         ktfmtExtension: KtfmtExtension,
         topLevelFormat: TaskProvider<Task>,
-        topLevelCheck: TaskProvider<Task>
+        topLevelCheck: TaskProvider<Task>,
+        visitedSourceSets : MutableSet<VisitedSourceSets>
     ) {
         fun applyKtfmtForAndroid() {
             project.extensions.configure(BaseExtension::class.java) {
@@ -38,7 +39,8 @@ internal object KtfmtAndroidUtils {
                         project.files(Callable { srcDirs }),
                         ktfmtExtension,
                         topLevelFormat,
-                        topLevelCheck
+                        topLevelCheck,
+                        visitedSourceSets
                     )
                 }
             }
