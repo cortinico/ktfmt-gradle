@@ -57,9 +57,10 @@ abstract class KtfmtPlugin : Plugin<Project> {
     private fun applyKtfmtToMultiplatformProject(project: Project) {
         val extension = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
         extension.sourceSets.all {
+            val name = "kmp ${it.name}"
             createTasksForSourceSet(
                 project,
-                it.name,
+                name,
                 it.kotlin.sourceDirectories,
                 ktfmtExtension,
                 topLevelFormat,

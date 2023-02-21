@@ -61,19 +61,19 @@ class KtfmtPluginTest {
         project.pluginManager.apply("org.jetbrains.kotlin.multiplatform")
         project.pluginManager.apply("com.ncorti.ktfmt.gradle")
 
-        assertThat(project.tasks.getByName("ktfmtCheckCommonMain"))
+        assertThat(project.tasks.getByName("ktfmtCheckKmpCommonMain"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatCommonMain"))
+        assertThat(project.tasks.getByName("ktfmtFormatKmpCommonMain"))
             .isInstanceOf(KtfmtFormatTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtCheckCommonTest"))
+        assertThat(project.tasks.getByName("ktfmtCheckKmpCommonTest"))
             .isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project.tasks.getByName("ktfmtFormatCommonTest"))
+        assertThat(project.tasks.getByName("ktfmtFormatKmpCommonTest"))
             .isInstanceOf(KtfmtFormatTask::class.java)
 
         assertThat(project["ktfmtCheck"].dependencies)
-            .containsExactly("ktfmtCheckCommonMain", "ktfmtCheckCommonTest")
+            .containsExactly("ktfmtCheckKmpCommonMain", "ktfmtCheckKmpCommonTest")
         assertThat(project["ktfmtFormat"].dependencies)
-            .containsExactly("ktfmtFormatCommonMain", "ktfmtFormatCommonTest")
+            .containsExactly("ktfmtFormatKmpCommonMain", "ktfmtFormatKmpCommonTest")
     }
 
     @Suppress("LongMethod")
