@@ -1,9 +1,18 @@
+
 # Change Log
 
 This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+
+## Version 0.12.0 *(2023-02-21)*
+
+- KtFmt to 0.43
+- Kotlin to 1.8.10
+- Gradle to 8.0.1
+- AGP to 7.4.1
+- Fix bug with KMP tasks clashing with Android Tasks (#130)
 
 ## Version 0.11.0 *(2022-10-01)*
 
