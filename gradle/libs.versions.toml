@@ -1,7 +1,7 @@
 [versions]
 agp = "8.0.2"
 binaryCompatibilityValidator = "0.13.2"
-coroutines = "1.7.1"
+coroutines = "1.7.2"
 detekt = "1.23.0"
 diffUtils = "4.12"
 junit = "5.9.3"
