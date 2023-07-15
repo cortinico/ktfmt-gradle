@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm")
     id("java-gradle-plugin")
+    id("signing")
     alias(libs.plugins.pluginPublish)
 }
 
@@ -54,7 +55,7 @@ dependencies {
     compileOnly(gradleApi())
     compileOnly(kotlin("gradle-plugin"))
     compileOnly(libs.agp)
-    
+
     testImplementation(libs.coroutines.test)
     testImplementation(kotlin("gradle-plugin"))
     testImplementation(libs.agp)
@@ -87,27 +88,17 @@ gradlePlugin {
             tags.set(listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter"))
         }
     }
-}
 
-gradlePlugin {
     website.set(property("WEBSITE").toString())
     vcsUrl.set(property("VCS_URL").toString())
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+signing {
+    val signingKey = findProperty("SIGNING_KEY") as? String
+    val signingPwd = findProperty("SIGNING_PWD") as? String
+    useInMemoryPgpKeys(signingKey, signingPwd)
 }
 
-tasks.create("setupPluginUploadFromEnvironment") {
-    doLast {
-        val key = System.getenv("GRADLE_PUBLISH_KEY")
-        val secret = System.getenv("GRADLE_PUBLISH_SECRET")
-
-        if (key == null || secret == null) {
-            throw GradleException("gradlePublishKey and/or gradlePublishSecret are not defined environment variables")
-        }
-
-        System.setProperty("gradle.publish.key", key)
-        System.setProperty("gradle.publish.secret", secret)
-    }
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
