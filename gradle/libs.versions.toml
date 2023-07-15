@@ -24,6 +24,7 @@ versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionChe
 agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+jupiter-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 kotlin-compiler-embeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
