@@ -24,7 +24,6 @@ public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask : org/gradle/a
 	public fun <init> ()V
 	protected abstract fun execute (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getIncludeOnly ()Lorg/gradle/api/provider/Property;
-	protected final fun getInputFiles ()Lorg/gradle/api/file/FileCollection;
 }
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtCheckTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {

@@ -6,6 +6,7 @@ import com.google.common.annotations.VisibleForTesting
 import com.google.googlejavaformat.FormattingError
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
 import com.ncorti.ktfmt.gradle.KtfmtExtension
+import com.ncorti.ktfmt.gradle.KtfmtPlugin
 import java.io.File
 import java.io.IOException
 import java.nio.file.Paths
@@ -17,9 +18,11 @@ import kotlinx.coroutines.runBlocking
 import org.gradle.api.UnknownDomainObjectException
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
+import org.gradle.api.specs.Spec
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -48,8 +51,8 @@ abstract class KtfmtBaseTask : SourceTask() {
     @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFiles
     @get:IgnoreEmptyDirectories
-    protected val inputFiles: FileCollection
-        get() = super.getSource()
+    internal val inputFiles: FileCollection
+        get() = super.getSource().filter(defaultExcludesFilter)
 
     @TaskAction
     @VisibleForTesting
@@ -110,5 +113,15 @@ abstract class KtfmtBaseTask : SourceTask() {
     internal suspend fun processFileCollection(input: FileCollection): List<KtfmtResult> =
         coroutineScope {
             input.map { async { processFile(it) } }.awaitAll()
+        }
+
+    @get:Internal
+    internal val defaultExcludesFilter: Spec<File> =
+        Spec<File> {
+            if (this.excludes.containsAll(KtfmtPlugin.defaultExcludes) && this.excludes.size == 1) {
+                it.absolutePath.matches(KtfmtPlugin.defaultExcludesRegex).not()
+            } else {
+                true
+            }
         }
 }
