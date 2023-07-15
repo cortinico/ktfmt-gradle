@@ -1,7 +1,7 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-    alias(libs.plugins.kotlin) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.pluginPublish) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktfmt)

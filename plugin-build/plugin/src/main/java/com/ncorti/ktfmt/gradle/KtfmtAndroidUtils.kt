@@ -14,11 +14,19 @@ internal object KtfmtAndroidUtils {
         project: Project,
         ktfmtExtension: KtfmtExtension,
         topLevelFormat: TaskProvider<Task>,
-        topLevelCheck: TaskProvider<Task>
+        topLevelCheck: TaskProvider<Task>,
+        isKmpProject: Boolean = false
     ) {
         fun applyKtfmtForAndroid() {
             project.extensions.configure(BaseExtension::class.java) {
                 it.sourceSets.all { sourceSet ->
+                    @Suppress("DEPRECATION")
+                    val sourceSetName =
+                        if (isKmpProject) {
+                            "kmp ${sourceSet.name}"
+                        } else {
+                            sourceSet.name
+                        }
                     val srcDirs =
                         sourceSet.java.srcDirs +
                             runCatching {
@@ -34,7 +42,7 @@ internal object KtfmtAndroidUtils {
                     // evaluation.
                     createTasksForSourceSet(
                         project,
-                        sourceSet.name,
+                        sourceSetName,
                         project.files(Callable { srcDirs }),
                         ktfmtExtension,
                         topLevelFormat,

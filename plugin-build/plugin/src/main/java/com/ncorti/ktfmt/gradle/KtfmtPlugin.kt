@@ -5,6 +5,7 @@ import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.EXTENSION_NAME
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.TASK_NAME_CHECK
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.TASK_NAME_FORMAT
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.createTasksForSourceSet
+import com.ncorti.ktfmt.gradle.util.i
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -32,7 +33,11 @@ abstract class KtfmtPlugin : Plugin<Project> {
 
         project.plugins.withId("kotlin") { applyKtfmt(project) }
         project.plugins.withId("kotlin-android") {
-            applyKtfmtToAndroidProject(project, ktfmtExtension, topLevelFormat, topLevelCheck)
+            if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
+                project.logger.i("Skipping Android task creation, as KMP is applied")
+            } else {
+                applyKtfmtToAndroidProject(project, ktfmtExtension, topLevelFormat, topLevelCheck)
+            }
         }
         project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project) }
         project.plugins.withId("org.jetbrains.kotlin.multiplatform") {
@@ -58,6 +63,11 @@ abstract class KtfmtPlugin : Plugin<Project> {
         val extension = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
         extension.sourceSets.all {
             val name = "kmp ${it.name}"
+            if (it.name.startsWith("android")) {
+                // We'll delegate Android Task Creation to the applyKtfmtToAndroidProject function
+                // below
+                return@all
+            }
             createTasksForSourceSet(
                 project,
                 name,
@@ -70,7 +80,13 @@ abstract class KtfmtPlugin : Plugin<Project> {
 
         extension.targets.all { kotlinTarget ->
             if (kotlinTarget.platformType == KotlinPlatformType.androidJvm) {
-                applyKtfmtToAndroidProject(project, ktfmtExtension, topLevelFormat, topLevelCheck)
+                applyKtfmtToAndroidProject(
+                    project,
+                    ktfmtExtension,
+                    topLevelFormat,
+                    topLevelCheck,
+                    isKmpProject = true
+                )
             }
         }
     }

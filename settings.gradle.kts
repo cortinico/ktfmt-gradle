@@ -15,5 +15,8 @@ dependencyResolutionManagement {
 
 rootProject.name = ("ktfmt-gradle")
 
-include(":example")
+include(
+    ":example",
+    ":example-kmp",
+)
 includeBuild("plugin-build")
