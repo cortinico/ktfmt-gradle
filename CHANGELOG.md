@@ -6,6 +6,17 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.13.0 *(2023-07-15)*
+
+- Handle implicit dependency error message for KMP project (#171)
+- Make sure files in the `build/` folder are skipped (#170)
+- Fix incompatibility with KSP (#167)
+- The Plugin is now GPG signed (#166)
+- KtFmt to 0.44
+- Kotlin to 1.9.0
+- Gradle to 8.2.1
+- AGP to 8.0.2
+
 ## Version 0.12.0 *(2023-02-21)*
 
 - KtFmt to 0.43
