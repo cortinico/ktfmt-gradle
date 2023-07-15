@@ -91,7 +91,8 @@ abstract class KtfmtPlugin : Plugin<Project> {
     }
 
     companion object {
-        internal val defaultExcludes = listOf("build/")
+        internal val defaultExcludes = listOf("**/build/**")
+        internal val defaultExcludesRegex = Regex("^(.*[\\\\/])?build([\\\\/].*)?\$")
         internal val defaultIncludes = listOf("**/*.kt", "**/*.kts")
     }
 }

@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm")
     id("com.ncorti.ktfmt.gradle")
     id("com.google.devtools.ksp") version "1.9.0-1.0.11"
+    id("app.cash.sqldelight") version "2.0.0-rc02"
 }
 
 ktfmt {
@@ -18,4 +19,12 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+sqldelight {
+  databases {
+    create("Database") {
+      packageName.set("com.example")
+    }
+  }
 }
