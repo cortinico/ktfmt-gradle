@@ -13,7 +13,7 @@ dependencies {
     testImplementation(libs.jupiter)
     testRuntimeOnly(libs.jupiter.platform.launcher)
     implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
-    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.14.0")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
 }
 
 tasks.withType<Test> {
