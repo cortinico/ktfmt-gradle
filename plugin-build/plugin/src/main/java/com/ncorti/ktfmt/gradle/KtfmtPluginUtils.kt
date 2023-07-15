@@ -17,6 +17,12 @@ internal object KtfmtPluginUtils {
 
     internal const val TASK_NAME_CHECK = "ktfmtCheck"
 
+    internal fun shouldCreateTasks(srcSetName: String): Boolean {
+        // KSP is adding new source sets called `generatedByKspKotlin`, `generatedByKspTestKotlin`
+        // For those source sets we don't want to run KSP as they're only generated code.
+        return !srcSetName.startsWith("generatedByKsp")
+    }
+
     @Suppress("LongParameterList")
     internal fun createTasksForSourceSet(
         project: Project,
@@ -26,6 +32,10 @@ internal object KtfmtPluginUtils {
         topLevelFormat: TaskProvider<Task>,
         topLevelCheck: TaskProvider<Task>
     ) {
+        if (shouldCreateTasks(srcSetName).not()) {
+            return
+        }
+
         val srcCheckTask = createCheckTask(project, ktfmtExtension, srcSetName, srcSetDir)
         val srcFormatTask = createFormatTask(project, ktfmtExtension, srcSetName, srcSetDir)
 
