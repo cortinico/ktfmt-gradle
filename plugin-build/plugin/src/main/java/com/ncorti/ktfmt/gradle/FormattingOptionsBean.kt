@@ -60,6 +60,7 @@ internal data class FormattingOptionsBean(
         FACEBOOK,
         DROPBOX,
         GOOGLE;
+
         fun toKtfmtStyle(): KtfmtStyle =
             when (this) {
                 FACEBOOK -> KtfmtStyle.FACEBOOK

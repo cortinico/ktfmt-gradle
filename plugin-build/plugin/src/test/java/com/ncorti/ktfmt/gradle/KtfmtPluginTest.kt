@@ -178,6 +178,7 @@ class KtfmtPluginTest {
 
     @Suppress("UnusedPrivateMember")
     private operator fun Project.get(value: String): Task = this.tasks.getByName(value)
+
     private val Task.dependencies: List<String>
         get() = this.dependsOn.filterIsInstance<TaskProvider<*>>().map { it.name }
 }
