@@ -2,7 +2,7 @@
 agp = "8.1.0"
 binaryCompatibilityValidator = "0.13.2"
 coroutines = "1.7.3"
-detekt = "1.23.0"
+detekt = "1.23.1"
 diffUtils = "4.12"
 junit = "5.10.0"
 kotlin = "1.9.0"
