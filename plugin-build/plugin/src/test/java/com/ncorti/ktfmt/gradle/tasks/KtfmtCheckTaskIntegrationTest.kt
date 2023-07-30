@@ -64,7 +64,7 @@ internal class KtfmtCheckTaskIntegrationTest {
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("ktfmtCheckMain")
+                .withArguments("ktfmtCheckMain", "--debug")
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
@@ -185,7 +185,7 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .withPluginClasspath()
                 .withArguments(
                     "ktfmtCheckMain",
-                    "--info",
+                    "--debug",
                     "--include-only=${file2.relativeTo(tempDir)}"
                 )
                 .build()

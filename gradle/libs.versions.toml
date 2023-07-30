@@ -1,7 +1,6 @@
 [versions]
-agp = "8.1.0"
+agp = "8.0.2"
 binaryCompatibilityValidator = "0.13.2"
-coroutines = "1.7.3"
 detekt = "1.23.1"
 diffUtils = "4.12"
 junit = "5.10.0"
@@ -28,8 +27,6 @@ junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 jupiter-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 kotlin-compiler-embeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 diffUtils = { module = "io.github.java-diff-utils:java-diff-utils", version.ref = "diffUtils" }
 ktfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }

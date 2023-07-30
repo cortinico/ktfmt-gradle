@@ -15,35 +15,35 @@ class KtfmtExtensionTest {
 
     @Test
     fun `maxWidth has default value`() {
-        val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
+        val extension = createExtension()
 
         assertThat(extension.maxWidth.get()).isEqualTo(DEFAULT_MAX_WIDTH)
     }
 
     @Test
     fun `blockIndent has default value`() {
-        val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
+        val extension = createExtension()
 
         assertThat(extension.blockIndent.get()).isEqualTo(DEFAULT_BLOCK_INDENT)
     }
 
     @Test
     fun `continuationIndent has default value`() {
-        val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
+        val extension = createExtension()
 
         assertThat(extension.continuationIndent.get()).isEqualTo(DEFAULT_CONTINUATION_INDENT)
     }
 
     @Test
     fun `removeUnusedImports has default value`() {
-        val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
+        val extension = createExtension()
 
         assertThat(extension.removeUnusedImports.get()).isEqualTo(DEFAULT_REMOVE_UNUSED_IMPORTS)
     }
 
     @Test
     fun `debuggingPrintOpsAfterFormatting has default value`() {
-        val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
+        val extension = createExtension()
 
         assertThat(extension.debuggingPrintOpsAfterFormatting.get())
             .isEqualTo(DEFAULT_DEBUGGING_PRINT_OPTS)
@@ -51,7 +51,7 @@ class KtfmtExtensionTest {
 
     @Test
     fun `dropboxStyle configures correctly`() {
-        val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
+        val extension = createExtension()
 
         extension.dropboxStyle()
 
@@ -62,7 +62,7 @@ class KtfmtExtensionTest {
 
     @Test
     fun `googleStyle configures correctly`() {
-        val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
+        val extension = createExtension()
 
         extension.googleStyle()
 
@@ -73,7 +73,7 @@ class KtfmtExtensionTest {
 
     @Test
     fun `kotlinLangStyle configures correctly`() {
-        val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
+        val extension = createExtension()
 
         extension.kotlinLangStyle()
 
@@ -84,7 +84,7 @@ class KtfmtExtensionTest {
 
     @Test
     fun `toBean copies fields correctly`() {
-        val extension = object : KtfmtExtension(ProjectBuilder.builder().build()) {}
+        val extension = createExtension()
 
         extension.maxWidth.set(42)
         extension.blockIndent.set(43)
@@ -99,5 +99,10 @@ class KtfmtExtensionTest {
         assertThat(bean.continuationIndent).isEqualTo(44)
         assertThat(bean.removeUnusedImports).isEqualTo(false)
         assertThat(bean.debuggingPrintOpsAfterFormatting).isEqualTo(true)
+    }
+
+    private fun createExtension(): KtfmtExtension {
+        val project = ProjectBuilder.builder().build()
+        return project.extensions.create("ktfmtExt", KtfmtExtension::class.java)
     }
 }

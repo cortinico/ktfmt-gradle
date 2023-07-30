@@ -1,52 +1,51 @@
 package com.ncorti.ktfmt.gradle.tasks
 
-import com.facebook.ktfmt.format.Formatter.format
-import com.facebook.ktfmt.format.ParseError
-import com.google.common.annotations.VisibleForTesting
-import com.google.googlejavaformat.FormattingError
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
 import com.ncorti.ktfmt.gradle.KtfmtExtension
 import com.ncorti.ktfmt.gradle.KtfmtPlugin
-import java.io.File
-import java.io.IOException
-import java.nio.file.Paths
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
+import com.ncorti.ktfmt.gradle.util.d
 import org.gradle.api.UnknownDomainObjectException
+import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
+import org.gradle.api.file.ProjectLayout
 import org.gradle.api.provider.Property
 import org.gradle.api.specs.Spec
-import org.gradle.api.tasks.IgnoreEmptyDirectories
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.*
 import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.PathSensitive
-import org.gradle.api.tasks.PathSensitivity
-import org.gradle.api.tasks.SourceTask
-import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
+import org.gradle.workers.WorkQueue
+import org.gradle.workers.WorkerExecutor
+import java.io.File
+import java.util.*
 
 /**
  * ktfmt-gradle base Gradle tasks. Handles a coroutine scope and contains method to propertly
  * process a single file with ktfmt
  */
-abstract class KtfmtBaseTask : SourceTask() {
+abstract class KtfmtBaseTask(
+    private val workerExecutor: WorkerExecutor,
+    private val layout: ProjectLayout
+) : SourceTask() {
 
-    @get:Input @get:Optional internal var bean: FormattingOptionsBean? = null
+    init {
+        includeOnly.convention("")
+    }
+
+    @get:InputFiles
+    internal abstract val ktfmtClasspath: ConfigurableFileCollection
+
+    @get:Input
+    @get:Optional
+    internal var bean: FormattingOptionsBean? = null
 
     @get:Option(
         option = "include-only",
         description =
-            "A comma separate list of relative file paths to include exclusively. " +
+        "A comma separate list of relative file paths to include exclusively. " +
                 "If set the task will run the processing only on such files."
     )
     @get:Input
-    open val includeOnly: Property<String> =
-        project.objects.property(String::class.java).convention("")
+    abstract val includeOnly: Property<String>
 
     @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFiles
@@ -55,19 +54,18 @@ abstract class KtfmtBaseTask : SourceTask() {
         get() = super.getSource().filter(defaultExcludesFilter)
 
     @TaskAction
-    @VisibleForTesting
     internal fun taskAction() {
-        runBlocking(Dispatchers.IO) { execute() }
+        val workQueue = workerExecutor.classLoaderIsolation { spec ->
+            spec.classpath.from(ktfmtClasspath)
+        }
+        execute(workQueue)
     }
 
-    protected abstract suspend fun execute()
+    protected abstract fun execute(workQueue: WorkQueue)
 
-    @VisibleForTesting
-    @Suppress("TooGenericExceptionCaught", "SpreadOperator")
-    internal fun processFile(input: File): KtfmtResult {
-        // The task should try to read from the ktfmt{} extension
-        // before falling back to default values.
+    private fun formattingOptions(): FormattingOptionsBean {
         if (bean == null) {
+            // TODO - set this as property / convention
             bean =
                 try {
                     project.extensions.getByType(KtfmtExtension::class.java).toBean()
@@ -75,45 +73,8 @@ abstract class KtfmtBaseTask : SourceTask() {
                     FormattingOptionsBean()
                 }
         }
-
-        if (includeOnly.orNull?.isNotEmpty() == true) {
-            val includeOnlyPaths =
-                includeOnly
-                    .get()
-                    .split(',', ':')
-                    .map {
-                        Paths.get(
-                            "",
-                            *it.trim().split(File.separatorChar, '\\', '/').toTypedArray()
-                        )
-                    }
-                    .toSet()
-            val relativePath = input.relativeTo(project.projectDir).toPath()
-            if (relativePath !in includeOnlyPaths) {
-                return KtfmtSkipped(input, "Not included inside --include-only")
-            }
-        }
-        return try {
-            val originCode = input.readText()
-            val formattedCode = format(bean!!.toFormattingOptions(), originCode)
-            val isCorrectlyFormatted = originCode == formattedCode
-            KtfmtSuccess(input, isCorrectlyFormatted, formattedCode)
-        } catch (cause: Throwable) {
-            val message =
-                when (cause) {
-                    is IOException -> "Unable to read file"
-                    is ParseError -> "Failed to parse file"
-                    is FormattingError -> cause.diagnostics().joinToString("\n") { "$input:$it" }
-                    else -> "Generic error during file processing"
-                }
-            KtfmtFailure(input, message, cause)
-        }
+        return bean!!
     }
-
-    internal suspend fun processFileCollection(input: FileCollection): List<KtfmtResult> =
-        coroutineScope {
-            input.map { async { processFile(it) } }.awaitAll()
-        }
 
     @get:Internal
     internal val defaultExcludesFilter: Spec<File> =
@@ -124,4 +85,32 @@ abstract class KtfmtBaseTask : SourceTask() {
                 true
             }
         }
+
+    internal fun <T : KtfmtWorkAction> FileCollection.submitToQueue(queue: WorkQueue, action: Class<T>): List<Result> {
+        val workingDir = temporaryDir.resolve(UUID.randomUUID().toString())
+        workingDir.mkdirs()
+        try {
+            val includedFiles = IncludedFilesParser.parse(includeOnly.get(), layout.projectDirectory.asFile)
+            logger.d("Preparing to format: includeOnly=${includeOnly.orNull}, includedFiles = $includedFiles")
+            forEach {
+                queue.submit(action) { parameters ->
+                    parameters.sourceFile.set(it)
+                    parameters.formattingOptions.set(formattingOptions())
+                    parameters.includedFiles.set(includedFiles)
+                    parameters.projectDir.set(layout.projectDirectory)
+                    parameters.workingDir.set(workingDir)
+                }
+            }
+            queue.await()
+
+            val files = workingDir.listFiles() ?: emptyArray()
+            return files.asSequence().filter { it.isFile }.map {
+                Result.fromResultString(it.readText())
+            }.toList()
+        } finally {
+            // remove working directory and everything in it
+            workingDir.deleteRecursively()
+        }
+    }
 }
+

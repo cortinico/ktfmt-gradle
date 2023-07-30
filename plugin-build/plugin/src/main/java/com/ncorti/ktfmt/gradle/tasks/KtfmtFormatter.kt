@@ -1,0 +1,65 @@
+package com.ncorti.ktfmt.gradle.tasks
+
+import com.facebook.ktfmt.format.Formatter
+import com.facebook.ktfmt.format.FormattingOptions
+import com.facebook.ktfmt.format.ParseError
+import com.google.googlejavaformat.FormattingError
+import com.ncorti.ktfmt.gradle.FormattingOptionsBean
+import com.ncorti.ktfmt.gradle.util.d
+import org.gradle.api.logging.Logging
+import java.io.File
+import java.io.IOException
+
+// format the specific file and return the result
+// this implementation is decoupled from Gradle APIs for ease of testing
+internal object KtfmtFormatter {
+    private val logger = Logging.getLogger(KtfmtFormatter::class.java)
+
+    data class FormatContext(
+        val sourceFile: File,
+        val includedFiles: Set<File> = emptySet(),
+        val formattingOptions: FormattingOptionsBean = FormattingOptionsBean(),
+        val sourceRoot: File
+    )
+
+    fun format(ctx: FormatContext): KtfmtResult {
+        logger.d("Formatting: $ctx")
+        if (ctx.includedFiles.isNotEmpty()) {
+            if (ctx.sourceFile.canonicalFile !in ctx.includedFiles) {
+                return KtfmtResult.KtfmtSkipped(ctx.sourceFile, "Not included inside --include-only")
+            }
+        }
+        return try {
+            val originCode = ctx.sourceFile.readText()
+            val formattedCode = Formatter.format(ctx.formattingOptions.toFormattingOptions(), originCode)
+            val isCorrectlyFormatted = originCode == formattedCode
+            KtfmtResult.KtfmtSuccess(ctx.sourceFile, isCorrectlyFormatted, formattedCode)
+        } catch (cause: Throwable) {
+            val message =
+                when (cause) {
+                    is IOException -> "Unable to read file"
+                    is ParseError -> "Failed to parse file"
+                    is FormattingError -> cause.diagnostics().joinToString("\n") { "${ctx.sourceFile}:$it" }
+                    else -> "Generic error during file processing"
+                }
+            KtfmtResult.KtfmtFailure(ctx.sourceFile, message, cause)
+        }
+    }
+}
+
+internal fun FormattingOptionsBean.toFormattingOptions(): FormattingOptions =
+    FormattingOptions(
+        style = style.toKtfmtStyle(),
+        maxWidth = maxWidth,
+        blockIndent = blockIndent,
+        continuationIndent = continuationIndent,
+        removeUnusedImports = removeUnusedImports,
+        debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting
+    )
+
+internal fun FormattingOptionsBean.Style.toKtfmtStyle(): FormattingOptions.Style =
+    when (this) {
+        FormattingOptionsBean.Style.FACEBOOK -> FormattingOptions.Style.FACEBOOK
+        FormattingOptionsBean.Style.DROPBOX -> FormattingOptions.Style.DROPBOX
+        FormattingOptionsBean.Style.GOOGLE -> FormattingOptions.Style.GOOGLE
+    }

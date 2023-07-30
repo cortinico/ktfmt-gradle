@@ -48,21 +48,21 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 dependencies {
-    implementation(libs.coroutines.core)
-    implementation(libs.ktfmt)
+    compileOnly(libs.ktfmt)
     implementation(libs.diffUtils)
 
     compileOnly(gradleApi())
     compileOnly(kotlin("gradle-plugin"))
     compileOnly(libs.agp)
 
-    testImplementation(libs.coroutines.test)
     testImplementation(kotlin("gradle-plugin"))
     testImplementation(libs.agp)
 
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.jupiter)
     testImplementation(libs.truth)
+
+    testImplementation(libs.ktfmt)
 
     testRuntimeOnly(
         files(

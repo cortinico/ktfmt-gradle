@@ -1,7 +1,8 @@
 package com.ncorti.ktfmt.gradle.util
 
 import com.google.common.truth.Truth.assertThat
-import com.ncorti.ktfmt.gradle.tasks.KtfmtSuccess
+import com.ncorti.ktfmt.gradle.tasks.KtfmtResult
+import com.ncorti.ktfmt.gradle.tasks.KtfmtResult.KtfmtSuccess
 import java.io.File
 import org.gradle.testfixtures.ProjectBuilder
 import org.intellij.lang.annotations.Language
@@ -41,10 +42,10 @@ internal class KtfmtDifferTest {
                 inputFile,
                 isCorrectlyFormatted = false,
                 formattedCode =
-                    """
+                """
                 val a = "So long,"
             """
-                        .trimIndent()
+                    .trimIndent()
             )
 
         val diff = KtfmtDiffer.computeDiff(input)

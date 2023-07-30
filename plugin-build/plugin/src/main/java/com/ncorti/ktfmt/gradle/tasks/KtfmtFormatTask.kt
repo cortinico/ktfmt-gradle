@@ -1,14 +1,20 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.ncorti.ktfmt.gradle.util.KtfmtUtils
-import com.ncorti.ktfmt.gradle.util.e
+import com.ncorti.ktfmt.gradle.util.d
 import com.ncorti.ktfmt.gradle.util.i
-import java.nio.charset.Charset
 import org.gradle.api.file.FileCollection
+import org.gradle.api.file.ProjectLayout
 import org.gradle.api.tasks.OutputFiles
+import org.gradle.workers.WorkQueue
+import org.gradle.workers.WorkerExecutor
+import javax.inject.Inject
 
 /** ktfmt-gradle Format task. Replaces input file content with its formatted equivalent. */
-abstract class KtfmtFormatTask : KtfmtBaseTask() {
+abstract class KtfmtFormatTask @Inject constructor(
+    workerExecutor: WorkerExecutor,
+    layout: ProjectLayout
+) : KtfmtBaseTask(workerExecutor, layout) {
 
     @get:OutputFiles
     protected val outputFiles: FileCollection
@@ -18,32 +24,18 @@ abstract class KtfmtFormatTask : KtfmtBaseTask() {
         group = KtfmtUtils.GROUP_FORMATTING
     }
 
-    override suspend fun execute() {
-        val result = processFileCollection(inputFiles)
-        result.forEach {
-            when {
-                it is KtfmtSuccess && it.isCorrectlyFormatted ->
-                    logger.i("Valid formatting for: ${it.input}")
-                it is KtfmtSuccess && !it.isCorrectlyFormatted -> {
-                    logger.i("Reformatting...: ${it.input}")
-                    it.input.writeText(it.formattedCode, Charset.defaultCharset())
-                }
-                it is KtfmtSkipped -> logger.i("Skipping for: ${it.input} because: ${it.reason}")
-                it is KtfmtFailure -> {
-                    logger.e("Failed to analyse: ${it.input}")
-                    it.message.split("\n").forEach { line -> logger.e("e: $line") }
-                }
-            }
-        }
+    override fun execute(workQueue: WorkQueue) {
+        val results = inputFiles.submitToQueue(workQueue, KtfmtFormatAction::class.java)
 
-        val failures = result.filterIsInstance<KtfmtFailure>()
+        logger.d("Format results: $results")
+        val failures = results.filterIsInstance<Result.Failure>()
 
         if (failures.isNotEmpty()) {
             error("Ktfmt failed to run with ${failures.size} failures")
         }
 
         val notFormattedFiles =
-            result.filterIsInstance<KtfmtSuccess>().filterNot(KtfmtSuccess::isCorrectlyFormatted)
+            results.filterIsInstance<Result.Success>().filterNot { it.correctlyFormatted }
 
         logger.i("Successfully reformatted ${notFormattedFiles.count()} files with Ktfmt")
     }
