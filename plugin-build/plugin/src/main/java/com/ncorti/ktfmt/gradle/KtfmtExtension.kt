@@ -3,7 +3,6 @@ package com.ncorti.ktfmt.gradle
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.DROPBOX
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.FACEBOOK
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.GOOGLE
-import javax.inject.Inject
 import org.gradle.api.provider.Property
 
 /** Gradle Extension to help you configure ktfmt-gradle */

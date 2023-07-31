@@ -4,6 +4,8 @@ import com.ncorti.ktfmt.gradle.FormattingOptionsBean
 import com.ncorti.ktfmt.gradle.KtfmtExtension
 import com.ncorti.ktfmt.gradle.KtfmtPlugin
 import com.ncorti.ktfmt.gradle.util.d
+import java.io.File
+import java.util.*
 import org.gradle.api.UnknownDomainObjectException
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
@@ -15,8 +17,6 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.options.Option
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
-import java.io.File
-import java.util.*
 
 /**
  * ktfmt-gradle base Gradle tasks. Handles a coroutine scope and contains method to propertly
@@ -31,17 +31,14 @@ abstract class KtfmtBaseTask(
         includeOnly.convention("")
     }
 
-    @get:InputFiles
-    internal abstract val ktfmtClasspath: ConfigurableFileCollection
+    @get:InputFiles internal abstract val ktfmtClasspath: ConfigurableFileCollection
 
-    @get:Input
-    @get:Optional
-    internal var bean: FormattingOptionsBean? = null
+    @get:Input @get:Optional internal var bean: FormattingOptionsBean? = null
 
     @get:Option(
         option = "include-only",
         description =
-        "A comma separate list of relative file paths to include exclusively. " +
+            "A comma separate list of relative file paths to include exclusively. " +
                 "If set the task will run the processing only on such files."
     )
     @get:Input
@@ -55,9 +52,8 @@ abstract class KtfmtBaseTask(
 
     @TaskAction
     internal fun taskAction() {
-        val workQueue = workerExecutor.classLoaderIsolation { spec ->
-            spec.classpath.from(ktfmtClasspath)
-        }
+        val workQueue =
+            workerExecutor.classLoaderIsolation { spec -> spec.classpath.from(ktfmtClasspath) }
         execute(workQueue)
     }
 
@@ -86,12 +82,18 @@ abstract class KtfmtBaseTask(
             }
         }
 
-    internal fun <T : KtfmtWorkAction> FileCollection.submitToQueue(queue: WorkQueue, action: Class<T>): List<Result> {
+    internal fun <T : KtfmtWorkAction> FileCollection.submitToQueue(
+        queue: WorkQueue,
+        action: Class<T>
+    ): List<Result> {
         val workingDir = temporaryDir.resolve(UUID.randomUUID().toString())
         workingDir.mkdirs()
         try {
-            val includedFiles = IncludedFilesParser.parse(includeOnly.get(), layout.projectDirectory.asFile)
-            logger.d("Preparing to format: includeOnly=${includeOnly.orNull}, includedFiles = $includedFiles")
+            val includedFiles =
+                IncludedFilesParser.parse(includeOnly.get(), layout.projectDirectory.asFile)
+            logger.d(
+                "Preparing to format: includeOnly=${includeOnly.orNull}, includedFiles = $includedFiles"
+            )
             forEach {
                 queue.submit(action) { parameters ->
                     parameters.sourceFile.set(it)
@@ -104,13 +106,14 @@ abstract class KtfmtBaseTask(
             queue.await()
 
             val files = workingDir.listFiles() ?: emptyArray()
-            return files.asSequence().filter { it.isFile }.map {
-                Result.fromResultString(it.readText())
-            }.toList()
+            return files
+                .asSequence()
+                .filter { it.isFile }
+                .map { Result.fromResultString(it.readText()) }
+                .toList()
         } finally {
             // remove working directory and everything in it
             workingDir.deleteRecursively()
         }
     }
 }
-

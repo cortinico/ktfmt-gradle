@@ -2,14 +2,12 @@ package com.ncorti.ktfmt.gradle.tasks
 
 import com.facebook.ktfmt.format.ParseError
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
-
 
 internal class KtfmtFormatterTest {
-    @TempDir
-    lateinit var tempDir: File
+    @TempDir lateinit var tempDir: File
 
     @Test
     fun `formatter returns success for valid file`() {
@@ -47,10 +45,11 @@ internal class KtfmtFormatterTest {
     fun `formatter skips file outside include-only`() {
         val formatCtx = createFormatContext(content = "val hello=\"world\"", fileName = "file1.kt")
         val input2 = createTempFile(content = "val hello=`", fileName = "file2.kt")
-        val newCtx = formatCtx.copy(
-            sourceFile = input2,
-            includedFiles = setOf(formatCtx.sourceFile.relativeTo(tempDir))
-        )
+        val newCtx =
+            formatCtx.copy(
+                sourceFile = input2,
+                includedFiles = setOf(formatCtx.sourceFile.relativeTo(tempDir))
+            )
 
         val result = KtfmtFormatter.format(newCtx) as KtfmtResult.KtfmtSkipped
 
@@ -61,9 +60,7 @@ internal class KtfmtFormatterTest {
     @Test
     fun `formatter does not skip file inside include-only`() {
         val formatCtx = createFormatContext(content = "val hello=\"world\"", fileName = "file1.kt")
-        val newCtx = formatCtx.copy(
-            includedFiles = setOf(formatCtx.sourceFile.canonicalFile)
-        )
+        val newCtx = formatCtx.copy(includedFiles = setOf(formatCtx.sourceFile.canonicalFile))
 
         val result = KtfmtFormatter.format(newCtx) as KtfmtResult.KtfmtSuccess
 
@@ -88,9 +85,6 @@ internal class KtfmtFormatterTest {
         fileName: String = "TestFile.kt"
     ): KtfmtFormatter.FormatContext {
         val input = createTempFile(content = content, fileName = fileName)
-        return KtfmtFormatter.FormatContext(
-            sourceFile = input,
-            sourceRoot = tempDir
-        )
+        return KtfmtFormatter.FormatContext(sourceFile = input, sourceRoot = tempDir)
     }
 }

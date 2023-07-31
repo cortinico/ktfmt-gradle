@@ -1,13 +1,12 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
 
 internal class IncludedFilesParserTest {
-    @TempDir
-    lateinit var tempDir: File
+    @TempDir lateinit var tempDir: File
 
     @Test
     fun `include path parser normalizes separator`() {
@@ -29,6 +28,7 @@ internal class IncludedFilesParserTest {
         assertThat(includePaths).hasSize(4)
 
         val tmp = tempDir.canonicalFile.toString()
-        assertThat(includePaths.map { it.toString() }).containsExactly("$tmp/a/b", "$tmp/c/d", "$tmp/e/f", "$tmp/g/h")
+        assertThat(includePaths.map { it.toString() })
+            .containsExactly("$tmp/a/b", "$tmp/c/d", "$tmp/e/f", "$tmp/g/h")
     }
 }

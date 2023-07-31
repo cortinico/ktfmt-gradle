@@ -3,18 +3,18 @@ package com.ncorti.ktfmt.gradle.tasks
 import com.ncorti.ktfmt.gradle.util.KtfmtUtils
 import com.ncorti.ktfmt.gradle.util.d
 import com.ncorti.ktfmt.gradle.util.i
+import javax.inject.Inject
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.tasks.OutputFiles
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
-import javax.inject.Inject
 
 /** ktfmt-gradle Format task. Replaces input file content with its formatted equivalent. */
-abstract class KtfmtFormatTask @Inject constructor(
-    workerExecutor: WorkerExecutor,
-    layout: ProjectLayout
-) : KtfmtBaseTask(workerExecutor, layout) {
+abstract class KtfmtFormatTask
+@Inject
+constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
+    KtfmtBaseTask(workerExecutor, layout) {
 
     @get:OutputFiles
     protected val outputFiles: FileCollection

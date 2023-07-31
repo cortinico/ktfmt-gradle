@@ -1,26 +1,23 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.google.common.truth.Truth.assertThat
+import java.io.File
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
 
 internal class KtfmtBaseTaskTest {
 
     private lateinit var project: Project
 
-    @TempDir
-    lateinit var tempDir: File
+    @TempDir lateinit var tempDir: File
 
     @BeforeEach
     fun setUp() {
-        project = ProjectBuilder.builder()
-            .withProjectDir(tempDir)
-            .build()
+        project = ProjectBuilder.builder().withProjectDir(tempDir).build()
         project.pluginManager.apply("org.jetbrains.kotlin.jvm")
         project.pluginManager.apply("com.ncorti.ktfmt.gradle")
     }

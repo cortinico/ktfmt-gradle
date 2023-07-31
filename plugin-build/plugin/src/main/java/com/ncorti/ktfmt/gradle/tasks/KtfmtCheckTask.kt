@@ -3,16 +3,16 @@ package com.ncorti.ktfmt.gradle.tasks
 import com.ncorti.ktfmt.gradle.util.KtfmtUtils
 import com.ncorti.ktfmt.gradle.util.d
 import com.ncorti.ktfmt.gradle.util.i
+import javax.inject.Inject
 import org.gradle.api.file.ProjectLayout
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
-import javax.inject.Inject
 
 /** ktfmt-gradle Check task. Verifies if the output of ktfmt is the same as the input */
-abstract class KtfmtCheckTask @Inject constructor(
-    workerExecutor: WorkerExecutor,
-    layout: ProjectLayout
-) : KtfmtBaseTask(workerExecutor, layout) {
+abstract class KtfmtCheckTask
+@Inject
+constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
+    KtfmtBaseTask(workerExecutor, layout) {
 
     init {
         group = KtfmtUtils.GROUP_VERIFICATION

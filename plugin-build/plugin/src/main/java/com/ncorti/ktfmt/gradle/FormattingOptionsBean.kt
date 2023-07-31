@@ -46,7 +46,7 @@ internal data class FormattingOptionsBean(
     enum class Style {
         FACEBOOK,
         DROPBOX,
-        GOOGLE;
+        GOOGLE
     }
 
     companion object {
