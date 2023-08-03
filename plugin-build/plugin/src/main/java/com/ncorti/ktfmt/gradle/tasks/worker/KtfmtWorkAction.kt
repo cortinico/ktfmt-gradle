@@ -136,6 +136,8 @@ internal sealed class Result(open val relativePath: String) {
     companion object {
         fun fromResultString(str: String): Result {
             val pieces = str.split(",")
+
+            @Suppress("MagicNumber")
             check(pieces.size == 3) { "Expected three components; got $str" }
             return when (pieces[0]) {
                 "success" -> Success(pieces[2], pieces[1].toBoolean())

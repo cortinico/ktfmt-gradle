@@ -32,6 +32,7 @@ internal object KtfmtFormatter {
                 )
             }
         }
+        @Suppress("TooGenericExceptionCaught")
         return try {
             val originCode = ctx.sourceFile.readText()
             val formattedCode =
