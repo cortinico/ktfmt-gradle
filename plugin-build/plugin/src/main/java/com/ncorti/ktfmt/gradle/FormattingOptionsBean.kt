@@ -51,6 +51,6 @@ internal data class FormattingOptionsBean(
 
     companion object {
         private const val serialVersionUID: Long = 1L
-        private val DefaultMaxWidth = 100
+        private const val defaultMaxWidth = 100
     }
 }
