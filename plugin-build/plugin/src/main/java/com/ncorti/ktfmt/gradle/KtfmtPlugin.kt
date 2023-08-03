@@ -43,7 +43,12 @@ abstract class KtfmtPlugin : Plugin<Project> {
                     isCanBeConsumed = false
                 }
 
-            project.dependencies.add(ktFmt.name, "com.facebook:ktfmt:0.44")
+            val resourceUri =
+                KtfmtPlugin::class.java.getResource("ktfmt-version.txt")
+                    ?: error("Missing ktfmt version")
+            val ktfmtVersion = resources.text.fromUri(resourceUri).asString()
+
+            project.dependencies.add(ktFmt.name, ktfmtVersion)
 
             project.tasks.withType(KtfmtBaseTask::class.java).configureEach {
                 it.ktfmtClasspath.from(ktFmt)

@@ -1,5 +1,7 @@
 package com.ncorti.ktfmt.gradle.tasks
 
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatAction
+import com.ncorti.ktfmt.gradle.tasks.worker.Result
 import com.ncorti.ktfmt.gradle.util.KtfmtUtils
 import com.ncorti.ktfmt.gradle.util.d
 import com.ncorti.ktfmt.gradle.util.i
@@ -13,7 +15,7 @@ import org.gradle.workers.WorkerExecutor
 /** ktfmt-gradle Format task. Replaces input file content with its formatted equivalent. */
 abstract class KtfmtFormatTask
 @Inject
-constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
+internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
     KtfmtBaseTask(workerExecutor, layout) {
 
     @get:OutputFiles

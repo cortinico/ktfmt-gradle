@@ -4,7 +4,7 @@ import com.github.difflib.DiffUtils
 import com.github.difflib.patch.ChangeDelta
 import com.github.difflib.patch.DeleteDelta
 import com.github.difflib.patch.InsertDelta
-import com.ncorti.ktfmt.gradle.tasks.KtfmtResult
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtResult
 import org.gradle.api.logging.Logger
 
 internal object KtfmtDiffer {

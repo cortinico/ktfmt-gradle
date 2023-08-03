@@ -1,4 +1,4 @@
-package com.ncorti.ktfmt.gradle.tasks
+package com.ncorti.ktfmt.gradle.tasks.worker
 
 import com.facebook.ktfmt.format.Formatter
 import com.facebook.ktfmt.format.FormattingOptions

@@ -1,7 +1,9 @@
-package com.ncorti.ktfmt.gradle.tasks
+package com.ncorti.ktfmt.gradle.tasks.worker
 
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
-import com.ncorti.ktfmt.gradle.tasks.KtfmtResult.*
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtResult.KtfmtFailure
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtResult.KtfmtSkipped
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtResult.KtfmtSuccess
 import com.ncorti.ktfmt.gradle.util.KtfmtDiffer
 import com.ncorti.ktfmt.gradle.util.e
 import com.ncorti.ktfmt.gradle.util.i
@@ -10,6 +12,7 @@ import java.nio.charset.Charset
 import java.util.*
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty

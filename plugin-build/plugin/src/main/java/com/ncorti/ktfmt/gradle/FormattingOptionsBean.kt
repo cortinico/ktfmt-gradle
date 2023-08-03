@@ -8,7 +8,7 @@ internal data class FormattingOptionsBean(
     val style: Style = Style.FACEBOOK,
 
     /** ktfmt breaks lines longer than maxWidth. */
-    val maxWidth: Int = DefaultMaxWidth,
+    val maxWidth: Int = defaultMaxWidth,
 
     /**
      * blockIndent is the size of the indent used when a new block is opened, in spaces.

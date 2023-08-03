@@ -1,5 +1,7 @@
 package com.ncorti.ktfmt.gradle.tasks
 
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtCheckAction
+import com.ncorti.ktfmt.gradle.tasks.worker.Result
 import com.ncorti.ktfmt.gradle.util.KtfmtUtils
 import com.ncorti.ktfmt.gradle.util.d
 import com.ncorti.ktfmt.gradle.util.i
@@ -11,7 +13,7 @@ import org.gradle.workers.WorkerExecutor
 /** ktfmt-gradle Check task. Verifies if the output of ktfmt is the same as the input */
 abstract class KtfmtCheckTask
 @Inject
-constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
+internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
     KtfmtBaseTask(workerExecutor, layout) {
 
     init {

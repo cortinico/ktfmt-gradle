@@ -2,6 +2,8 @@ package com.ncorti.ktfmt.gradle.tasks
 
 import com.facebook.ktfmt.format.ParseError
 import com.google.common.truth.Truth.assertThat
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatter
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtResult
 import java.io.File
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
