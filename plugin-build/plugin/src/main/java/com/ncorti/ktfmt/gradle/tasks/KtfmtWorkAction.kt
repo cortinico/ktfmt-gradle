@@ -30,7 +30,7 @@ import org.intellij.lang.annotations.Language
  * transitive dependencies)
  */
 internal abstract class KtfmtWorkAction : WorkAction<KtfmtWorkAction.KtfmtWorkParameters> {
-    protected val logger = Logging.getLogger(KtfmtWorkAction::class.java)
+    protected val logger: Logger = Logging.getLogger(KtfmtWorkAction::class.java)
 
     interface KtfmtWorkParameters : WorkParameters {
         val sourceFile: RegularFileProperty
