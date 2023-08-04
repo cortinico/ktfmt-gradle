@@ -4,12 +4,12 @@ import com.github.difflib.DiffUtils
 import com.github.difflib.patch.ChangeDelta
 import com.github.difflib.patch.DeleteDelta
 import com.github.difflib.patch.InsertDelta
-import com.ncorti.ktfmt.gradle.tasks.KtfmtSuccess
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtResult
 import org.gradle.api.logging.Logger
 
 internal object KtfmtDiffer {
 
-    fun computeDiff(formatterResult: KtfmtSuccess): List<KtfmtDiffEntry> {
+    fun computeDiff(formatterResult: KtfmtResult.KtfmtSuccess): List<KtfmtDiffEntry> {
         val input = formatterResult.input.readText()
         val output = formatterResult.formattedCode
         return DiffUtils.diff(input, output, null).deltas.map {

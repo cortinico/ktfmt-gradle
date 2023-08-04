@@ -1,6 +1,7 @@
 package com.ncorti.ktfmt.gradle
 
 import com.google.common.truth.Truth.assertThat
+import com.ncorti.ktfmt.gradle.tasks.worker.toFormattingOptions
 import org.junit.jupiter.api.Test
 
 class FormattingOptionsBeanTest {

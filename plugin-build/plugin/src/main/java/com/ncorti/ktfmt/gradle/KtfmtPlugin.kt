@@ -5,10 +5,12 @@ import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.EXTENSION_NAME
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.TASK_NAME_CHECK
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.TASK_NAME_FORMAT
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.createTasksForSourceSet
+import com.ncorti.ktfmt.gradle.tasks.KtfmtBaseTask
 import com.ncorti.ktfmt.gradle.util.i
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.attributes.Usage
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
@@ -24,26 +26,55 @@ abstract class KtfmtPlugin : Plugin<Project> {
     private lateinit var topLevelFormat: TaskProvider<Task>
     private lateinit var topLevelCheck: TaskProvider<Task>
 
-    override fun apply(project: Project) {
-        ktfmtExtension =
-            project.extensions.create(EXTENSION_NAME, KtfmtExtension::class.java, project)
+    override fun apply(project: Project) =
+        project.run {
+            ktfmtExtension = project.extensions.create(EXTENSION_NAME, KtfmtExtension::class.java)
 
-        topLevelFormat = createTopLevelFormatTask(project)
-        topLevelCheck = createTopLevelCheckTask(project)
+            // setup to pull in ktfmt separately to run on an isolated classloader
+            val ktFmt =
+                configurations.create("ktfmt").apply {
+                    attributes.apply {
+                        attribute(
+                            Usage.USAGE_ATTRIBUTE,
+                            project.objects.named(Usage::class.java, Usage.JAVA_RUNTIME)
+                        )
+                    }
+                    isVisible = false
+                    isCanBeConsumed = false
+                }
 
-        project.plugins.withId("kotlin") { applyKtfmt(project) }
-        project.plugins.withId("kotlin-android") {
-            if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
-                project.logger.i("Skipping Android task creation, as KMP is applied")
-            } else {
-                applyKtfmtToAndroidProject(project, ktfmtExtension, topLevelFormat, topLevelCheck)
+            val resourceUri =
+                KtfmtPlugin::class.java.getResource("ktfmt-version.txt")
+                    ?: error("Missing ktfmt version")
+            val ktfmtVersion = resources.text.fromUri(resourceUri).asString()
+
+            project.dependencies.add(ktFmt.name, ktfmtVersion)
+
+            project.tasks.withType(KtfmtBaseTask::class.java).configureEach {
+                it.ktfmtClasspath.from(ktFmt)
+            }
+
+            topLevelFormat = createTopLevelFormatTask(project)
+            topLevelCheck = createTopLevelCheckTask(project)
+
+            project.plugins.withId("kotlin") { applyKtfmt(project) }
+            project.plugins.withId("kotlin-android") {
+                if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
+                    project.logger.i("Skipping Android task creation, as KMP is applied")
+                } else {
+                    applyKtfmtToAndroidProject(
+                        project,
+                        ktfmtExtension,
+                        topLevelFormat,
+                        topLevelCheck
+                    )
+                }
+            }
+            project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project) }
+            project.plugins.withId("org.jetbrains.kotlin.multiplatform") {
+                applyKtfmtToMultiplatformProject(project)
             }
         }
-        project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project) }
-        project.plugins.withId("org.jetbrains.kotlin.multiplatform") {
-            applyKtfmtToMultiplatformProject(project)
-        }
-    }
 
     private fun applyKtfmt(project: Project) {
         val extension = project.extensions.getByType(KotlinProjectExtension::class.java)

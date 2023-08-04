@@ -6,6 +6,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- Add support for Gradle Worker API and Classloader Isolation (#182)
+
 ## Version 0.13.0 *(2023-07-15)*
 
 - Handle implicit dependency error message for KMP project (#171)

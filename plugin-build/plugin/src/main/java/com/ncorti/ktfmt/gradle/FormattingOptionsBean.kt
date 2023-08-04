@@ -1,8 +1,5 @@
 package com.ncorti.ktfmt.gradle
 
-import com.facebook.ktfmt.format.FormattingOptions
-import com.facebook.ktfmt.format.FormattingOptions.Companion.DEFAULT_MAX_WIDTH
-import com.facebook.ktfmt.format.FormattingOptions.Style as KtfmtStyle
 import java.io.Serializable
 
 internal data class FormattingOptionsBean(
@@ -11,7 +8,7 @@ internal data class FormattingOptionsBean(
     val style: Style = Style.FACEBOOK,
 
     /** ktfmt breaks lines longer than maxWidth. */
-    val maxWidth: Int = DEFAULT_MAX_WIDTH,
+    val maxWidth: Int = defaultMaxWidth,
 
     /**
      * blockIndent is the size of the indent used when a new block is opened, in spaces.
@@ -46,30 +43,14 @@ internal data class FormattingOptionsBean(
      */
     val debuggingPrintOpsAfterFormatting: Boolean = false
 ) : Serializable {
-    fun toFormattingOptions(): FormattingOptions =
-        FormattingOptions(
-            style = style.toKtfmtStyle(),
-            maxWidth = maxWidth,
-            blockIndent = blockIndent,
-            continuationIndent = continuationIndent,
-            removeUnusedImports = removeUnusedImports,
-            debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting
-        )
-
     enum class Style {
         FACEBOOK,
         DROPBOX,
-        GOOGLE;
-
-        fun toKtfmtStyle(): KtfmtStyle =
-            when (this) {
-                FACEBOOK -> KtfmtStyle.FACEBOOK
-                DROPBOX -> KtfmtStyle.DROPBOX
-                GOOGLE -> KtfmtStyle.GOOGLE
-            }
+        GOOGLE
     }
 
     companion object {
         private const val serialVersionUID: Long = 1L
+        private const val defaultMaxWidth = 100
     }
 }
