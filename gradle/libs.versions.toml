@@ -9,7 +9,7 @@ ktfmt-plugin = "0.13.0"
 ktfmt = "0.44"
 pluginPublish = "1.2.1"
 truth = "1.1.5"
-versionCheck = "0.47.0"
+versionCheck = "0.48.0"
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
