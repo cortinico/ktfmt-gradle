@@ -6,7 +6,13 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.13.0 *(2023-10-09)*
+
 - Add support for Gradle Worker API and Classloader Isolation (#182)
+- KtFmt to 0.46
+- Kotlin to 1.9.10
+- Gradle to 8.4
+- AGP to 8.1.2
 
 ## Version 0.13.0 *(2023-07-15)*
 
