@@ -17,11 +17,15 @@ internal object KtfmtPluginUtils {
 
     internal const val TASK_NAME_CHECK = "ktfmtCheck"
 
-    internal fun shouldCreateTasks(srcSetName: String): Boolean {
-        // KSP is adding new source sets called `generatedByKspKotlin`, `generatedByKspTestKotlin`
-        // For those source sets we don't want to run KSP as they're only generated code.
-        return !srcSetName.startsWith("generatedByKsp")
-    }
+    internal fun shouldCreateTasks(srcSetName: String): Boolean =
+        when {
+            // KSP is adding new source sets called `generatedByKspKotlin`, `generatedByKspTestKotlin`
+            // For those source sets we don't want to run KSP as they're only generated code.
+            srcSetName.startsWith("generatedByKsp") -> false
+            // Spring is adding sourceSets called `aot` and `aotTest` which we don't want to inspect.
+            srcSetName == "aot" || srcSetName == "aotTest" -> false
+            else -> true
+        }
 
     @Suppress("LongParameterList")
     internal fun createTasksForSourceSet(
