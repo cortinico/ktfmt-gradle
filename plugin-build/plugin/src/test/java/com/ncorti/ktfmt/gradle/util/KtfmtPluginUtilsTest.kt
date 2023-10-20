@@ -15,4 +15,10 @@ class KtfmtPluginUtilsTest {
     fun `shouldCreateTasks returns false for KSP sourceset`() {
         assertThat(shouldCreateTasks("generatedByKspKotlin")).isFalse()
     }
+
+    @Test
+    fun `shouldCreateTasks returns false for Spring sourceset`() {
+        assertThat(shouldCreateTasks("aot")).isFalse()
+        assertThat(shouldCreateTasks("aotTest")).isFalse()
+    }
 }
