@@ -31,6 +31,11 @@ internal class IncludedFilesParserTest {
         val sep = File.separator
 
         assertThat(includePaths.map { it.toString() })
-            .containsExactly("$tmp${sep}a${sep}b", "$tmp${sep}c${sep}d", "$tmp${sep}e${sep}f", "$tmp${sep}g${sep}h")
+            .containsExactly(
+                "$tmp${sep}a${sep}b",
+                "$tmp${sep}c${sep}d",
+                "$tmp${sep}e${sep}f",
+                "$tmp${sep}g${sep}h"
+            )
     }
 }
