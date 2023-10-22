@@ -56,6 +56,15 @@ internal constructor(
     @get:Input
     abstract val includeOnly: Property<String>
 
+    @get:Option(
+        option = "isolation-strategy",
+        description =
+            "Possible isolation strategies for invoking ktfmt. Can be PROCESS, CLASS_LOADER, NO_ISOLATION. Default is NO_ISOLATION"
+    )
+    @get:Optional
+    @get:Input
+    abstract val isolationStrategy: Property<String>
+
     @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFiles
     @get:IgnoreEmptyDirectories
@@ -64,9 +73,28 @@ internal constructor(
 
     @TaskAction
     internal fun taskAction() {
-        val workQueue =
-            workerExecutor.classLoaderIsolation { spec -> spec.classpath.from(ktfmtClasspath) }
+        val workQueue = getWorkerQueue()
+
+        val startTime = System.currentTimeMillis()
         execute(workQueue)
+        val endTime = System.currentTimeMillis()
+
+        logger.info("Worker queue finished after ${endTime-startTime} ms")
+    }
+
+    private fun getWorkerQueue(): WorkQueue {
+        val isolationStrategy = isolationStrategy.getOrElse("NO_ISOLATION")
+        logger.info("Selected workerQueue isolation strategy is $isolationStrategy")
+        return when (isolationStrategy) {
+            "PROCESS" ->
+                workerExecutor.processIsolation() { spec -> spec.classpath.from(ktfmtClasspath) }
+            "CLASS_LOADER" ->
+                workerExecutor.classLoaderIsolation() { spec ->
+                    spec.classpath.from(ktfmtClasspath)
+                }
+            "NO_ISOLATION" -> workerExecutor.noIsolation()
+            else -> workerExecutor.noIsolation()
+        }
     }
 
     protected abstract fun execute(workQueue: WorkQueue)
