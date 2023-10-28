@@ -1,4 +1,3 @@
-
 # Change Log
 
 This file follows [Keepachangelog](https://keepachangelog.com/) format.
@@ -6,9 +5,11 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- Add configuration property to select Gradle worker isolation level (#205)
+
 ## Version 0.13.0 *(2023-10-09)*
 
-- Add support for Gradle Worker API and Classloader Isolation (#182)
+- Add support for Gradle Worker API and Classloader Isolation (#205)
 - KtFmt to 0.46
 - Kotlin to 1.9.10
 - Gradle to 8.4
@@ -35,12 +36,12 @@ Please add your entries according to this format.
 
 ## Version 0.11.0 *(2022-10-01)*
 
-- KtFmt to 0.41 
+- KtFmt to 0.41
 - AGP to 7.3.0
 
 ## Version 0.10.0 *(2022-09-09)*
 
-- Add support for Gradle Configuration Cache 
+- Add support for Gradle Configuration Cache
 - KtFmt to 0.40
 
 ## Version 0.9.0 *(2022-08-29)*
@@ -72,7 +73,8 @@ Please add your entries according to this format.
 
 - `--include-only` now works with paths that are file-separator independent.
 - Added support for Gradle 7.0+
-- Added task ordering between `ktfmt*` tasks and `compileKotlin` tasks. This fix the correctness warning introduced with Gradle 7.0
+- Added task ordering between `ktfmt*` tasks and `compileKotlin` tasks. This fix the correctness warning introduced with
+  Gradle 7.0
 
 ### Dependencies Update
 
@@ -98,7 +100,8 @@ Please add your entries according to this format.
 
 ### New features
 
-- Added the `kotlinLangStyle()` function to the `ktfmt{}` extension. This will allow you to apply a format that attempts to reflect the [official kotlin convetions](https://kotlinlang.org/docs/coding-conventions.html).
+- Added the `kotlinLangStyle()` function to the `ktfmt{}` extension. This will allow you to apply a format that attempts
+  to reflect the [official kotlin convetions](https://kotlinlang.org/docs/coding-conventions.html).
 
 ### Dependencies Update
 
@@ -122,7 +125,7 @@ Please add your entries according to this format.
 
 - Ktfmt to 0.19
 - Kotlin to 1.4.21
-- kotlinx-coroutines to 1.4.2 
+- kotlinx-coroutines to 1.4.2
 
 ## Version 0.1.0 *(2020-12-22)*
 
