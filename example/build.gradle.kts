@@ -1,3 +1,5 @@
+import com.ncorti.ktfmt.gradle.GradleWorkerIsolationStrategy
+
 plugins {
     kotlin("jvm")
     id("com.ncorti.ktfmt.gradle")
@@ -7,6 +9,7 @@ plugins {
 
 ktfmt {
     kotlinLangStyle()
+    gradleWorkerIsolationStrategy.set(GradleWorkerIsolationStrategy.NO_ISOLATION)
 }
 
 dependencies {

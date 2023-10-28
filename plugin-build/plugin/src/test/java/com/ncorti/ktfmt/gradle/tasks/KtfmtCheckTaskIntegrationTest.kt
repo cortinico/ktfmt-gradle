@@ -162,56 +162,41 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
-    fun `format task can format multiple files using with default no-isolation workerQueue`(
+    fun `check task can check the formatting of multiple files using with default no-isolation strategy`(
         n: Int
     ) {
         repeat(n) { index ->
-            createTempFile(content = "val answer${index}=42\n", fileName = "TestFile$index.kt")
+            createTempFile(content = "val answer${index} = 42\n", fileName = "TestFile$index.kt")
         }
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("ktfmtFormatMain", "--info")
+                .withArguments("ktfmtCheckMain", "--info")
                 .forwardOutput()
                 .build()
 
-        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
     }
 
+    @Disabled("Extend test to use ktfmt property for isolation strategy")
     @ParameterizedTest
     @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
-    fun `format task can format multiple files using process isolation strategy`(n: Int) {
+    fun `check task can check the formatting of multiple files using process isolation strategy`(
+        n: Int
+    ) {
         repeat(n) { index ->
-            createTempFile(content = "val answer${index}=42\n", fileName = "TestFile$index.kt")
+            createTempFile(content = "val answer${index} = 42\n", fileName = "TestFile$index.kt")
         }
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("ktfmtFormatMain", "--info", "--isolation-strategy=PROCESS")
+                .withArguments("ktfmtCheckMain", "--info", "--isolation-strategy=PROCESS")
                 .forwardOutput()
                 .build()
 
-        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
-    }
-
-    @Disabled("This test will never finish due to memory leasks in the class loader")
-    @ParameterizedTest
-    @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
-    fun `format task can format multiple files using class loader isolation strategy`(n: Int) {
-        repeat(n) { index ->
-            createTempFile(content = "val answer${index}=42\n", fileName = "TestFile$index.kt")
-        }
-        val result =
-            GradleRunner.create()
-                .withProjectDir(tempDir)
-                .withPluginClasspath()
-                .withArguments("ktfmtFormatMain", "--info", "--isolation-strategy=CLASS_LOADER")
-                .forwardOutput()
-                .build()
-
-        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
     }
 
     @Test

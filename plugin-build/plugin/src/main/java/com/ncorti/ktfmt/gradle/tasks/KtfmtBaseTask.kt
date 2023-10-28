@@ -1,8 +1,6 @@
 package com.ncorti.ktfmt.gradle.tasks
 
-import com.ncorti.ktfmt.gradle.FormattingOptionsBean
-import com.ncorti.ktfmt.gradle.KtfmtExtension
-import com.ncorti.ktfmt.gradle.KtfmtPlugin
+import com.ncorti.ktfmt.gradle.*
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtWorkAction
 import com.ncorti.ktfmt.gradle.tasks.worker.Result
 import com.ncorti.ktfmt.gradle.util.d
@@ -56,14 +54,7 @@ internal constructor(
     @get:Input
     abstract val includeOnly: Property<String>
 
-    @get:Option(
-        option = "isolation-strategy",
-        description =
-            "Possible isolation strategies for invoking ktfmt. Can be PROCESS, CLASS_LOADER, NO_ISOLATION. Default is NO_ISOLATION"
-    )
-    @get:Optional
-    @get:Input
-    abstract val isolationStrategy: Property<String>
+    @get:Input abstract val isolationStrategy: Property<GradleWorkerIsolationStrategy>
 
     @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFiles
@@ -73,28 +64,9 @@ internal constructor(
 
     @TaskAction
     internal fun taskAction() {
-        val workQueue = getWorkerQueue()
+        val workQueue = workerExecutor.getWorkQueue(isolationStrategy.get(), ktfmtClasspath)
 
-        val startTime = System.currentTimeMillis()
         execute(workQueue)
-        val endTime = System.currentTimeMillis()
-
-        logger.info("Worker queue finished after ${endTime-startTime} ms")
-    }
-
-    private fun getWorkerQueue(): WorkQueue {
-        val isolationStrategy = isolationStrategy.getOrElse("NO_ISOLATION")
-        logger.info("Selected workerQueue isolation strategy is $isolationStrategy")
-        return when (isolationStrategy) {
-            "PROCESS" ->
-                workerExecutor.processIsolation() { spec -> spec.classpath.from(ktfmtClasspath) }
-            "CLASS_LOADER" ->
-                workerExecutor.classLoaderIsolation() { spec ->
-                    spec.classpath.from(ktfmtClasspath)
-                }
-            "NO_ISOLATION" -> workerExecutor.noIsolation()
-            else -> workerExecutor.noIsolation()
-        }
     }
 
     protected abstract fun execute(workQueue: WorkQueue)

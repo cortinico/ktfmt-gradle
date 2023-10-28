@@ -14,6 +14,7 @@ abstract class KtfmtExtension {
         continuationIndent.convention(DEFAULT_CONTINUATION_INDENT)
         removeUnusedImports.convention(DEFAULT_REMOVE_UNUSED_IMPORTS)
         debuggingPrintOpsAfterFormatting.convention(DEFAULT_DEBUGGING_PRINT_OPTS)
+        gradleWorkerIsolationStrategy.convention(DEFAULT_GRADLE_WORKER_ISOLATION_STRATEGY)
     }
 
     internal var ktfmtStyle = FACEBOOK
@@ -53,6 +54,9 @@ abstract class KtfmtExtension {
      * newline) decisions
      */
     abstract val debuggingPrintOpsAfterFormatting: Property<Boolean>
+
+    /** Defines the isolation strategy between the ktfmt classpath and the project classpath. */
+    abstract val gradleWorkerIsolationStrategy: Property<GradleWorkerIsolationStrategy>
 
     /** Enables --dropbox-style (equivalent to set blockIndent to 4 and continuationIndent to 4). */
     @Suppress("MagicNumber")
@@ -97,5 +101,7 @@ abstract class KtfmtExtension {
         internal const val DEFAULT_CONTINUATION_INDENT: Int = 4
         internal const val DEFAULT_REMOVE_UNUSED_IMPORTS: Boolean = true
         internal const val DEFAULT_DEBUGGING_PRINT_OPTS: Boolean = false
+        internal val DEFAULT_GRADLE_WORKER_ISOLATION_STRATEGY: GradleWorkerIsolationStrategy =
+            GradleWorkerIsolationStrategy.NO_ISOLATION
     }
 }

@@ -52,6 +52,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
 
             project.tasks.withType(KtfmtBaseTask::class.java).configureEach {
                 it.ktfmtClasspath.from(ktFmt)
+                it.isolationStrategy.set(ktfmtExtension.gradleWorkerIsolationStrategy)
             }
 
             topLevelFormat = createTopLevelFormatTask(project)

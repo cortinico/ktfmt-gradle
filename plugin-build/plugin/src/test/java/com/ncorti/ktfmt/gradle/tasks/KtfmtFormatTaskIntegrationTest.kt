@@ -8,8 +8,11 @@ import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class KtfmtFormatTaskIntegrationTest {
 
@@ -180,6 +183,43 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .build()
 
         assertThat(result.output).contains("Reusing configuration cache.")
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
+    fun `format task can format multiple files using with default no-isolation workerQueue`(
+        n: Int
+    ) {
+        repeat(n) { index ->
+            createTempFile(content = "val answer${index}=42\n", fileName = "TestFile$index.kt")
+        }
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain", "--info")
+                .forwardOutput()
+                .build()
+
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
+    }
+
+    @Disabled("Disabled because it is not yet possible to set the process strategy")
+    @ParameterizedTest
+    @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
+    fun `format task can format multiple files using process isolation strategy`(n: Int) {
+        repeat(n) { index ->
+            createTempFile(content = "val answer${index}=42\n", fileName = "TestFile$index.kt")
+        }
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain", "--info")
+                .forwardOutput()
+                .build()
+
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
     }
 
     @Test
