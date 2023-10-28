@@ -7,7 +7,6 @@ import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
@@ -179,12 +178,12 @@ internal class KtfmtCheckTaskIntegrationTest {
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
     }
 
-    @Disabled("Extend test to use ktfmt property for isolation strategy")
     @ParameterizedTest
     @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
     fun `check task can check the formatting of multiple files using process isolation strategy`(
         n: Int
     ) {
+        configureProcessIsolationStrategy()
         repeat(n) { index ->
             createTempFile(content = "val answer${index} = 42\n", fileName = "TestFile$index.kt")
         }
@@ -192,7 +191,7 @@ internal class KtfmtCheckTaskIntegrationTest {
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("ktfmtCheckMain", "--info", "--isolation-strategy=PROCESS")
+                .withArguments("ktfmtCheckMain", "--info")
                 .forwardOutput()
                 .build()
 
@@ -236,6 +235,11 @@ internal class KtfmtCheckTaskIntegrationTest {
         assertThat(result.output).contains("Skipping for:")
         assertThat(result.output).contains("Not included inside --include-only")
         assertThat(result.output).contains("Valid formatting for:")
+    }
+
+    private fun configureProcessIsolationStrategy() {
+        File("src/test/resources/jvmProjectProcessIsolation")
+            .copyRecursively(tempDir, overwrite = true)
     }
 
     private fun createTempFile(

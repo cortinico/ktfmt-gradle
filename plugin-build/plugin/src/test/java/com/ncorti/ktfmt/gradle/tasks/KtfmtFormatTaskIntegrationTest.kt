@@ -8,7 +8,6 @@ import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
@@ -204,10 +203,10 @@ internal class KtfmtFormatTaskIntegrationTest {
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
     }
 
-    @Disabled("Disabled because it is not yet possible to set the process strategy")
     @ParameterizedTest
     @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
     fun `format task can format multiple files using process isolation strategy`(n: Int) {
+        configureProcessIsolationStrategy()
         repeat(n) { index ->
             createTempFile(content = "val answer${index}=42\n", fileName = "TestFile$index.kt")
         }
@@ -280,6 +279,11 @@ internal class KtfmtFormatTaskIntegrationTest {
         assertThat(result.output).contains("Not included inside --include-only")
         assertThat(result.output).contains("[ktfmt] Reformatting...")
         assertThat(result.output).contains("[ktfmt] Successfully reformatted 1 files with Ktfmt")
+    }
+
+    private fun configureProcessIsolationStrategy() {
+        File("src/test/resources/jvmProjectProcessIsolation")
+            .copyRecursively(tempDir, overwrite = true)
     }
 
     private fun createTempFile(
