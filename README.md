@@ -43,9 +43,11 @@ Please note that `ktfmt-gradle` relies on `ktfmt` hence the minimum supported JD
 
 Please also note the following requirements:
 
-* **Kotlin 1.4+**. In order to reformat Kotlin 1.4 code, you need run on **Gradle to 6.8+** (This is due to Gradle 6.7 embedding Kotlin 1.3.x - See [#12660](https://github.com/gradle/gradle/issues/12660)).
+* **Kotlin 1.4+**. In order to reformat Kotlin 1.4 code, you need run on **Gradle to 6.8+** (This is due to Gradle 6.7
+  embedding Kotlin 1.3.x - See [#12660](https://github.com/gradle/gradle/issues/12660)).
 
-* **Android**. `ktfmt-gradle` relies on features from **Android Gradle Plugin 4.1+**. So make sure you bump AGP before applying this plugin.
+* **Android**. `ktfmt-gradle` relies on features from **Android Gradle Plugin 4.1+**. So make sure you bump AGP before
+  applying this plugin.
 
 ### Task
 
@@ -91,10 +93,10 @@ To enable different styles you can simply:
 ktfmt {
     // Dropbox style - 4 space indentation
     dropboxStyle()
-    
+
     // Google style - 2 space indentation
     googleStyle()
-    
+
     // KotlinLang style - 4 space indentation - From kotlinlang.org/docs/coding-conventions.html
     kotlinLangStyle()
 }
@@ -115,11 +117,24 @@ ktfmt {
 }
 ```
 
+The Ktfmt formatter can be invoked from gradle with different dependency isolation strategies. By default, there is no
+isolation between ktfmt and other build dependencies. This should be sufficient for most projects. When you encounter
+errors related to dependency conflicts, you can try to invoke ktfmt in a separate process with its own classpath.
+
+```kotlin
+import com.ncorti.ktfmt.gradle.GradleWorkerIsolationStrategy
+
+ktfmt {
+    gradleWorkerIsolationStrategy.set(GradleWorkerIsolationStrategy.NO_ISOLATION)
+}
+```
+
 ## Using with a pre-commit hook 🎣
 
 You can leverage the `--include-only` to let ktfmt-gradle run only on a specific subset of files.
 
-To this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as follows:
+To this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as
+follows:
 
 ```kotlin
 import com.ncorti.ktfmt.gradle.tasks.*
