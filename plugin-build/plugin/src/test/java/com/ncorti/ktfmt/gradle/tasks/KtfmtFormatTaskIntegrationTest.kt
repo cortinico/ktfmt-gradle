@@ -10,6 +10,8 @@ import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class KtfmtFormatTaskIntegrationTest {
 
@@ -240,6 +242,23 @@ internal class KtfmtFormatTaskIntegrationTest {
         assertThat(result.output).contains("Not included inside --include-only")
         assertThat(result.output).contains("[ktfmt] Reformatting...")
         assertThat(result.output).contains("[ktfmt] Successfully reformatted 1 files with Ktfmt")
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
+    fun `format task can format multiple files`(n: Int) {
+        repeat(n) { index ->
+            createTempFile(content = "val answer${index}=42\n", fileName = "TestFile$index.kt")
+        }
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatMain", "--info")
+                .forwardOutput()
+                .build()
+
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
     }
 
     private fun createTempFile(

@@ -9,6 +9,8 @@ import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class KtfmtCheckTaskIntegrationTest {
 
@@ -194,6 +196,23 @@ internal class KtfmtCheckTaskIntegrationTest {
         assertThat(result.output).contains("Skipping for:")
         assertThat(result.output).contains("Not included inside --include-only")
         assertThat(result.output).contains("Valid formatting for:")
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
+    fun `check task can check the formatting of multiple files`(n: Int) {
+        repeat(n) { index ->
+            createTempFile(content = "val answer${index} = 42\n", fileName = "TestFile$index.kt")
+        }
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheckMain", "--info")
+                .forwardOutput()
+                .build()
+
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
     }
 
     private fun createTempFile(

@@ -28,10 +28,7 @@ import org.gradle.api.tasks.options.Option
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
 
-/**
- * ktfmt-gradle base Gradle tasks. Handles a coroutine scope and contains method to propertly
- * process a single file with ktfmt
- */
+/** ktfmt-gradle base Gradle tasks. Contains methods to properly process a single file with ktfmt */
 @Suppress("LeakingThis")
 abstract class KtfmtBaseTask
 internal constructor(
@@ -65,7 +62,7 @@ internal constructor(
     @TaskAction
     internal fun taskAction() {
         val workQueue =
-            workerExecutor.classLoaderIsolation { spec -> spec.classpath.from(ktfmtClasspath) }
+            workerExecutor.processIsolation { spec -> spec.classpath.from(ktfmtClasspath) }
         execute(workQueue)
     }
 
