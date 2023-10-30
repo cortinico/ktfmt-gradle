@@ -5,6 +5,7 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+- Replace class loader isolation with process isolation (#206)
 
 ## Version 0.14.0 *(2023-10-09)*
 
