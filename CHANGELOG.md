@@ -5,7 +5,12 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+
+## Version 0.15.0 *(2023-10-30)*
+
 - Replace class loader isolation with process isolation (#206)
+- Do not create tasks for aot srcset on Spring projects (#204)
+- Kotlin to 1.9.20
 
 ## Version 0.14.0 *(2023-10-09)*
 
