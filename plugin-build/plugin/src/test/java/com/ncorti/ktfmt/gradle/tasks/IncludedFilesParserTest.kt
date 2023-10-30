@@ -28,7 +28,14 @@ internal class IncludedFilesParserTest {
         assertThat(includePaths).hasSize(4)
 
         val tmp = tempDir.canonicalFile.toString()
+        val sep = File.separator
+
         assertThat(includePaths.map { it.toString() })
-            .containsExactly("$tmp/a/b", "$tmp/c/d", "$tmp/e/f", "$tmp/g/h")
+            .containsExactly(
+                "$tmp${sep}a${sep}b",
+                "$tmp${sep}c${sep}d",
+                "$tmp${sep}e${sep}f",
+                "$tmp${sep}g${sep}h"
+            )
     }
 }
