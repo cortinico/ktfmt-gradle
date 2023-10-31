@@ -6,6 +6,10 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.15.1 *(2023-10-31)*
+
+- Kotlin version reverted to 1.9.10
+
 ## Version 0.15.0 *(2023-10-30)*
 
 - Replace class loader isolation with process isolation (#206)
