@@ -14,15 +14,18 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.withType<KotlinCompile> { kotlinOptions { jvmTarget = JavaVersion.VERSION_11.toString() } }
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+}
 
 /**
- * We create a configuration that we can resolve by extending [compileOnly]. Here we inject the
- * dependencies into TestKit plugin classpath via [PluginUnderTestMetadata] to make them available
- * for testing.
+ * We create a configuration that we can resolve by extending [compileOnly].
+ * Here we inject the dependencies into TestKit plugin
+ * classpath via [PluginUnderTestMetadata] to make them available for testing.
  */
 val integrationTestRuntime: Configuration by configurations.creating
-
 integrationTestRuntime.apply {
     extendsFrom(configurations.getByName("compileOnly"))
     attributes {
@@ -63,11 +66,8 @@ dependencies {
 
     testRuntimeOnly(
         files(
-            serviceOf<ModuleRegistry>()
-                .getModule("gradle-tooling-api-builders")
-                .classpath
-                .asFiles
-                .first()
+            serviceOf<ModuleRegistry>().getModule("gradle-tooling-api-builders")
+                .classpath.asFiles.first()
         )
     )
 }
