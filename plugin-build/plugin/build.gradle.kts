@@ -14,15 +14,18 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.withType<KotlinCompile> { kotlinOptions { jvmTarget = JavaVersion.VERSION_11.toString() } }
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+}
 
 /**
- * We create a configuration that we can resolve by extending [compileOnly]. Here we inject the
- * dependencies into TestKit plugin classpath via [PluginUnderTestMetadata] to make them available
- * for testing.
+ * We create a configuration that we can resolve by extending [compileOnly].
+ * Here we inject the dependencies into TestKit plugin
+ * classpath via [PluginUnderTestMetadata] to make them available for testing.
  */
 val integrationTestRuntime: Configuration by configurations.creating
-
 integrationTestRuntime.apply {
     extendsFrom(configurations.getByName("compileOnly"))
     attributes {
@@ -63,11 +66,8 @@ dependencies {
 
     testRuntimeOnly(
         files(
-            serviceOf<ModuleRegistry>()
-                .getModule("gradle-tooling-api-builders")
-                .classpath
-                .asFiles
-                .first()
+            serviceOf<ModuleRegistry>().getModule("gradle-tooling-api-builders")
+                .classpath.asFiles.first()
         )
     )
 }
@@ -96,15 +96,20 @@ signing {
 
 tasks.withType<Sign>().configureEach { onlyIf { project.properties["skip-signing"] != "true" } }
 
-tasks.withType<Test> { useJUnitPlatform() }
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
 
-val persistKtmftVersion by
-    tasks.registering {
-        inputs.property("ktfmtVersion", libs.ktfmt)
-        outputs.files(layout.buildDirectory.file("ktfmt-version.txt"))
-        doLast { outputs.files.singleFile.writeText(inputs.properties["ktfmtVersion"].toString()) }
+val persistKtmftVersion by tasks.registering {
+    inputs.property("ktfmtVersion", libs.ktfmt)
+    outputs.files(layout.buildDirectory.file("ktfmt-version.txt"))
+    doLast {
+        outputs.files.singleFile.writeText(inputs.properties["ktfmtVersion"].toString())
     }
+}
 
 tasks.named<ProcessResources>("processResources") {
-    from(persistKtmftVersion) { into("com/ncorti/ktfmt/gradle") }
+    from(persistKtmftVersion) {
+        into("com/ncorti/ktfmt/gradle")
+    }
 }
