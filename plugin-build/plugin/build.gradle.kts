@@ -70,13 +70,6 @@ dependencies {
                 .first()
         )
     )
-    constraints {
-        implementation(libs.kotlin.compiler.embeddable) {
-            because(
-                "Clash in Kotlin compiler versions - See https://youtrack.jetbrains.com/issue/KT-54236"
-            )
-        }
-    }
 }
 
 gradlePlugin {
