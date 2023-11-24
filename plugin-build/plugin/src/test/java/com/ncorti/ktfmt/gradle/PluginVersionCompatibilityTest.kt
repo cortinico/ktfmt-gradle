@@ -46,7 +46,7 @@ internal class PluginVersionCompatibilityTest {
             .withProjectDir(pluginBuildDirectory.toFile())
             .withArguments(
                 "plugin:publishToMavenLocal",
-                "-PVERSION=0.0.1-compatibility-check",
+                "-PVERSION=99.99.99-compatibility-check",
                 "-Pskip-signing=true"
             )
             .build()
