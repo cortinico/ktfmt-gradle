@@ -26,7 +26,6 @@ agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 jupiter-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-kotlin-compiler-embeddable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 diffUtils = { module = "io.github.java-diff-utils:java-diff-utils", version.ref = "diffUtils" }
 ktfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }

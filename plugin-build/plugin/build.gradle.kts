@@ -70,11 +70,6 @@ dependencies {
                 .classpath.asFiles.first()
         )
     )
-    constraints {
-        implementation(libs.kotlin.compiler.embeddable) {
-            because("Clash in Kotlin compiler versions - See https://youtrack.jetbrains.com/issue/KT-54236")
-        }
-    }
 }
 
 gradlePlugin {
@@ -98,6 +93,8 @@ signing {
     val signingPwd = findProperty("SIGNING_PWD") as? String
     useInMemoryPgpKeys(signingKey, signingPwd)
 }
+
+tasks.withType<Sign>().configureEach { onlyIf { project.properties["skip-signing"] != "true" } }
 
 tasks.withType<Test> {
     useJUnitPlatform()
