@@ -6,8 +6,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 
-- Remove ``kotlin-compiler-embeddable`` dependency to allow update on Kotlin version 1.9.20
-- Kotlin to 1.9.20
+- Remove legacy ``kotlin-compiler-embeddable`` dependency to prevent potential Kotlin version conflicts
+- Kotlin to 1.9.21
 
 ## Version 0.15.1 *(2023-10-31)*
 
