@@ -79,10 +79,11 @@ internal object KtfmtPluginUtils {
                 charArray.concatToString()
             }
         val taskName = "$TASK_NAME_CHECK$capitalizedName"
+        val inputDirs = srcDir.toList()
         return project.tasks.register(taskName, KtfmtCheckTask::class.java) {
             it.description =
                 "Run Ktfmt formatter for sourceSet '$name' on project '${project.name}'"
-            it.setSource(srcDir)
+            it.setSource(inputDirs)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
             it.setExcludes(KtfmtPlugin.defaultExcludes)
             it.bean = ktfmtExtension.toBean()
@@ -107,10 +108,11 @@ internal object KtfmtPluginUtils {
                 charArray.concatToString()
             }
         val taskName = "$TASK_NAME_FORMAT$srcSetName"
+        val inputDirs = srcDir.toList()
         return project.tasks.register(taskName, KtfmtFormatTask::class.java) {
             it.description =
                 "Run Ktfmt formatter validation for sourceSet '$name' on project '${project.name}'"
-            it.setSource(srcDir)
+            it.setSource(inputDirs)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
             it.setExcludes(KtfmtPlugin.defaultExcludes)
             it.bean = ktfmtExtension.toBean()

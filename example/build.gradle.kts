@@ -9,6 +9,10 @@ ktfmt {
     kotlinLangStyle()
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.jupiter)
