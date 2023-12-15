@@ -5,6 +5,7 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(17)
     jvm()
     androidTarget()
 }
@@ -20,4 +21,9 @@ android {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+dependencies {
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.jupiter)
 }
