@@ -63,7 +63,11 @@ internal abstract class KtfmtWorkAction : WorkAction<KtfmtWorkAction.KtfmtWorkPa
     }
 
     private fun writeResult(result: KtfmtResult) {
-        val resultFile = parameters.workingDir.asFile.get().resolve(UUID.randomUUID().toString())
+        val workingDir = parameters.workingDir.asFile.get()
+        if (!workingDir.exists()) {
+            workingDir.mkdirs()
+        }
+        val resultFile = workingDir.resolve(UUID.randomUUID().toString())
         resultFile.writeText(result.toResultString())
     }
 
