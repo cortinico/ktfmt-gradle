@@ -6,9 +6,13 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.16.0 *(2023-12-19)*
+
 - Adapt the plugin to work with KSP 1.9.21
 - Remove legacy `kotlin-compiler-embeddable` dependency to prevent potential Kotlin version conflicts
 - Kotlin to 1.9.21
+- AGP to 8.2.0
+- Gradle to 8.5
 
 ## Version 0.15.1 *(2023-10-31)*
 
