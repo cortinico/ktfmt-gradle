@@ -6,6 +6,12 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.17.0 *(2024-01-31)*
+
+- KTFMT to 0.47
+- Kotlin to 1.9.22
+- AGP to 8.2.2
+
 ## Version 0.16.0 *(2023-12-19)*
 
 - Adapt the plugin to work with KSP 1.9.21
