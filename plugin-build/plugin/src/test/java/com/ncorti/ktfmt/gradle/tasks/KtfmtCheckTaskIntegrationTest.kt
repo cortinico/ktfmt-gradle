@@ -1,8 +1,8 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.google.common.truth.Truth.assertThat
-import org.gradle.testkit.runner.BuildResult
 import java.io.File
+import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.*
 import org.intellij.lang.annotations.Language
@@ -199,11 +199,12 @@ internal class KtfmtCheckTaskIntegrationTest {
 
         var result: BuildResult? = null
         repeat(2) {
-            result = GradleRunner.create()
-                .withProjectDir(tempDir)
-                .withPluginClasspath()
-                .withArguments("clean", "ktfmtCheckMain", "--build-cache")
-                .build()
+            result =
+                GradleRunner.create()
+                    .withProjectDir(tempDir)
+                    .withPluginClasspath()
+                    .withArguments("clean", "ktfmtCheckMain", "--build-cache")
+                    .build()
         }
 
         assertThat(result!!.task(":ktfmtCheckMain")?.outcome).isEqualTo(FROM_CACHE)
@@ -215,11 +216,12 @@ internal class KtfmtCheckTaskIntegrationTest {
 
         var result: BuildResult? = null
         repeat(2) {
-            result = GradleRunner.create()
-                .withProjectDir(tempDir)
-                .withPluginClasspath()
-                .withArguments("ktfmtCheckMain", "--configuration-cache")
-                .build()
+            result =
+                GradleRunner.create()
+                    .withProjectDir(tempDir)
+                    .withPluginClasspath()
+                    .withArguments("ktfmtCheckMain", "--configuration-cache")
+                    .build()
         }
 
         assertThat(result!!.output).contains("Reusing configuration cache.")
