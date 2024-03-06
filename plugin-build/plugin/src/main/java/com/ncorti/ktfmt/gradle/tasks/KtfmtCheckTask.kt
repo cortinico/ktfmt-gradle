@@ -7,14 +7,22 @@ import com.ncorti.ktfmt.gradle.util.d
 import com.ncorti.ktfmt.gradle.util.i
 import javax.inject.Inject
 import org.gradle.api.file.ProjectLayout
+import org.gradle.api.file.RegularFile
+import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.OutputFile
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
 
 /** ktfmt-gradle Check task. Verifies if the output of ktfmt is the same as the input */
+@CacheableTask
 abstract class KtfmtCheckTask
 @Inject
 internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
     KtfmtBaseTask(workerExecutor, layout) {
+
+    @get:OutputFile
+    val output: Provider<RegularFile> = layout.buildDirectory.file("ktfmt/output.txt")
 
     init {
         group = KtfmtUtils.GROUP_VERIFICATION
@@ -40,6 +48,8 @@ internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
             )
         }
 
-        logger.i("Successfully checked ${results.size} files with Ktfmt")
+        val message = "Successfully checked ${results.size} files with Ktfmt"
+        logger.i(message)
+        output.get().asFile.writeText(message)
     }
 }
