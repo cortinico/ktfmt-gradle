@@ -27,6 +27,7 @@ public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask : org/gradle/a
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtCheckTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {
 	protected fun execute (Lorg/gradle/workers/WorkQueue;)V
+	public final fun getOutput ()Lorg/gradle/api/provider/Provider;
 }
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtFormatTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {

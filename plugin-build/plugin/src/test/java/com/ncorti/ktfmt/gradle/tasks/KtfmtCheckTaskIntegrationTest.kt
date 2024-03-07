@@ -4,7 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import java.io.File
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome.*
+import org.gradle.testkit.runner.TaskOutcome.FAILED
+import org.gradle.testkit.runner.TaskOutcome.FROM_CACHE
+import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
