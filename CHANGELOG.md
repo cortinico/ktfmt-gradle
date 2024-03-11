@@ -6,6 +6,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- Make `KtfmtCheckTask` cacheable
+
 ## Version 0.17.0 *(2024-01-31)*
 
 - KTFMT to 0.47
