@@ -2,8 +2,10 @@ package com.ncorti.ktfmt.gradle.tasks
 
 import com.google.common.truth.Truth.assertThat
 import java.io.File
+import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
+import org.gradle.testkit.runner.TaskOutcome.FROM_CACHE
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
@@ -78,28 +80,6 @@ internal class KtfmtCheckTaskIntegrationTest {
     fun `check task succeed if code is formatted`() {
         createTempFile(content = "val answer = 42\n")
         val result =
-            GradleRunner.create()
-                .withProjectDir(tempDir)
-                .withPluginClasspath()
-                .withArguments("ktfmtCheckMain")
-                .build()
-
-        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
-    }
-
-    @Test
-    fun `check task is always executed on subsequent execution`() {
-        createTempFile(content = "val answer = 42\n")
-        var result =
-            GradleRunner.create()
-                .withProjectDir(tempDir)
-                .withPluginClasspath()
-                .withArguments("ktfmtCheckMain")
-                .build()
-
-        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
-
-        result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
@@ -213,6 +193,40 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .build()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
+    }
+
+    @Test
+    fun `check task is cacheable`() {
+        createTempFile(content = "val answer = 42\n")
+
+        var result: BuildResult? = null
+        repeat(2) {
+            result =
+                GradleRunner.create()
+                    .withProjectDir(tempDir)
+                    .withPluginClasspath()
+                    .withArguments("clean", "ktfmtCheckMain", "--build-cache")
+                    .build()
+        }
+
+        assertThat(result!!.task(":ktfmtCheckMain")?.outcome).isEqualTo(FROM_CACHE)
+    }
+
+    @Test
+    fun `check task is configuration cache compatible`() {
+        createTempFile(content = "val answer = 42\n")
+
+        var result: BuildResult? = null
+        repeat(2) {
+            result =
+                GradleRunner.create()
+                    .withProjectDir(tempDir)
+                    .withPluginClasspath()
+                    .withArguments("ktfmtCheckMain", "--configuration-cache")
+                    .build()
+        }
+
+        assertThat(result!!.output).contains("Reusing configuration cache.")
     }
 
     private fun createTempFile(
