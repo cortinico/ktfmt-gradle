@@ -5,7 +5,7 @@ import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.EXTENSION_NAME
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.TASK_NAME_CHECK
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.TASK_NAME_FORMAT
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.createTasksForSourceSet
-import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.registerGitHookTask
+import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.registerGitPreCommitHookTask
 import com.ncorti.ktfmt.gradle.tasks.KtfmtBaseTask
 import com.ncorti.ktfmt.gradle.util.i
 import org.gradle.api.Plugin
@@ -80,7 +80,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
     private fun applyKtfmt(project: Project) {
         val extension = project.extensions.getByType(KotlinProjectExtension::class.java)
 
-        registerGitHookTask(project)
+        registerGitPreCommitHookTask(project)
 
         extension.sourceSets.all {
             createTasksForSourceSet(
