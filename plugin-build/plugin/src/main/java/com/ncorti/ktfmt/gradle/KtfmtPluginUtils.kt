@@ -1,5 +1,6 @@
 package com.ncorti.ktfmt.gradle
 
+import com.ncorti.ktfmt.gradle.tasks.CreateGitPreCommitHookTask
 import com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask
 import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
 import org.gradle.api.Project
@@ -116,6 +117,22 @@ internal object KtfmtPluginUtils {
             it.setIncludes(KtfmtPlugin.defaultIncludes)
             it.setExcludes(KtfmtPlugin.defaultExcludes)
             it.bean = ktfmtExtension.toBean()
+        }
+    }
+
+    internal fun registerGitHookTask(project: Project) {
+        project.tasks.register("ktfmtPrecommitHook", KtfmtFormatTask::class.java) {
+            it.source = project.fileTree(project.projectDir)
+            it.include("**/*.kt")
+        }
+
+        project.tasks.register(
+            "${TASK_NAME_FORMAT}RegisterGitHook",
+            CreateGitPreCommitHookTask::class.java
+        ) {
+            it.description = "Creates a git hook that runs ktfmt before commit"
+            it.projectDir.set(project.projectDir)
+            it.setSource(project.projectDir.path)
         }
     }
 }
