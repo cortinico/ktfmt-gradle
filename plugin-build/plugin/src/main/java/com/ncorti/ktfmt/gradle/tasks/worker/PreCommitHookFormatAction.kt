@@ -42,9 +42,6 @@ internal abstract class PreCommitHookFormatAction :
         } else {
             hookFile.createNewFile()
 
-            println("hi")
-            println(rootDirectory.path)
-
             hookFile.writeText(
                 """
                 #!/bin/bash
