@@ -38,9 +38,7 @@ internal abstract class PreCommitHookFormatAction :
         val hookFile = File("${hooksDirectory}/pre-commit")
 
         if (hookFile.exists()) {
-            logger.w(
-                "Pre commit hook file (${hookFile.path}) already exists, aborting hook generation"
-            )
+            logger.w("Pre commit hook file already exists, aborting hook generation")
         } else {
             hookFile.createNewFile()
 
