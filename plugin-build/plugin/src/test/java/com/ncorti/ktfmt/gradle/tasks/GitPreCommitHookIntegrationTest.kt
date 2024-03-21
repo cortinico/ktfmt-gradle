@@ -60,7 +60,9 @@ class GitPreCommitHookIntegrationTest {
         assertThat(hookContent[4]).isEqualTo("if [[ ${'$'}staged_files_count -gt 0 ]]; then")
         assertThat(hookContent[5])
             .contains(
-                "gradlew ktfmtPreCommitHook --include-only $(git diff --name-only --cached -- '*.kt' | paste -sd \",\");"
+                """
+                gradlew ktfmtPreCommitHook --include-only ${'$'}(git diff --name-only --cached -- '*.kt' | paste -sd ",");
+                """.trimIndent()
             )
         assertThat(hookContent[6]).contains("git add -A $(git diff --name-only --cached -- '*.kt')")
     }
