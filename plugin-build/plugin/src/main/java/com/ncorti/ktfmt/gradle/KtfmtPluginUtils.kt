@@ -131,7 +131,6 @@ internal object KtfmtPluginUtils {
             CreateGitPreCommitHookTask::class.java
         ) {
             it.description = "Creates a git hook that runs ktfmt before commit"
-            it.projectDir.set(project.projectDir)
             it.setSource(project.projectDir)
         }
     }
