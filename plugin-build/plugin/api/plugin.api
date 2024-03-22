@@ -24,7 +24,6 @@ public final class com/ncorti/ktfmt/gradle/KtfmtPlugin$Companion {
 public abstract class com/ncorti/ktfmt/gradle/tasks/CreateGitPreCommitHookTask : org/gradle/api/tasks/SourceTask {
 	public fun <init> ()V
 	public final fun createHook ()V
-	public abstract fun getProjectDir ()Lorg/gradle/api/file/DirectoryProperty;
 	public abstract fun getWorkerExecutor ()Lorg/gradle/workers/WorkerExecutor;
 }
 
