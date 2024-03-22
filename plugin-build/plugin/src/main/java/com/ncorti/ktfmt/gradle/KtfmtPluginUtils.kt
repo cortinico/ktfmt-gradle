@@ -123,6 +123,7 @@ internal object KtfmtPluginUtils {
     internal fun registerGitPreCommitHookTask(project: Project) {
         project.tasks.register("ktfmtPreCommitHook", KtfmtFormatTask::class.java) {
             it.source = project.fileTree(project.projectDir)
+            it.doNotTrackState("Task does not require gradle cache")
             it.include("**/*.kt")
         }
 
@@ -131,6 +132,7 @@ internal object KtfmtPluginUtils {
             CreateGitPreCommitHookTask::class.java
         ) {
             it.setSource(".")
+            it.doNotTrackState("Task does not require gradle cache")
             it.description = "Creates a git hook that runs ktfmt before commit"
         }
     }
