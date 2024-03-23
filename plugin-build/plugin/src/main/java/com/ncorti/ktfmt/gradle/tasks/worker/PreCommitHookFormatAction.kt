@@ -12,7 +12,7 @@ import org.gradle.workers.WorkParameters
 import org.jetbrains.kotlin.incremental.createDirectory
 
 internal abstract class PreCommitHookFormatAction :
-    WorkAction<PreCommitHookFormatAction.PreCommitHooParameters> {
+    WorkAction<PreCommitHookFormatAction.PreCommitHookParameters> {
 
     interface PreCommitHookParameters : WorkParameters {
         val projectDir: DirectoryProperty
@@ -35,7 +35,7 @@ internal abstract class PreCommitHookFormatAction :
             hooksDirectory.createDirectory()
         }
 
-        val hookFile = File("${hooksDirectory}/pre-commit")
+        val hookFile = File(hooksDirectory, "pre-commit")
 
         if (hookFile.exists()) {
             logger.w("Pre commit hook file already exists, aborting hook generation")
