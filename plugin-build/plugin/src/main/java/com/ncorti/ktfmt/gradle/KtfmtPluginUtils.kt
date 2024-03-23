@@ -127,7 +127,7 @@ internal object KtfmtPluginUtils {
         }
 
         project.tasks.register(
-            "ktfmtRegisterGitPreCommitHook",
+            "ktfmtGenerateGitPreCommitHook",
             CreateGitPreCommitHookTask::class.java
         ) {
             it.description = "Creates a git hook that runs ktfmt before commit"

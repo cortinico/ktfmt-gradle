@@ -31,7 +31,7 @@ internal abstract class PreCommitHookFormatAction :
         }
 
         if (!hooksDirectory.exists()) {
-            logger.w("Hooks directory does not exist, will create one")
+            logger.i("Hooks directory does not exist, will create one")
             hooksDirectory.createDirectory()
         }
 

@@ -43,9 +43,11 @@ Please note that `ktfmt-gradle` relies on `ktfmt` hence the minimum supported JD
 
 Please also note the following requirements:
 
-* **Kotlin 1.4+**. In order to reformat Kotlin 1.4 code, you need run on **Gradle to 6.8+** (This is due to Gradle 6.7 embedding Kotlin 1.3.x - See [#12660](https://github.com/gradle/gradle/issues/12660)).
+* **Kotlin 1.4+**. In order to reformat Kotlin 1.4 code, you need run on **Gradle to 6.8+** (This is due to Gradle 6.7
+  embedding Kotlin 1.3.x - See [#12660](https://github.com/gradle/gradle/issues/12660)).
 
-* **Android**. `ktfmt-gradle` relies on features from **Android Gradle Plugin 4.1+**. So make sure you bump AGP before applying this plugin.
+* **Android**. `ktfmt-gradle` relies on features from **Android Gradle Plugin 4.1+**. So make sure you bump AGP before
+  applying this plugin.
 
 ### Task
 
@@ -91,10 +93,10 @@ To enable different styles you can simply:
 ktfmt {
     // Dropbox style - 4 space indentation
     dropboxStyle()
-    
+
     // Google style - 2 space indentation & automatically adds/removes trailing commas
     googleStyle()
-    
+
     // KotlinLang style - 4 space indentation - From kotlinlang.org/docs/coding-conventions.html
     kotlinLangStyle()
 }
@@ -121,7 +123,8 @@ ktfmt {
 
 You can leverage the `--include-only` to let ktfmt-gradle run only on a specific subset of files.
 
-To this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as follows:
+To this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as
+follows:
 
 ```kotlin
 import com.ncorti.ktfmt.gradle.tasks.*
@@ -132,10 +135,13 @@ tasks.register<KtfmtFormatTask>("ktfmtPrecommit") {
 }
 ```
 
-You can then invoke the task with `--include-only` and a comma separated list of relative path of files:
+## Generating with a pre-commit hook 🎣
+
+You can also generate a generate a git pre-commit hook which will run `ktfmtFormat` on your commits using the following
+command:
 
 ```
-./gradlew ktfmtPrecommit --include-only=src/main/java/File1.kt:src/main/java/File2.kt
+./gradlew ktfmtGenerateGitPreCommitHook
 ```
 
 The task will execute only on the file you passed and will skip all the others.
