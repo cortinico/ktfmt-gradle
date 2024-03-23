@@ -92,7 +92,7 @@ ktfmt {
     // Dropbox style - 4 space indentation
     dropboxStyle()
     
-    // Google style - 2 space indentation
+    // Google style - 2 space indentation & automatically adds/removes trailing commas
     googleStyle()
     
     // KotlinLang style - 4 space indentation - From kotlinlang.org/docs/coding-conventions.html
@@ -112,6 +112,8 @@ ktfmt {
     continuationIndent.set(8)
     // Whether ktfmt should remove imports that are not used.
     removeUnusedImports.set(false)
+    // Whether ktfmt should automatically add/remove trailing commas.
+    manageTrailingCommas.set(false)
 }
 ```
 

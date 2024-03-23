@@ -7,6 +7,7 @@ Please add your entries according to this format.
 ## Unreleased
 
 - Make `KtfmtCheckTask` cacheable
+- Add support for `manageTrailingCommas` and enables it by default for googleStyle
 
 ## Version 0.17.0 *(2024-01-31)*
 
