@@ -22,8 +22,8 @@ internal abstract class PreCommitHookFormatAction :
 
     override fun execute() {
         val rootDirectory = parameters.projectDir.get().asFile
-        val gitDirectory = File("${rootDirectory.path}/.git")
-        val hooksDirectory = File("${gitDirectory.path}/hooks")
+        val gitDirectory = File(rootDirectory, ".git")
+        val hooksDirectory = File(gitDirectory, "hooks")
 
         if (!gitDirectory.exists()) {
             logger.e("Git directory not found, will not create the hook")
