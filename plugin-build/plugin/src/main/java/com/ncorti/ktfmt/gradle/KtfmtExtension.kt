@@ -14,6 +14,7 @@ abstract class KtfmtExtension {
         continuationIndent.convention(DEFAULT_CONTINUATION_INDENT)
         removeUnusedImports.convention(DEFAULT_REMOVE_UNUSED_IMPORTS)
         debuggingPrintOpsAfterFormatting.convention(DEFAULT_DEBUGGING_PRINT_OPTS)
+        manageTrailingCommas.convention(DEFAULT_MANAGE_TRAILING_COMMAS)
     }
 
     internal var ktfmtStyle = FACEBOOK
@@ -45,6 +46,15 @@ abstract class KtfmtExtension {
      */
     abstract val continuationIndent: Property<Int>
 
+    /**
+     * Automatically remove and insert trialing commas.
+     *
+     * Lists that cannot fit on one line will have trailing commas inserted. Lists that span
+     * multiple lines will have them removed. Manually inserted trailing commas cannot be used as a
+     * hint to force breaking lists to multiple lines.
+     */
+    abstract val manageTrailingCommas: Property<Boolean>
+
     /** Whether ktfmt should remove imports that are not used. */
     abstract val removeUnusedImports: Property<Boolean>
 
@@ -68,6 +78,7 @@ abstract class KtfmtExtension {
         ktfmtStyle = GOOGLE
         blockIndent.set(2)
         continuationIndent.set(2)
+        manageTrailingCommas.set(true)
     }
 
     /**
@@ -88,6 +99,7 @@ abstract class KtfmtExtension {
             blockIndent = blockIndent.get(),
             continuationIndent = continuationIndent.get(),
             removeUnusedImports = removeUnusedImports.get(),
+            manageTrailingCommas = manageTrailingCommas.get(),
             debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting.get()
         )
 
@@ -97,5 +109,6 @@ abstract class KtfmtExtension {
         internal const val DEFAULT_CONTINUATION_INDENT: Int = 4
         internal const val DEFAULT_REMOVE_UNUSED_IMPORTS: Boolean = true
         internal const val DEFAULT_DEBUGGING_PRINT_OPTS: Boolean = false
+        internal const val DEFAULT_MANAGE_TRAILING_COMMAS: Boolean = false
     }
 }

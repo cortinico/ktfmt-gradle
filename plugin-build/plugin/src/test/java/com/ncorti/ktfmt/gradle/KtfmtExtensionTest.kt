@@ -90,6 +90,7 @@ class KtfmtExtensionTest {
         extension.blockIndent.set(43)
         extension.continuationIndent.set(44)
         extension.removeUnusedImports.set(false)
+        extension.manageTrailingCommas.set(true)
         extension.debuggingPrintOpsAfterFormatting.set(true)
 
         val bean = extension.toBean()
@@ -98,6 +99,7 @@ class KtfmtExtensionTest {
         assertThat(bean.blockIndent).isEqualTo(43)
         assertThat(bean.continuationIndent).isEqualTo(44)
         assertThat(bean.removeUnusedImports).isEqualTo(false)
+        assertThat(bean.manageTrailingCommas).isEqualTo(true)
         assertThat(bean.debuggingPrintOpsAfterFormatting).isEqualTo(true)
     }
 

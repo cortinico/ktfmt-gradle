@@ -14,6 +14,7 @@ class FormattingOptionsBeanTest {
                 blockIndent = 43,
                 continuationIndent = 44,
                 removeUnusedImports = false,
+                manageTrailingCommas = true,
                 debuggingPrintOpsAfterFormatting = true
             )
 
@@ -23,6 +24,7 @@ class FormattingOptionsBeanTest {
         assertThat(opts.blockIndent).isEqualTo(43)
         assertThat(opts.continuationIndent).isEqualTo(44)
         assertThat(opts.removeUnusedImports).isEqualTo(false)
+        assertThat(opts.manageTrailingCommas).isEqualTo(true)
         assertThat(opts.debuggingPrintOpsAfterFormatting).isEqualTo(true)
     }
 }
