@@ -49,7 +49,7 @@ internal abstract class PreCommitHookFormatAction :
                         
                 # format only if there are kotlin files in git's index
                 if [[ ${'$'}staged_files_count -gt 0 ]]; then
-                    ${rootDirectory.path}/gradlew ktfmtPreCommitHook --include-only $(git diff --name-only --cached -- '*.kt' | paste -sd ",");
+                    ${rootDirectory.path}/gradlew -Pktfmt.gradle.includeOnly=${'$'}(git diff --name-only --cached -- '*.kt' | paste -sd ",") ktfmtFormat;
                     git add -A $(git diff --name-only --cached -- '*.kt')
                 fi
                 exit 0;

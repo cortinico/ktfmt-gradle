@@ -110,22 +110,26 @@ internal object KtfmtPluginUtils {
             }
         val taskName = "$TASK_NAME_FORMAT$srcSetName"
         val inputDirs = srcDir.toList()
+
+        // check if specific files are specified to be included. If not, use the default includes
+        val includes =
+            (project.findProperty("ktfmt.gradle.includeOnly") as String?)
+                ?.split(",")
+                ?.filter { file -> file.isNotEmpty() }
+                ?.takeIf { files -> files.isNotEmpty() } ?: KtfmtPlugin.defaultIncludes
+
         return project.tasks.register(taskName, KtfmtFormatTask::class.java) {
             it.description =
                 "Run Ktfmt formatter validation for sourceSet '$name' on project '${project.name}'"
+
             it.setSource(inputDirs)
-            it.setIncludes(KtfmtPlugin.defaultIncludes)
+            it.setIncludes(includes)
             it.setExcludes(KtfmtPlugin.defaultExcludes)
             it.bean = ktfmtExtension.toBean()
         }
     }
 
     internal fun registerGitPreCommitHookTask(project: Project) {
-        project.tasks.register("ktfmtPreCommitHook", KtfmtFormatTask::class.java) {
-            it.source = project.fileTree(project.projectDir)
-            it.include("**/*.kt")
-        }
-
         project.tasks.register(
             "ktfmtGenerateGitPreCommitHook",
             CreateGitPreCommitHookTask::class.java

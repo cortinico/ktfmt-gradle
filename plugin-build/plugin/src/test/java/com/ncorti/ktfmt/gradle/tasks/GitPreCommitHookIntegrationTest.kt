@@ -61,7 +61,7 @@ class GitPreCommitHookIntegrationTest {
         assertThat(hookContent[5])
             .contains(
                 """
-                gradlew ktfmtPreCommitHook --include-only ${'$'}(git diff --name-only --cached -- '*.kt' | paste -sd ",");
+                gradlew -Pktfmt.gradle.includeOnly=${'$'}(git diff --name-only --cached -- '*.kt' | paste -sd ",") ktfmtFormat;
                 """
                     .trimIndent()
             )
