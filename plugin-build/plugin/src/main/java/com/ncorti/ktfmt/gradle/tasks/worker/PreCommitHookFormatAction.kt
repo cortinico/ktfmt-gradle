@@ -14,7 +14,7 @@ import org.jetbrains.kotlin.incremental.createDirectory
 internal abstract class PreCommitHookFormatAction :
     WorkAction<PreCommitHookFormatAction.PreCommitHooParameters> {
 
-    interface PreCommitHooParameters : WorkParameters {
+    interface PreCommitHookParameters : WorkParameters {
         val projectDir: DirectoryProperty
     }
 
