@@ -4,6 +4,7 @@ public abstract class com/ncorti/ktfmt/gradle/KtfmtExtension {
 	public abstract fun getBlockIndent ()Lorg/gradle/api/provider/Property;
 	public abstract fun getContinuationIndent ()Lorg/gradle/api/provider/Property;
 	public abstract fun getDebuggingPrintOpsAfterFormatting ()Lorg/gradle/api/provider/Property;
+	public abstract fun getManageTrailingCommas ()Lorg/gradle/api/provider/Property;
 	public abstract fun getMaxWidth ()Lorg/gradle/api/provider/Property;
 	public abstract fun getRemoveUnusedImports ()Lorg/gradle/api/provider/Property;
 	public final fun googleStyle ()V

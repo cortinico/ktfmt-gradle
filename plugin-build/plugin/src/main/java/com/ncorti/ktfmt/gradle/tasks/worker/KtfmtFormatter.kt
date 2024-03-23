@@ -60,6 +60,7 @@ internal fun FormattingOptionsBean.toFormattingOptions(): FormattingOptions =
         blockIndent = blockIndent,
         continuationIndent = continuationIndent,
         removeUnusedImports = removeUnusedImports,
+        manageTrailingCommas = manageTrailingCommas,
         debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting
     )
 

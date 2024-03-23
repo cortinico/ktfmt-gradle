@@ -51,7 +51,6 @@ internal data class FormattingOptionsBean(
      * newline) decisions
      */
     val debuggingPrintOpsAfterFormatting: Boolean = false,
-
 ) : Serializable {
     enum class Style {
         FACEBOOK,
