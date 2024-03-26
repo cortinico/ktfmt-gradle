@@ -7,11 +7,9 @@ source code like a glimpse.
 
 ## How to use 👣
 
-**ktfmt-gradle** is distributed through [Gradle Plugin Portal](https://plugins.gradle.org/). To use it you need to add
-the following dependency to your gradle files.
+**ktfmt-gradle** is distributed through [Gradle Plugin Portal](https://plugins.gradle.org/). To use it you need to add the following dependency to your gradle files.
 
-Please note that those code needs to be added the gradle file of the **module** where you want to reformat the code
-(**not the top level** build.gradle[.kts] file).
+Please note that those code needs to be added the gradle file of the **module** where you want to reformat the code (**not the top level** build.gradle[.kts] file).
 
 If you're using the `plugin{}` blocks in your Gradle file:
 
@@ -123,8 +121,7 @@ ktfmt {
 
 You can leverage the `--include-only` to let ktfmt-gradle run only on a specific subset of files.
 
-To this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as
-follows:
+To this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as follows:
 
 ```kotlin
 import com.ncorti.ktfmt.gradle.tasks.*
