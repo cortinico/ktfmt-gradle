@@ -1,5 +1,6 @@
 package com.ncorti.ktfmt.gradle
 
+import com.ncorti.ktfmt.gradle.tasks.CreateGitPreCommitHookTask
 import com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask
 import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
 import org.gradle.api.Project
@@ -109,13 +110,24 @@ internal object KtfmtPluginUtils {
             }
         val taskName = "$TASK_NAME_FORMAT$srcSetName"
         val inputDirs = srcDir.toList()
+
         return project.tasks.register(taskName, KtfmtFormatTask::class.java) {
             it.description =
                 "Run Ktfmt formatter validation for sourceSet '$name' on project '${project.name}'"
+
             it.setSource(inputDirs)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
             it.setExcludes(KtfmtPlugin.defaultExcludes)
             it.bean = ktfmtExtension.toBean()
+        }
+    }
+
+    internal fun registerGitPreCommitHookTask(project: Project) {
+        project.tasks.register(
+            "ktfmtGenerateGitPreCommitHook",
+            CreateGitPreCommitHookTask::class.java
+        ) {
+            it.description = "Creates a git hook that runs ktfmt before commit"
         }
     }
 }

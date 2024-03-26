@@ -98,10 +98,18 @@ internal constructor(
         val workingDir = temporaryDir.resolve(UUID.randomUUID().toString())
         workingDir.mkdirs()
         try {
+            val filesToBeIncluded =
+                when {
+                    includeOnly.get().isNotBlank() -> includeOnly.get()
+                    hasProperty("ktfmt.gradle.includeOnly") ->
+                        property("ktfmt.gradle.includeOnly") as String
+                    else -> ""
+                }
+
             val includedFiles =
                 IncludedFilesParser.parse(includeOnly.get(), layout.projectDirectory.asFile)
             logger.d(
-                "Preparing to format: includeOnly=${includeOnly.orNull}, includedFiles = $includedFiles"
+                "Preparing to format: includeOnly=${filesToBeIncluded}, includedFiles = $includedFiles"
             )
             forEach {
                 queue.submit(action) { parameters ->
