@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm")
     id("com.ncorti.ktfmt.gradle")
-    id("com.google.devtools.ksp") version "1.9.23-1.0.19"
+    id("com.google.devtools.ksp") version "1.9.23-1.0.20"
     id("app.cash.sqldelight") version "2.0.1"
 }
 
