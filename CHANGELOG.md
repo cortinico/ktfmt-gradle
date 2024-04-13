@@ -1,4 +1,3 @@
-
 # Change Log
 
 This file follows [Keepachangelog](https://keepachangelog.com/) format.
@@ -6,16 +5,21 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.18.0 _(2024-04-13)_
+
 - Make `KtfmtCheckTask` cacheable
 - Add support for `manageTrailingCommas` and enables it by default for googleStyle
+- Gradle to 8.7
+- AGP to 8.3.2
+- Kotlin to 1.9.23
 
-## Version 0.17.0 *(2024-01-31)*
+## Version 0.17.0 _(2024-01-31)_
 
 - KTFMT to 0.47
 - Kotlin to 1.9.22
 - AGP to 8.2.2
 
-## Version 0.16.0 *(2023-12-19)*
+## Version 0.16.0 _(2023-12-19)_
 
 - Adapt the plugin to work with KSP 1.9.21
 - Remove legacy `kotlin-compiler-embeddable` dependency to prevent potential Kotlin version conflicts
@@ -24,17 +28,17 @@ Please add your entries according to this format.
 - AGP to 8.2.0
 - Gradle to 8.5
 
-## Version 0.15.1 *(2023-10-31)*
+## Version 0.15.1 _(2023-10-31)_
 
 - Kotlin version reverted to 1.9.10
 
-## Version 0.15.0 *(2023-10-30)*
+## Version 0.15.0 _(2023-10-30)_
 
 - Replace class loader isolation with process isolation (#206)
 - Do not create tasks for aot srcset on Spring projects (#204)
 - Kotlin to 1.9.20
 
-## Version 0.14.0 *(2023-10-09)*
+## Version 0.14.0 _(2023-10-09)_
 
 - Add support for Gradle Worker API and Classloader Isolation (#182)
 - KtFmt to 0.46
@@ -42,7 +46,7 @@ Please add your entries according to this format.
 - Gradle to 8.4
 - AGP to 8.1.2
 
-## Version 0.13.0 *(2023-07-15)*
+## Version 0.13.0 _(2023-07-15)_
 
 - Handle implicit dependency error message for KMP project (#171)
 - Make sure files in the `build/` folder are skipped (#170)
@@ -53,7 +57,7 @@ Please add your entries according to this format.
 - Gradle to 8.2.1
 - AGP to 8.0.2
 
-## Version 0.12.0 *(2023-02-21)*
+## Version 0.12.0 _(2023-02-21)_
 
 - KtFmt to 0.43
 - Kotlin to 1.8.10
@@ -61,17 +65,17 @@ Please add your entries according to this format.
 - AGP to 7.4.1
 - Fix bug with KMP tasks clashing with Android Tasks (#130)
 
-## Version 0.11.0 *(2022-10-01)*
+## Version 0.11.0 _(2022-10-01)_
 
-- KtFmt to 0.41 
+- KtFmt to 0.41
 - AGP to 7.3.0
 
-## Version 0.10.0 *(2022-09-09)*
+## Version 0.10.0 _(2022-09-09)_
 
-- Add support for Gradle Configuration Cache 
+- Add support for Gradle Configuration Cache
 - KtFmt to 0.40
 
-## Version 0.9.0 *(2022-08-29)*
+## Version 0.9.0 _(2022-08-29)_
 
 - KtFmt to 0.39
 - Gradle to 7.5.1
@@ -80,14 +84,14 @@ Please add your entries according to this format.
 - Kotlinx Coroutines to 1.6.1
 - Moved to Version Catalog
 
-## Version 0.8.0 *(2022-02-19)*
+## Version 0.8.0 _(2022-02-19)_
 
 - Set Kotlin jvmTarget to 11
 - KtFmt to 0.32
 - Kotlin to 1.5.31
 - Gradle to 7.4
 
-## Version 0.7.0 *(2021-08-30)*
+## Version 0.7.0 _(2021-08-30)_
 
 - KtFmt to 0.28
 - Gradle to 7.2
@@ -96,7 +100,7 @@ Please add your entries according to this format.
 - Android Ktfmt Tasks will not have `JavaSource` as postfix anymore
 - Tasks should fallback to extension value before defaults
 
-## Version 0.6.0 *(2021-05-20)*
+## Version 0.6.0 _(2021-05-20)_
 
 - `--include-only` now works with paths that are file-separator independent.
 - Added support for Gradle 7.0+
@@ -107,7 +111,7 @@ Please add your entries according to this format.
 - Gradle to `7.0.2`
 - KtFmt to `0.24`
 
-## Version 0.5.0 *(2021-03-20)*
+## Version 0.5.0 _(2021-03-20)_
 
 ### New features
 
@@ -122,7 +126,7 @@ Please add your entries according to this format.
 - AGP to `4.1.3`
 - Gradle to `6.8.3`
 
-## Version 0.4.0 *(2021-02-27)*
+## Version 0.4.0 _(2021-02-27)_
 
 ### New features
 
@@ -132,7 +136,7 @@ Please add your entries according to this format.
 
 - Ktfmt to 0.21
 
-## Version 0.3.0 *(2021-02-23)*
+## Version 0.3.0 _(2021-02-23)_
 
 ### Dependencies Update
 
@@ -140,7 +144,7 @@ Please add your entries according to this format.
 - Gradle to 6.8.2
 - AGP to 4.1.2
 
-## Version 0.2.0 *(2020-12-24)*
+## Version 0.2.0 _(2020-12-24)_
 
 ### Added
 
@@ -150,8 +154,8 @@ Please add your entries according to this format.
 
 - Ktfmt to 0.19
 - Kotlin to 1.4.21
-- kotlinx-coroutines to 1.4.2 
+- kotlinx-coroutines to 1.4.2
 
-## Version 0.1.0 *(2020-12-22)*
+## Version 0.1.0 _(2020-12-22)_
 
 That's the first version of `ktfmt-gradle`
