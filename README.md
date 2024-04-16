@@ -132,7 +132,7 @@ tasks.register<KtfmtFormatTask>("ktfmtPrecommit") {
 }
 ```
 
-You can then invoke the task with `--include-only` and a comma separated list of relative path of files:
+You can then invoke the task with `--include-only` and a comma-separated (or colon-separated) list of relative path of files:
 
 ```
 ./gradlew ktfmtPrecommit --include-only=src/main/java/File1.kt:src/main/java/File2.kt
