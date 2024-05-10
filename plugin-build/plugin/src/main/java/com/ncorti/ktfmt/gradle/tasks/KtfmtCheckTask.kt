@@ -22,7 +22,7 @@ internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
     KtfmtBaseTask(workerExecutor, layout) {
 
     @get:OutputFile
-    val output: Provider<RegularFile> = layout.buildDirectory.file("ktfmt/output.txt")
+    val output: Provider<RegularFile> = layout.buildDirectory.file("ktfmt/${this.name}/output.txt")
 
     init {
         group = KtfmtUtils.GROUP_VERIFICATION
