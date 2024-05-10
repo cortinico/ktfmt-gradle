@@ -7,6 +7,7 @@ import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.FROM_CACHE
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
+import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -21,6 +22,7 @@ internal class KtfmtCheckTaskIntegrationTest {
     @BeforeEach
     fun setUp() {
         File(tempDir, "src/main/java").mkdirs()
+        File(tempDir, "src/test/java").mkdirs()
         File("src/test/resources/jvmProject").copyRecursively(tempDir)
     }
 
@@ -210,6 +212,45 @@ internal class KtfmtCheckTaskIntegrationTest {
         }
 
         assertThat(result!!.task(":ktfmtCheckMain")?.outcome).isEqualTo(FROM_CACHE)
+    }
+
+    @Test
+    fun `check task should be up-to-date when invoked twice with multiple different sized sourceSets`() {
+        createTempFile(
+            content = "val answer = 42\n",
+            fileName = "SrcFile.kt",
+            path = "src/main/java"
+        )
+        createTempFile(
+            content = "val answer = 42\n",
+            fileName = "TestFile.kt",
+            path = "src/test/java"
+        )
+        createTempFile(
+            content = "val answer = 42\n",
+            fileName = "TestFile2.kt",
+            path = "src/test/java"
+        )
+
+        val firstRun: BuildResult =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheck", "--info")
+                .build()
+
+        assertThat(firstRun.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
+        assertThat(firstRun.task(":ktfmtCheckTest")?.outcome).isEqualTo(SUCCESS)
+
+        val secondRun: BuildResult =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheck", "--info")
+                .build()
+
+        assertThat(secondRun.task(":ktfmtCheckMain")?.outcome).isEqualTo(UP_TO_DATE)
+        assertThat(secondRun.task(":ktfmtCheckTest")?.outcome).isEqualTo(UP_TO_DATE)
     }
 
     @Test
