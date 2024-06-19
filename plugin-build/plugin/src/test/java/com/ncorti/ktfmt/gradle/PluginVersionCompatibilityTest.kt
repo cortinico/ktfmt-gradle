@@ -24,7 +24,7 @@ internal class PluginVersionCompatibilityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["1.7.20", "1.9.10", "1.9.20"])
+    @ValueSource(strings = ["1.7.20", "1.9.10", "1.9.20", "2.0.0"])
     fun `plugin can be applied to projects with different kotlin versions`(kotlinVersion: String) {
         // Prevent sharing of classpath
         publishPluginToMavenLocal()
