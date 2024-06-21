@@ -63,4 +63,3 @@ internal fun FormattingOptionsBean.toFormattingOptions(): FormattingOptions =
         manageTrailingCommas = manageTrailingCommas,
         debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting
     )
-
