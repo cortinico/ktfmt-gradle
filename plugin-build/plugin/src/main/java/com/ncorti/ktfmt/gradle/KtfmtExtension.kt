@@ -59,13 +59,6 @@ abstract class KtfmtExtension {
      */
     abstract val debuggingPrintOpsAfterFormatting: Property<Boolean>
 
-    /** Enables --dropbox-style (equivalent to set blockIndent to 4 and continuationIndent to 4). */
-    @Suppress("MagicNumber")
-    fun dropboxStyle() {
-        blockIndent.set(4)
-        continuationIndent.set(4)
-    }
-
     /** Sets the Google style (equivalent to set blockIndent to 2 and continuationIndent to 2). */
     @Suppress("MagicNumber")
     fun googleStyle() {

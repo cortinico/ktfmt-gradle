@@ -5,6 +5,7 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- Remove dropboxStyle since it is no longer supported by ktfmt. Use kotlinLangStyle() instead
 - Fix task caching for ktfmtCheckTask when project has multiple source sets (#288)
 - Kotlin to 2.0.0
 - KtFmt to 0.51

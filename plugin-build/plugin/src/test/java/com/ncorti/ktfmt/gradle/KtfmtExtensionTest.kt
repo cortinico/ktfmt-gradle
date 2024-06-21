@@ -48,16 +48,6 @@ class KtfmtExtensionTest {
     }
 
     @Test
-    fun `dropboxStyle configures correctly`() {
-        val extension = createExtension()
-
-        extension.dropboxStyle()
-
-        assertThat(extension.blockIndent.get()).isEqualTo(4)
-        assertThat(extension.continuationIndent.get()).isEqualTo(4)
-    }
-
-    @Test
     fun `googleStyle configures correctly`() {
         val extension = createExtension()
 

@@ -89,9 +89,6 @@ To enable different styles you can simply:
 
 ```kotlin
 ktfmt {
-    // Dropbox style - 4 space indentation
-    dropboxStyle()
-    
     // Google style - 2 space indentation & automatically adds/removes trailing commas
     googleStyle()
     

@@ -1,6 +1,5 @@
 public abstract class com/ncorti/ktfmt/gradle/KtfmtExtension {
 	public fun <init> ()V
-	public final fun dropboxStyle ()V
 	public abstract fun getBlockIndent ()Lorg/gradle/api/provider/Property;
 	public abstract fun getContinuationIndent ()Lorg/gradle/api/provider/Property;
 	public abstract fun getDebuggingPrintOpsAfterFormatting ()Lorg/gradle/api/provider/Property;
