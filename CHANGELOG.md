@@ -6,6 +6,8 @@ Please add your entries according to this format.
 ## Unreleased
 
 - Fix task caching for ktfmtCheckTask when project has multiple source sets (#288)
+- Kotlin to 2.0.0
+- ksp to 2.0.0-1.0.22
 
 ## Version 0.18.0 _(2024-04-13)_
 
