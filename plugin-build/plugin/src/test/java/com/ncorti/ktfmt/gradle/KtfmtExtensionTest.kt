@@ -1,8 +1,6 @@
 package com.ncorti.ktfmt.gradle
 
 import com.google.common.truth.Truth.assertThat
-import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.DROPBOX
-import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.GOOGLE
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_BLOCK_INDENT
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_CONTINUATION_INDENT
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_DEBUGGING_PRINT_OPTS
@@ -57,7 +55,6 @@ class KtfmtExtensionTest {
 
         assertThat(extension.blockIndent.get()).isEqualTo(4)
         assertThat(extension.continuationIndent.get()).isEqualTo(4)
-        assertThat(extension.ktfmtStyle).isEqualTo(DROPBOX)
     }
 
     @Test
@@ -68,7 +65,6 @@ class KtfmtExtensionTest {
 
         assertThat(extension.blockIndent.get()).isEqualTo(2)
         assertThat(extension.continuationIndent.get()).isEqualTo(2)
-        assertThat(extension.ktfmtStyle).isEqualTo(GOOGLE)
     }
 
     @Test
@@ -79,7 +75,6 @@ class KtfmtExtensionTest {
 
         assertThat(extension.blockIndent.get()).isEqualTo(4)
         assertThat(extension.continuationIndent.get()).isEqualTo(4)
-        assertThat(extension.ktfmtStyle).isEqualTo(GOOGLE)
     }
 
     @Test

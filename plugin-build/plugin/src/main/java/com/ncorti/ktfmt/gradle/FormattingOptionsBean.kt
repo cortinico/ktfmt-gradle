@@ -4,9 +4,6 @@ import java.io.Serializable
 
 internal data class FormattingOptionsBean(
 
-    /** The style used by ktfmt */
-    val style: Style = Style.FACEBOOK,
-
     /** ktfmt breaks lines longer than maxWidth. */
     val maxWidth: Int = defaultMaxWidth,
 
@@ -52,11 +49,6 @@ internal data class FormattingOptionsBean(
      */
     val debuggingPrintOpsAfterFormatting: Boolean = false,
 ) : Serializable {
-    enum class Style {
-        FACEBOOK,
-        DROPBOX,
-        GOOGLE
-    }
 
     companion object {
         private const val serialVersionUID: Long = 1L

@@ -48,6 +48,7 @@ internal object KtfmtFormatter {
                         cause.diagnostics().joinToString("\n") { "${ctx.sourceFile}:$it" }
                     else -> "Generic error during file processing"
                 }
+            logger.debug(message, cause)
             KtfmtResult.KtfmtFailure(ctx.sourceFile, message, cause)
         }
     }
@@ -55,7 +56,6 @@ internal object KtfmtFormatter {
 
 internal fun FormattingOptionsBean.toFormattingOptions(): FormattingOptions =
     FormattingOptions(
-        style = style.toKtfmtStyle(),
         maxWidth = maxWidth,
         blockIndent = blockIndent,
         continuationIndent = continuationIndent,
@@ -64,9 +64,3 @@ internal fun FormattingOptionsBean.toFormattingOptions(): FormattingOptions =
         debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting
     )
 
-internal fun FormattingOptionsBean.Style.toKtfmtStyle(): FormattingOptions.Style =
-    when (this) {
-        FormattingOptionsBean.Style.FACEBOOK -> FormattingOptions.Style.FACEBOOK
-        FormattingOptionsBean.Style.DROPBOX -> FormattingOptions.Style.DROPBOX
-        FormattingOptionsBean.Style.GOOGLE -> FormattingOptions.Style.GOOGLE
-    }
