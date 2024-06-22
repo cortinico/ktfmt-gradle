@@ -48,7 +48,6 @@ internal object KtfmtFormatter {
                         cause.diagnostics().joinToString("\n") { "${ctx.sourceFile}:$it" }
                     else -> "Generic error during file processing"
                 }
-            logger.debug(message, cause)
             KtfmtResult.KtfmtFailure(ctx.sourceFile, message, cause)
         }
     }
