@@ -55,7 +55,6 @@ internal object KtfmtFormatter {
 
 internal fun FormattingOptionsBean.toFormattingOptions(): FormattingOptions =
     FormattingOptions(
-        style = style.toKtfmtStyle(),
         maxWidth = maxWidth,
         blockIndent = blockIndent,
         continuationIndent = continuationIndent,
@@ -63,10 +62,3 @@ internal fun FormattingOptionsBean.toFormattingOptions(): FormattingOptions =
         manageTrailingCommas = manageTrailingCommas,
         debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting
     )
-
-internal fun FormattingOptionsBean.Style.toKtfmtStyle(): FormattingOptions.Style =
-    when (this) {
-        FormattingOptionsBean.Style.FACEBOOK -> FormattingOptions.Style.FACEBOOK
-        FormattingOptionsBean.Style.DROPBOX -> FormattingOptions.Style.DROPBOX
-        FormattingOptionsBean.Style.GOOGLE -> FormattingOptions.Style.GOOGLE
-    }

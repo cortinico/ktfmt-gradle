@@ -1,8 +1,5 @@
 package com.ncorti.ktfmt.gradle
 
-import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.DROPBOX
-import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.FACEBOOK
-import com.ncorti.ktfmt.gradle.FormattingOptionsBean.Style.GOOGLE
 import org.gradle.api.provider.Property
 
 /** Gradle Extension to help you configure ktfmt-gradle */
@@ -16,8 +13,6 @@ abstract class KtfmtExtension {
         debuggingPrintOpsAfterFormatting.convention(DEFAULT_DEBUGGING_PRINT_OPTS)
         manageTrailingCommas.convention(DEFAULT_MANAGE_TRAILING_COMMAS)
     }
-
-    internal var ktfmtStyle = FACEBOOK
 
     /** ktfmt breaks lines longer than maxWidth. Default 100. */
     abstract val maxWidth: Property<Int>
@@ -64,18 +59,9 @@ abstract class KtfmtExtension {
      */
     abstract val debuggingPrintOpsAfterFormatting: Property<Boolean>
 
-    /** Enables --dropbox-style (equivalent to set blockIndent to 4 and continuationIndent to 4). */
-    @Suppress("MagicNumber")
-    fun dropboxStyle() {
-        ktfmtStyle = DROPBOX
-        blockIndent.set(4)
-        continuationIndent.set(4)
-    }
-
     /** Sets the Google style (equivalent to set blockIndent to 2 and continuationIndent to 2). */
     @Suppress("MagicNumber")
     fun googleStyle() {
-        ktfmtStyle = GOOGLE
         blockIndent.set(2)
         continuationIndent.set(2)
         manageTrailingCommas.set(true)
@@ -87,14 +73,12 @@ abstract class KtfmtExtension {
      */
     @Suppress("MagicNumber")
     fun kotlinLangStyle() {
-        ktfmtStyle = GOOGLE
         blockIndent.set(4)
         continuationIndent.set(4)
     }
 
     internal fun toBean(): FormattingOptionsBean =
         FormattingOptionsBean(
-            style = ktfmtStyle,
             maxWidth = maxWidth.get(),
             blockIndent = blockIndent.get(),
             continuationIndent = continuationIndent.get(),
