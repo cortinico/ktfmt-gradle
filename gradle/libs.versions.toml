@@ -8,7 +8,7 @@ kotlin = "2.0.0"
 ktfmt-plugin = "0.18.0"
 ktfmt = "0.51"
 pluginPublish = "1.2.1"
-truth = "1.4.2"
+truth = "1.4.3"
 versionCheck = "0.51.0"
 
 [plugins]
