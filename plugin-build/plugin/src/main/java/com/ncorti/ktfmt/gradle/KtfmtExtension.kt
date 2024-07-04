@@ -84,7 +84,7 @@ abstract class KtfmtExtension {
             continuationIndent = continuationIndent.get(),
             removeUnusedImports = removeUnusedImports.get(),
             manageTrailingCommas = manageTrailingCommas.get(),
-            debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting.get()
+            debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting.get(),
         )
 
     internal companion object {

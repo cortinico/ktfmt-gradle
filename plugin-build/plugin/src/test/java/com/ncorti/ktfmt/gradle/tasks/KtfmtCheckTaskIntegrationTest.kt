@@ -63,8 +63,7 @@ internal class KtfmtCheckTaskIntegrationTest {
                 ````
             }
             """
-                .trimIndent()
-        )
+                .trimIndent())
 
         val result =
             GradleRunner.create()
@@ -168,10 +167,7 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
                 .withArguments(
-                    "ktfmtCheckMain",
-                    "--debug",
-                    "--include-only=${file2.relativeTo(tempDir)}"
-                )
+                    "ktfmtCheckMain", "--debug", "--include-only=${file2.relativeTo(tempDir)}")
                 .build()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
@@ -217,20 +213,11 @@ internal class KtfmtCheckTaskIntegrationTest {
     @Test
     fun `check task should be up-to-date when invoked twice with multiple different sized sourceSets`() {
         createTempFile(
-            content = "val answer = 42\n",
-            fileName = "SrcFile.kt",
-            path = "src/main/java"
-        )
+            content = "val answer = 42\n", fileName = "SrcFile.kt", path = "src/main/java")
         createTempFile(
-            content = "val answer = 42\n",
-            fileName = "TestFile.kt",
-            path = "src/test/java"
-        )
+            content = "val answer = 42\n", fileName = "TestFile.kt", path = "src/test/java")
         createTempFile(
-            content = "val answer = 42\n",
-            fileName = "TestFile2.kt",
-            path = "src/test/java"
-        )
+            content = "val answer = 42\n", fileName = "TestFile2.kt", path = "src/test/java")
 
         val firstRun: BuildResult =
             GradleRunner.create()

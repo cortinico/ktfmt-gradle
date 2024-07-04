@@ -27,9 +27,7 @@ internal object KtfmtFormatter {
         if (ctx.includedFiles.isNotEmpty()) {
             if (ctx.sourceFile.canonicalFile !in ctx.includedFiles) {
                 return KtfmtResult.KtfmtSkipped(
-                    ctx.sourceFile,
-                    "Not included inside --include-only"
-                )
+                    ctx.sourceFile, "Not included inside --include-only")
             }
         }
         @Suppress("TooGenericExceptionCaught")
@@ -60,5 +58,5 @@ internal fun FormattingOptionsBean.toFormattingOptions(): FormattingOptions =
         continuationIndent = continuationIndent,
         removeUnusedImports = removeUnusedImports,
         manageTrailingCommas = manageTrailingCommas,
-        debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting
+        debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting,
     )

@@ -35,7 +35,7 @@ internal class IncludedFilesParserTest {
                 "$tmp${sep}a${sep}b",
                 "$tmp${sep}c${sep}d",
                 "$tmp${sep}e${sep}f",
-                "$tmp${sep}g${sep}h"
+                "$tmp${sep}g${sep}h",
             )
     }
 }

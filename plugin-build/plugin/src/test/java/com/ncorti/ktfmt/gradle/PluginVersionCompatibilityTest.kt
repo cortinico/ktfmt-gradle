@@ -47,7 +47,7 @@ internal class PluginVersionCompatibilityTest {
             .withArguments(
                 "plugin:publishToMavenLocal",
                 "-PVERSION=99.99.99-compatibility-check",
-                "-Pskip-signing=true"
+                "-Pskip-signing=true",
             )
             .build()
     }

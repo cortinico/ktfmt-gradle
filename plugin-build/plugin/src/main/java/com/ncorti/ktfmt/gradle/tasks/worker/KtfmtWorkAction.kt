@@ -55,7 +55,7 @@ internal abstract class KtfmtWorkAction : WorkAction<KtfmtWorkAction.KtfmtWorkPa
                 sourceFile = input,
                 sourceRoot = parameters.projectDir.asFile.get(),
                 includedFiles = parameters.includedFiles.get(),
-                formattingOptions = parameters.formattingOptions.get()
+                formattingOptions = parameters.formattingOptions.get(),
             )
         val result = KtfmtFormatter.format(ctx)
         writeResult(result)

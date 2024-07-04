@@ -231,10 +231,7 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
                 .withArguments(
-                    "ktfmtFormatMain",
-                    "--info",
-                    "--include-only=${file2.relativeTo(tempDir)}"
-                )
+                    "ktfmtFormatMain", "--info", "--include-only=${file2.relativeTo(tempDir)}")
                 .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)

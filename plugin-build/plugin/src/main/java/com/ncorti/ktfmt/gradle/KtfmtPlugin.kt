@@ -36,8 +36,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
                     attributes.apply {
                         attribute(
                             Usage.USAGE_ATTRIBUTE,
-                            project.objects.named(Usage::class.java, Usage.JAVA_RUNTIME)
-                        )
+                            project.objects.named(Usage::class.java, Usage.JAVA_RUNTIME))
                     }
                     isVisible = false
                     isCanBeConsumed = false
@@ -63,11 +62,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
                     project.logger.i("Skipping Android task creation, as KMP is applied")
                 } else {
                     applyKtfmtToAndroidProject(
-                        project,
-                        ktfmtExtension,
-                        topLevelFormat,
-                        topLevelCheck
-                    )
+                        project, ktfmtExtension, topLevelFormat, topLevelCheck)
                 }
             }
             project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project) }
@@ -85,8 +80,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 it.kotlin.sourceDirectories,
                 ktfmtExtension,
                 topLevelFormat,
-                topLevelCheck
-            )
+                topLevelCheck)
         }
     }
 
@@ -105,19 +99,14 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 it.kotlin.sourceDirectories,
                 ktfmtExtension,
                 topLevelFormat,
-                topLevelCheck
+                topLevelCheck,
             )
         }
 
         extension.targets.all { kotlinTarget ->
             if (kotlinTarget.platformType == KotlinPlatformType.androidJvm) {
                 applyKtfmtToAndroidProject(
-                    project,
-                    ktfmtExtension,
-                    topLevelFormat,
-                    topLevelCheck,
-                    isKmpProject = true
-                )
+                    project, ktfmtExtension, topLevelFormat, topLevelCheck, isKmpProject = true)
             }
         }
     }
