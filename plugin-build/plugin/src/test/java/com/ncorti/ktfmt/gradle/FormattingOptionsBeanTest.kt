@@ -15,7 +15,7 @@ class FormattingOptionsBeanTest {
                 continuationIndent = 44,
                 removeUnusedImports = false,
                 manageTrailingCommas = true,
-                debuggingPrintOpsAfterFormatting = true
+                debuggingPrintOpsAfterFormatting = true,
             )
 
         val opts = bean.toFormattingOptions()

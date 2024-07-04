@@ -50,8 +50,7 @@ internal class KtfmtFormatterTest {
         val newCtx =
             formatCtx.copy(
                 sourceFile = input2,
-                includedFiles = setOf(formatCtx.sourceFile.relativeTo(tempDir))
-            )
+                includedFiles = setOf(formatCtx.sourceFile.relativeTo(tempDir)))
 
         val result = KtfmtFormatter.format(newCtx) as KtfmtResult.KtfmtSkipped
 

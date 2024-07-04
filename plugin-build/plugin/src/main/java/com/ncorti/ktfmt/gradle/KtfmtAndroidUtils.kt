@@ -46,7 +46,7 @@ internal object KtfmtAndroidUtils {
                         project.files(Callable { srcDirs }),
                         ktfmtExtension,
                         topLevelFormat,
-                        topLevelCheck
+                        topLevelCheck,
                     )
                 }
             }

@@ -157,7 +157,7 @@ class KtfmtPluginTest {
                 "ktfmtCheckMain",
                 "ktfmtCheckTestFixtures",
                 "ktfmtCheckTestFixturesRelease",
-                "ktfmtCheckTestFixturesDebug"
+                "ktfmtCheckTestFixturesDebug",
             )
         assertThat(project["ktfmtFormat"].dependencies)
             .containsExactly(
@@ -172,7 +172,7 @@ class KtfmtPluginTest {
                 "ktfmtFormatMain",
                 "ktfmtFormatTestFixtures",
                 "ktfmtFormatTestFixturesRelease",
-                "ktfmtFormatTestFixturesDebug"
+                "ktfmtFormatTestFixturesDebug",
             )
     }
 
