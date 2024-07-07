@@ -26,6 +26,8 @@ abstract class KtfmtPlugin : Plugin<Project> {
     private lateinit var topLevelFormat: TaskProvider<Task>
     private lateinit var topLevelCheck: TaskProvider<Task>
 
+    // TODO Simon.Hauck 2024-07-07 - Remove this level of indentation. The variable project is used
+    // inconsistently in the next section
     override fun apply(project: Project) =
         project.run {
             ktfmtExtension = project.extensions.create(EXTENSION_NAME, KtfmtExtension::class.java)

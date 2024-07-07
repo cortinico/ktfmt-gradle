@@ -258,6 +258,28 @@ internal class KtfmtFormatTaskIntegrationTest {
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
     }
 
+    @Test
+    fun `custom format task should be compatible with configuration cache`() {
+        createTempFile(content = "val answer = 42\n")
+
+        tempDir
+            .resolve("build.gradle.kts")
+            .appendText(
+                """
+                |
+                |tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask>("customFormatTask") {
+                |   source = fileTree("src/main/java")
+                |}
+                """
+                    .trimMargin())
+
+        GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("customFormatTask", "--configuration-cache")
+            .build()
+    }
+
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
