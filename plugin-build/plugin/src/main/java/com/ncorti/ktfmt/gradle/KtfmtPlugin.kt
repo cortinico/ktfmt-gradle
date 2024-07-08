@@ -11,6 +11,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.attributes.Usage
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
@@ -53,6 +54,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
 
             project.tasks.withType(KtfmtBaseTask::class.java).configureEach {
                 it.ktfmtClasspath.from(ktFmt)
+                it.formattingOptionsBean.set(getFormattingOptionsProvider(ktfmtExtension))
             }
 
             topLevelFormat = createTopLevelFormatTask(project)
@@ -63,8 +65,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
                     project.logger.i("Skipping Android task creation, as KMP is applied")
                 } else {
-                    applyKtfmtToAndroidProject(
-                        project, ktfmtExtension, topLevelFormat, topLevelCheck)
+                    applyKtfmtToAndroidProject(project, topLevelFormat, topLevelCheck)
                 }
             }
             project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project) }
@@ -80,9 +81,9 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 project,
                 it.name,
                 it.kotlin.sourceDirectories,
-                ktfmtExtension,
                 topLevelFormat,
-                topLevelCheck)
+                topLevelCheck,
+            )
         }
     }
 
@@ -99,7 +100,6 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 project,
                 name,
                 it.kotlin.sourceDirectories,
-                ktfmtExtension,
                 topLevelFormat,
                 topLevelCheck,
             )
@@ -108,7 +108,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
         extension.targets.all { kotlinTarget ->
             if (kotlinTarget.platformType == KotlinPlatformType.androidJvm) {
                 applyKtfmtToAndroidProject(
-                    project, ktfmtExtension, topLevelFormat, topLevelCheck, isKmpProject = true)
+                    project, topLevelFormat, topLevelCheck, isKmpProject = true)
             }
         }
     }
@@ -127,6 +127,10 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 "Run Ktfmt validation for all source sets for project '${project.name}'"
         }
     }
+
+    private fun Project.getFormattingOptionsProvider(
+        extension: KtfmtExtension
+    ): Provider<FormattingOptionsBean> = provider { extension.toBean() }
 
     companion object {
         internal val defaultExcludes = listOf("**/build/**")

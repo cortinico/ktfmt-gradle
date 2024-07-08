@@ -1,14 +1,12 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
-import com.ncorti.ktfmt.gradle.KtfmtExtension
 import com.ncorti.ktfmt.gradle.KtfmtPlugin
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtWorkAction
 import com.ncorti.ktfmt.gradle.tasks.worker.Result
 import com.ncorti.ktfmt.gradle.util.d
 import java.io.File
 import java.util.*
-import org.gradle.api.UnknownDomainObjectException
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.ProjectLayout
@@ -19,7 +17,6 @@ import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SourceTask
@@ -42,7 +39,7 @@ internal constructor(
 
     @get:Classpath @get:InputFiles internal abstract val ktfmtClasspath: ConfigurableFileCollection
 
-    @get:Input @get:Optional internal var bean: FormattingOptionsBean? = null
+    @get:Input internal abstract val formattingOptionsBean: Property<FormattingOptionsBean>
 
     @get:Option(
         option = "include-only",
@@ -66,19 +63,6 @@ internal constructor(
     }
 
     protected abstract fun execute(workQueue: WorkQueue)
-
-    private fun formattingOptions(): FormattingOptionsBean {
-        if (bean == null) {
-            // TODO - set this as property / convention
-            bean =
-                try {
-                    project.extensions.getByType(KtfmtExtension::class.java).toBean()
-                } catch (ignored: UnknownDomainObjectException) {
-                    FormattingOptionsBean()
-                }
-        }
-        return bean!!
-    }
 
     @get:Internal
     internal val defaultExcludesFilter: Spec<File> =
@@ -104,7 +88,7 @@ internal constructor(
             forEach {
                 queue.submit(action) { parameters ->
                     parameters.sourceFile.set(it)
-                    parameters.formattingOptions.set(formattingOptions())
+                    parameters.formattingOptions.set(formattingOptionsBean.get())
                     parameters.includedFiles.set(includedFiles)
                     parameters.projectDir.set(layout.projectDirectory)
                     parameters.workingDir.set(workingDir)
