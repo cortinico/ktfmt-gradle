@@ -1,11 +1,8 @@
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-
 plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.pluginPublish) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktfmt)
-    alias(libs.plugins.versionCheck)
     alias(libs.plugins.binaryCompatibilityValidator)
 }
 
@@ -22,9 +19,5 @@ allprojects {
 
     detekt { config.setFrom(rootProject.files("../config/detekt/detekt.yml")) }
 }
-
-tasks.withType<DependencyUpdatesTask> { rejectVersionIf { isNonStable(candidate.version) } }
-
-fun isNonStable(version: String) = "^[0-9,.v-]+(-r)?$".toRegex().matches(version).not()
 
 tasks.register<Delete>("clean") { delete(layout.buildDirectory) }
