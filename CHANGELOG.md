@@ -5,6 +5,10 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- Update formatting of `build.gradle.kts` with ktfmt 0.51
+- Replace deprecated methods in `build.gradle.kts` files
+- Prepare for Gradle 8.9
+
 ## Version 0.19.0 _(2024-07-03)_
 
 - Remove dropboxStyle since it is no longer supported by ktfmt. Use kotlinLangStyle() instead
@@ -113,7 +117,8 @@ Please add your entries according to this format.
 
 - `--include-only` now works with paths that are file-separator independent.
 - Added support for Gradle 7.0+
-- Added task ordering between `ktfmt*` tasks and `compileKotlin` tasks. This fix the correctness warning introduced with Gradle 7.0
+- Added task ordering between `ktfmt*` tasks and `compileKotlin` tasks. This fix the correctness warning introduced with
+  Gradle 7.0
 
 ### Dependencies Update
 
@@ -139,7 +144,8 @@ Please add your entries according to this format.
 
 ### New features
 
-- Added the `kotlinLangStyle()` function to the `ktfmt{}` extension. This will allow you to apply a format that attempts to reflect the [official kotlin convetions](https://kotlinlang.org/docs/coding-conventions.html).
+- Added the `kotlinLangStyle()` function to the `ktfmt{}` extension. This will allow you to apply a format that attempts
+  to reflect the [official kotlin convetions](https://kotlinlang.org/docs/coding-conventions.html).
 
 ### Dependencies Update
 

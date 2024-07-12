@@ -19,4 +19,7 @@ include(
     ":example",
     ":example-kmp",
 )
-includeBuild("plugin-build")
+
+includeBuild(
+    "plugin-build",
+)
