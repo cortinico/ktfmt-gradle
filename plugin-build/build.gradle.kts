@@ -18,23 +18,13 @@ allprojects {
         plugin(rootProject.libs.plugins.ktfmt.get().pluginId)
     }
 
-    ktfmt {
-        kotlinLangStyle()
-    }
+    ktfmt { kotlinLangStyle() }
 
-    detekt {
-        config.setFrom(rootProject.files("../config/detekt/detekt.yml"))
-    }
+    detekt { config.setFrom(rootProject.files("../config/detekt/detekt.yml")) }
 }
 
-tasks.withType<DependencyUpdatesTask> {
-    rejectVersionIf {
-        isNonStable(candidate.version)
-    }
-}
+tasks.withType<DependencyUpdatesTask> { rejectVersionIf { isNonStable(candidate.version) } }
 
 fun isNonStable(version: String) = "^[0-9,.v-]+(-r)?$".toRegex().matches(version).not()
 
-tasks.register("clean", Delete::class.java) {
-    delete(rootProject.buildDir)
-}
+tasks.register("clean", Delete::class.java) { delete(rootProject.buildDir) }

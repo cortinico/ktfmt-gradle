@@ -9,26 +9,16 @@ plugins {
 }
 
 subprojects {
-    apply {
-        plugin(rootProject.libs.plugins.detekt.get().pluginId)
-    }
+    apply { plugin(rootProject.libs.plugins.detekt.get().pluginId) }
 
-    detekt {
-        config.setFrom(rootProject.files("config/detekt/detekt.yml"))
-    }
+    detekt { config.setFrom(rootProject.files("config/detekt/detekt.yml")) }
 }
 
-tasks.withType<DependencyUpdatesTask> {
-    rejectVersionIf {
-        isNonStable(candidate.version)
-    }
-}
+tasks.withType<DependencyUpdatesTask> { rejectVersionIf { isNonStable(candidate.version) } }
 
 fun isNonStable(version: String) = "^[0-9,.v-]+(-r)?$".toRegex().matches(version).not()
 
-tasks.register("clean", Delete::class.java) {
-    delete(rootProject.buildDir)
-}
+tasks.register("clean", Delete::class.java) { delete(rootProject.buildDir) }
 
 tasks.register("reformatAll") {
     description = "Reformat all the Kotlin Code"
