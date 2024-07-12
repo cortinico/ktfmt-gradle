@@ -69,6 +69,7 @@ dependencies {
                 .first()))
 }
 
+@Suppress("UnstableApiUsage")
 gradlePlugin {
     plugins {
         create(property("ID").toString()) {
@@ -77,12 +78,12 @@ gradlePlugin {
             version = property("VERSION").toString()
             displayName = property("DISPLAY_NAME").toString()
             description = property("DESCRIPTION").toString()
-            tags.set(listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter"))
+            tags = listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter")
         }
     }
 
-    website.set(property("WEBSITE").toString())
-    vcsUrl.set(property("VCS_URL").toString())
+    website = property("WEBSITE").toString()
+    vcsUrl = property("VCS_URL").toString()
 }
 
 signing {
@@ -95,7 +96,7 @@ tasks.withType<Sign>().configureEach { onlyIf { project.properties["skip-signing
 
 tasks.withType<Test> { useJUnitPlatform() }
 
-val persistKtmftVersion by
+val persistKtfmtVersion by
     tasks.registering {
         inputs.property("ktfmtVersion", libs.ktfmt)
         outputs.files(layout.buildDirectory.file("ktfmt-version.txt"))
@@ -103,5 +104,5 @@ val persistKtmftVersion by
     }
 
 tasks.named<ProcessResources>("processResources") {
-    from(persistKtmftVersion) { into("com/ncorti/ktfmt/gradle") }
+    from(persistKtfmtVersion) { into("com/ncorti/ktfmt/gradle") }
 }
