@@ -1,5 +1,3 @@
-import org.gradle.api.internal.classpath.ModuleRegistry
-import org.gradle.configurationcache.extensions.serviceOf
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
@@ -58,14 +56,6 @@ dependencies {
     testImplementation(libs.truth)
 
     testImplementation(libs.ktfmt)
-
-    testRuntimeOnly(
-        files(
-            serviceOf<ModuleRegistry>()
-                .getModule("gradle-tooling-api-builders")
-                .classpath
-                .asFiles
-                .first()))
 }
 
 @Suppress("UnstableApiUsage")
