@@ -18,7 +18,7 @@ tasks.withType<DependencyUpdatesTask> { rejectVersionIf { isNonStable(candidate.
 
 fun isNonStable(version: String) = "^[0-9,.v-]+(-r)?$".toRegex().matches(version).not()
 
-tasks.register("clean", Delete::class.java) { delete(rootProject.buildDir) }
+tasks.register<Delete>("clean") { delete(layout.buildDirectory) }
 
 tasks.register("reformatAll") {
     description = "Reformat all the Kotlin Code"
