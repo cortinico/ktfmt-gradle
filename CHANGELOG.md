@@ -8,7 +8,6 @@ Please add your entries according to this format.
 - Update formatting of `build.gradle.kts` with ktfmt 0.51
 - Replace deprecated methods in `build.gradle.kts` files
 - Prepare for Gradle 8.9
-- Replace deprecated detekt rule
 
 ## Version 0.19.0 _(2024-07-03)_
 
