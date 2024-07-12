@@ -1,6 +1,7 @@
 import org.gradle.api.internal.classpath.ModuleRegistry
 import org.gradle.configurationcache.extensions.serviceOf
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     kotlin("jvm")
@@ -14,7 +15,14 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.withType<KotlinCompile> { kotlinOptions { jvmTarget = JavaVersion.VERSION_11.toString() } }
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+        apiVersion.set(KotlinVersion.fromVersion("1.4"))
+        languageVersion.set(KotlinVersion.fromVersion("1.4"))
+        jvmTarget = JvmTarget.JVM_11
+    }
+}
 
 /**
  * We create a configuration that we can resolve by extending [compileOnly]. Here we inject the
@@ -33,15 +41,6 @@ integrationTestRuntime.apply {
 
 tasks.withType<PluginUnderTestMetadata>().configureEach {
     pluginClasspath.from(integrationTestRuntime)
-}
-
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
-        jvmTarget = JavaVersion.VERSION_11.toString()
-        apiVersion = "1.4"
-        languageVersion = "1.4"
-    }
 }
 
 dependencies {
