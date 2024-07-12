@@ -17,7 +17,6 @@ java {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
         apiVersion.set(KotlinVersion.fromVersion("1.4"))
         languageVersion.set(KotlinVersion.fromVersion("1.4"))
         jvmTarget = JvmTarget.JVM_11
