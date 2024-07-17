@@ -115,7 +115,8 @@ Please add your entries according to this format.
 
 - `--include-only` now works with paths that are file-separator independent.
 - Added support for Gradle 7.0+
-- Added task ordering between `ktfmt*` tasks and `compileKotlin` tasks. This fix the correctness warning introduced with Gradle 7.0
+- Added task ordering between `ktfmt*` tasks and `compileKotlin` tasks. This fix the correctness warning introduced with
+  Gradle 7.0
 
 ### Dependencies Update
 
@@ -141,7 +142,8 @@ Please add your entries according to this format.
 
 ### New features
 
-- Added the `kotlinLangStyle()` function to the `ktfmt{}` extension. This will allow you to apply a format that attempts to reflect the [official kotlin convetions](https://kotlinlang.org/docs/coding-conventions.html).
+- Added the `kotlinLangStyle()` function to the `ktfmt{}` extension. This will allow you to apply a format that attempts
+  to reflect the [official kotlin convetions](https://kotlinlang.org/docs/coding-conventions.html).
 
 ### Dependencies Update
 
