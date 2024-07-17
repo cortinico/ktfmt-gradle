@@ -77,7 +77,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
             createTasksForSourceSet(
                 project,
                 it.name,
-                it.kotlin.sourceDirectories,
+                project.provider { it.kotlin.sourceDirectories },
                 ktfmtExtension,
                 topLevelFormat,
                 topLevelCheck)
@@ -96,7 +96,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
             createTasksForSourceSet(
                 project,
                 name,
-                it.kotlin.sourceDirectories,
+                project.provider { it.kotlin.sourceDirectories },
                 ktfmtExtension,
                 topLevelFormat,
                 topLevelCheck,

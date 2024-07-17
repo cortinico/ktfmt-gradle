@@ -258,7 +258,8 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task should detect the source and test files in a flattened project structure`() {
-        appendToBuildGradle("""
+        appendToBuildGradle(
+            """
             |kotlin {
             |    sourceSets.main {
             |       kotlin.srcDirs("src")
@@ -267,10 +268,11 @@ internal class KtfmtCheckTaskIntegrationTest {
             |       kotlin.srcDirs("test")
             |    }
             |}
-        """.trimMargin())
+        """
+                .trimMargin())
 
-        createTempFile("val answer = 42", path = "src/someFolder")
-        createTempFile("val answer = 42", path = "test/someOtherFolder")
+        createTempFile("val answer = 42\n", path = "src/someFolder")
+        createTempFile("val answer = 42\n", path = "test/someOtherFolder")
 
         val result =
             GradleRunner.create()
@@ -290,16 +292,14 @@ internal class KtfmtCheckTaskIntegrationTest {
         }
     }
 
-
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
         path: String = "src/main/java"
-    ): File {
-     return tempDir.resolve(path).resolve(fileName).apply {
+    ): File =
+        tempDir.resolve(path).resolve(fileName).apply {
             parentFile.mkdirs()
             createNewFile()
             writeText(content)
         }
-    }
 }

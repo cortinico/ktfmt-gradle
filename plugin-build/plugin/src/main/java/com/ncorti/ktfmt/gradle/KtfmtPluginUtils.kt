@@ -5,6 +5,7 @@ import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -33,7 +34,7 @@ internal object KtfmtPluginUtils {
     internal fun createTasksForSourceSet(
         project: Project,
         srcSetName: String,
-        srcSetDir: FileCollection,
+        srcSetDir: Provider<FileCollection>,
         ktfmtExtension: KtfmtExtension,
         topLevelFormat: TaskProvider<Task>,
         topLevelCheck: TaskProvider<Task>
@@ -65,7 +66,7 @@ internal object KtfmtPluginUtils {
         project: Project,
         ktfmtExtension: KtfmtExtension,
         name: String,
-        srcDir: FileCollection
+        srcDir: Provider<FileCollection>
     ): TaskProvider<KtfmtCheckTask> {
         val capitalizedName =
             name.split(" ").joinToString("") {
@@ -79,11 +80,10 @@ internal object KtfmtPluginUtils {
                 charArray.concatToString()
             }
         val taskName = "$TASK_NAME_CHECK$capitalizedName"
-        val inputDirs = srcDir.toList()
         return project.tasks.register(taskName, KtfmtCheckTask::class.java) {
             it.description =
                 "Run Ktfmt formatter for sourceSet '$name' on project '${project.name}'"
-            it.setSource(inputDirs)
+            it.setSource(srcDir)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
             it.setExcludes(KtfmtPlugin.defaultExcludes)
             it.bean = ktfmtExtension.toBean()
@@ -94,7 +94,7 @@ internal object KtfmtPluginUtils {
         project: Project,
         ktfmtExtension: KtfmtExtension,
         name: String,
-        srcDir: FileCollection
+        srcDir: Provider<FileCollection>
     ): TaskProvider<KtfmtFormatTask> {
         val srcSetName =
             name.split(" ").joinToString("") {
@@ -108,11 +108,10 @@ internal object KtfmtPluginUtils {
                 charArray.concatToString()
             }
         val taskName = "$TASK_NAME_FORMAT$srcSetName"
-        val inputDirs = srcDir.toList()
         return project.tasks.register(taskName, KtfmtFormatTask::class.java) {
             it.description =
                 "Run Ktfmt formatter validation for sourceSet '$name' on project '${project.name}'"
-            it.setSource(inputDirs)
+            it.setSource(srcDir)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
             it.setExcludes(KtfmtPlugin.defaultExcludes)
             it.bean = ktfmtExtension.toBean()
