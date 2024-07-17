@@ -1,34 +1,17 @@
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-
 plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.detekt)
-    alias(libs.plugins.versionCheck)
 }
 
 subprojects {
-    apply {
-        plugin(rootProject.libs.plugins.detekt.get().pluginId)
-    }
+    apply { plugin(rootProject.libs.plugins.detekt.get().pluginId) }
 
-    detekt {
-        config.setFrom(rootProject.files("config/detekt/detekt.yml"))
-    }
+    detekt { config.setFrom(rootProject.files("config/detekt/detekt.yml")) }
 }
 
-tasks.withType<DependencyUpdatesTask> {
-    rejectVersionIf {
-        isNonStable(candidate.version)
-    }
-}
-
-fun isNonStable(version: String) = "^[0-9,.v-]+(-r)?$".toRegex().matches(version).not()
-
-tasks.register("clean", Delete::class.java) {
-    delete(rootProject.buildDir)
-}
+tasks.register<Delete>("clean") { delete(layout.buildDirectory) }
 
 tasks.register("reformatAll") {
     description = "Reformat all the Kotlin Code"

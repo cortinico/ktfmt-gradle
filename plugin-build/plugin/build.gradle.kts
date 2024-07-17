@@ -1,6 +1,5 @@
-import org.gradle.api.internal.classpath.ModuleRegistry
-import org.gradle.configurationcache.extensions.serviceOf
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     kotlin("jvm")
@@ -14,18 +13,21 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+kotlin {
+    compilerOptions {
+        apiVersion.set(KotlinVersion.fromVersion("1.4"))
+        languageVersion.set(KotlinVersion.fromVersion("1.4"))
+        jvmTarget = JvmTarget.JVM_11
     }
 }
 
 /**
- * We create a configuration that we can resolve by extending [compileOnly].
- * Here we inject the dependencies into TestKit plugin
- * classpath via [PluginUnderTestMetadata] to make them available for testing.
+ * We create a configuration that we can resolve by extending [compileOnly]. Here we inject the
+ * dependencies into TestKit plugin classpath via [PluginUnderTestMetadata] to make them available
+ * for testing.
  */
 val integrationTestRuntime: Configuration by configurations.creating
+
 integrationTestRuntime.apply {
     extendsFrom(configurations.getByName("compileOnly"))
     attributes {
@@ -36,15 +38,6 @@ integrationTestRuntime.apply {
 
 tasks.withType<PluginUnderTestMetadata>().configureEach {
     pluginClasspath.from(integrationTestRuntime)
-}
-
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
-        jvmTarget = JavaVersion.VERSION_11.toString()
-        apiVersion = "1.4"
-        languageVersion = "1.4"
-    }
 }
 
 dependencies {
@@ -63,15 +56,9 @@ dependencies {
     testImplementation(libs.truth)
 
     testImplementation(libs.ktfmt)
-
-    testRuntimeOnly(
-        files(
-            serviceOf<ModuleRegistry>().getModule("gradle-tooling-api-builders")
-                .classpath.asFiles.first()
-        )
-    )
 }
 
+@Suppress("UnstableApiUsage")
 gradlePlugin {
     plugins {
         create(property("ID").toString()) {
@@ -80,12 +67,12 @@ gradlePlugin {
             version = property("VERSION").toString()
             displayName = property("DISPLAY_NAME").toString()
             description = property("DESCRIPTION").toString()
-            tags.set(listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter"))
+            tags = listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter")
         }
     }
 
-    website.set(property("WEBSITE").toString())
-    vcsUrl.set(property("VCS_URL").toString())
+    website = property("WEBSITE").toString()
+    vcsUrl = property("VCS_URL").toString()
 }
 
 signing {
@@ -96,20 +83,15 @@ signing {
 
 tasks.withType<Sign>().configureEach { onlyIf { project.properties["skip-signing"] != "true" } }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
+tasks.withType<Test> { useJUnitPlatform() }
 
-val persistKtmftVersion by tasks.registering {
-    inputs.property("ktfmtVersion", libs.ktfmt)
-    outputs.files(layout.buildDirectory.file("ktfmt-version.txt"))
-    doLast {
-        outputs.files.singleFile.writeText(inputs.properties["ktfmtVersion"].toString())
+val persistKtfmtVersion by
+    tasks.registering {
+        inputs.property("ktfmtVersion", libs.ktfmt)
+        outputs.files(layout.buildDirectory.file("ktfmt-version.txt"))
+        doLast { outputs.files.singleFile.writeText(inputs.properties["ktfmtVersion"].toString()) }
     }
-}
 
 tasks.named<ProcessResources>("processResources") {
-    from(persistKtmftVersion) {
-        into("com/ncorti/ktfmt/gradle")
-    }
+    from(persistKtfmtVersion) { into("com/ncorti/ktfmt/gradle") }
 }

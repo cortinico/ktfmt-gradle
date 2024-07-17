@@ -510,9 +510,9 @@ style:
     singleLine: 'never'
     multiLine: 'always'
   BracesOnWhenStatements:
-    active: false
+    active: true
     singleLine: 'necessary'
-    multiLine: 'consistent'
+    multiLine: 'necessary'
   CanBeNonNullable:
     active: false
   CascadingCallWrapping:
@@ -661,8 +661,6 @@ style:
   OptionalAbstractKeyword:
     active: true
   OptionalUnit:
-    active: false
-  OptionalWhenBraces:
     active: false
   PreferToOverPairSyntax:
     active: false

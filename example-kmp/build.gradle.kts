@@ -10,18 +10,14 @@ kotlin {
     androidTarget()
 }
 
-ktfmt {
-    kotlinLangStyle()
-}
+ktfmt { kotlinLangStyle() }
 
 android {
     namespace = "com.ncorti.example.ktfmt"
     compileSdk = 33
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
+tasks.withType<Test> { useJUnitPlatform() }
 
 dependencies {
     testImplementation(platform(libs.junit.bom))

@@ -1,17 +1,13 @@
 plugins {
     kotlin("jvm")
     id("com.ncorti.ktfmt.gradle")
-    id("com.google.devtools.ksp") version "2.0.0-1.0.22"
+    id("com.google.devtools.ksp") version "2.0.0-1.0.23"
     id("app.cash.sqldelight") version "2.0.2"
 }
 
-ktfmt {
-    kotlinLangStyle()
-}
+ktfmt { kotlinLangStyle() }
 
-kotlin {
-    jvmToolchain(17)
-}
+kotlin { jvmToolchain(17) }
 
 dependencies {
     testImplementation(platform(libs.junit.bom))
@@ -21,14 +17,6 @@ dependencies {
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
+tasks.withType<Test> { useJUnitPlatform() }
 
-sqldelight {
-  databases {
-    create("Database") {
-      packageName.set("com.example")
-    }
-  }
-}
+sqldelight { databases { create("Database") { packageName.set("com.example") } } }
