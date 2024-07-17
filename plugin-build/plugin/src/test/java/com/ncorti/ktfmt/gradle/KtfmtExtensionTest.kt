@@ -68,7 +68,7 @@ class KtfmtExtensionTest {
     }
 
     @Test
-    fun `toBean copies fields correctly`() {
+    fun `toFormattingOptions copies fields correctly`() {
         val extension = createExtension()
 
         extension.maxWidth.set(42)
@@ -78,7 +78,7 @@ class KtfmtExtensionTest {
         extension.manageTrailingCommas.set(true)
         extension.debuggingPrintOpsAfterFormatting.set(true)
 
-        val bean = extension.toBean()
+        val bean = extension.toFormattingOptions()
 
         assertThat(bean.maxWidth).isEqualTo(42)
         assertThat(bean.blockIndent).isEqualTo(43)

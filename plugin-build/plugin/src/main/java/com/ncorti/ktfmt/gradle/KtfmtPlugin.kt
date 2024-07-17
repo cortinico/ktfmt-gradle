@@ -124,8 +124,6 @@ abstract class KtfmtPlugin : Plugin<Project> {
         }
     }
 
-    private fun KtfmtExtension.toFormattingOptions(): FormattingOptionsBean = toBean()
-
     companion object {
         internal val defaultExcludes = listOf("**/build/**")
         internal val defaultExcludesRegex = Regex("^(.*[\\\\/])?build([\\\\/].*)?\$")
