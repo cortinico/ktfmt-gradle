@@ -26,50 +26,49 @@ abstract class KtfmtPlugin : Plugin<Project> {
     private lateinit var topLevelFormat: TaskProvider<Task>
     private lateinit var topLevelCheck: TaskProvider<Task>
 
-    override fun apply(project: Project) =
-        project.run {
-            ktfmtExtension = project.extensions.create(EXTENSION_NAME, KtfmtExtension::class.java)
+    override fun apply(project: Project) {
+        ktfmtExtension = project.extensions.create(EXTENSION_NAME, KtfmtExtension::class.java)
 
-            // setup to pull in ktfmt separately to run on an isolated classloader
-            val ktFmt =
-                configurations.create("ktfmt").apply {
-                    attributes.apply {
-                        attribute(
-                            Usage.USAGE_ATTRIBUTE,
-                            project.objects.named(Usage::class.java, Usage.JAVA_RUNTIME))
-                    }
-                    isVisible = false
-                    isCanBeConsumed = false
+        // setup to pull in ktfmt separately to run on an isolated classloader
+        val ktFmt =
+            project.configurations.create("ktfmt").apply {
+                attributes.apply {
+                    attribute(
+                        Usage.USAGE_ATTRIBUTE,
+                        project.objects.named(Usage::class.java, Usage.JAVA_RUNTIME))
                 }
-
-            val resourceUri =
-                KtfmtPlugin::class.java.getResource("ktfmt-version.txt")
-                    ?: error("Missing ktfmt version")
-            val ktfmtVersion = resources.text.fromUri(resourceUri).asString()
-
-            project.dependencies.add(ktFmt.name, ktfmtVersion)
-
-            project.tasks.withType(KtfmtBaseTask::class.java).configureEach {
-                it.ktfmtClasspath.from(ktFmt)
+                isVisible = false
+                isCanBeConsumed = false
             }
 
-            topLevelFormat = createTopLevelFormatTask(project)
-            topLevelCheck = createTopLevelCheckTask(project)
+        val resourceUri =
+            KtfmtPlugin::class.java.getResource("ktfmt-version.txt")
+                ?: error("Missing ktfmt version")
+        val ktfmtVersion = project.resources.text.fromUri(resourceUri).asString()
 
-            project.plugins.withId("kotlin") { applyKtfmt(project) }
-            project.plugins.withId("kotlin-android") {
-                if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
-                    project.logger.i("Skipping Android task creation, as KMP is applied")
-                } else {
-                    applyKtfmtToAndroidProject(
-                        project, ktfmtExtension, topLevelFormat, topLevelCheck)
-                }
-            }
-            project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project) }
-            project.plugins.withId("org.jetbrains.kotlin.multiplatform") {
-                applyKtfmtToMultiplatformProject(project)
+        project.dependencies.add(ktFmt.name, ktfmtVersion)
+
+        project.tasks.withType(KtfmtBaseTask::class.java).configureEach {
+            it.ktfmtClasspath.from(ktFmt)
+            it.formattingOptionsBean.set(ktfmtExtension.toFormattingOptions())
+        }
+
+        topLevelFormat = createTopLevelFormatTask(project)
+        topLevelCheck = createTopLevelCheckTask(project)
+
+        project.plugins.withId("kotlin") { applyKtfmt(project) }
+        project.plugins.withId("kotlin-android") {
+            if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
+                project.logger.i("Skipping Android task creation, as KMP is applied")
+            } else {
+                applyKtfmtToAndroidProject(project, topLevelFormat, topLevelCheck)
             }
         }
+        project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project) }
+        project.plugins.withId("org.jetbrains.kotlin.multiplatform") {
+            applyKtfmtToMultiplatformProject(project)
+        }
+    }
 
     private fun applyKtfmt(project: Project) {
         val extension = project.extensions.getByType(KotlinProjectExtension::class.java)
@@ -78,9 +77,9 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 project,
                 it.name,
                 project.provider { it.kotlin.sourceDirectories },
-                ktfmtExtension,
                 topLevelFormat,
-                topLevelCheck)
+                topLevelCheck,
+            )
         }
     }
 
@@ -97,7 +96,6 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 project,
                 name,
                 project.provider { it.kotlin.sourceDirectories },
-                ktfmtExtension,
                 topLevelFormat,
                 topLevelCheck,
             )
@@ -106,7 +104,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
         extension.targets.all { kotlinTarget ->
             if (kotlinTarget.platformType == KotlinPlatformType.androidJvm) {
                 applyKtfmtToAndroidProject(
-                    project, ktfmtExtension, topLevelFormat, topLevelCheck, isKmpProject = true)
+                    project, topLevelFormat, topLevelCheck, isKmpProject = true)
             }
         }
     }

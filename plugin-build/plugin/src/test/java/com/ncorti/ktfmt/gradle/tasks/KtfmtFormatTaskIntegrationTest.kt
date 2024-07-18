@@ -258,6 +258,91 @@ internal class KtfmtFormatTaskIntegrationTest {
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
     }
 
+    @Test
+    fun `custom format task should be compatible with configuration cache`() {
+        createTempFile(content = "val answer = 42\n")
+
+        tempDir
+            .resolve("build.gradle.kts")
+            .appendText(
+                """
+                |
+                |tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask>("customFormatTask") {
+                |   source = fileTree("src/main/java")
+                |}
+                """
+                    .trimMargin())
+
+        GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("customFormatTask", "--configuration-cache")
+            .build()
+    }
+
+    @Test
+    fun `should format the files in kotlinLang style with a 4 space indentation`() {
+        val file =
+            createTempFile(
+                content =
+                    """
+                    |fun someFun(){
+                    |println("Hello, World!")
+                    |println("HelloWorld2")
+                    |}
+                    """
+                        .trimMargin())
+
+        appendToBuildGradle("ktfmt { kotlinLangStyle() }")
+
+        GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("ktfmtFormatMain")
+            .forwardOutput()
+            .build()
+
+        val actual = file.readLines()
+        assertThat(actual)
+            .containsExactly(
+                "fun someFun() {",
+                "    println(\"Hello, World!\")",
+                "    println(\"HelloWorld2\")",
+                "}")
+    }
+
+    @Test
+    fun `should format the files in googleStyle style with a 2 space indentation`() {
+        val file =
+            createTempFile(
+                content =
+                    """
+                    |fun someFun(){
+                    |println("Hello, World!")
+                    |println("HelloWorld2")
+                    |}
+                    """
+                        .trimMargin())
+
+        appendToBuildGradle("ktfmt { googleStyle() }")
+
+        GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("ktfmtFormatMain")
+            .forwardOutput()
+            .build()
+
+        val actual = file.readLines()
+
+        assertThat(actual)
+            .containsExactly(
+                "fun someFun() {",
+                "  println(\"Hello, World!\")",
+                "  println(\"HelloWorld2\")",
+                "}")
+    }
+
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
@@ -267,4 +352,11 @@ internal class KtfmtFormatTaskIntegrationTest {
             createNewFile()
             writeText(content)
         }
+
+    private fun appendToBuildGradle(content: String) {
+        tempDir.resolve("build.gradle.kts").apply {
+            appendText(System.lineSeparator())
+            appendText(content)
+        }
+    }
 }

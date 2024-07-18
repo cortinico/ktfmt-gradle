@@ -77,7 +77,7 @@ abstract class KtfmtExtension {
         continuationIndent.set(4)
     }
 
-    internal fun toBean(): FormattingOptionsBean =
+    internal fun toFormattingOptions(): FormattingOptionsBean =
         FormattingOptionsBean(
             maxWidth = maxWidth.get(),
             blockIndent = blockIndent.get(),

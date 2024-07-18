@@ -14,7 +14,6 @@ internal object KtfmtAndroidUtils {
 
     internal fun applyKtfmtToAndroidProject(
         project: Project,
-        ktfmtExtension: KtfmtExtension,
         topLevelFormat: TaskProvider<Task>,
         topLevelCheck: TaskProvider<Task>,
         isKmpProject: Boolean = false
@@ -40,7 +39,6 @@ internal object KtfmtAndroidUtils {
                         project,
                         sourceSetName,
                         srcDirs,
-                        ktfmtExtension,
                         topLevelFormat,
                         topLevelCheck,
                     )

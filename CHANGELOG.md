@@ -5,9 +5,7 @@ Please add your entries according to this format.
 
 ## Unreleased
 
-- Update formatting of `build.gradle.kts` with ktfmt 0.51
-- Replace deprecated methods in `build.gradle.kts` files
-- Prepare for Gradle 8.9
+- Fix custom KtFmt tasks not compatible with configuration cache (#290)
 
 ## Version 0.19.0 _(2024-07-03)_
 

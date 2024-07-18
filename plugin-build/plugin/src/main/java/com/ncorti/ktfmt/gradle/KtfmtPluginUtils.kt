@@ -35,7 +35,6 @@ internal object KtfmtPluginUtils {
         project: Project,
         srcSetName: String,
         srcSetDir: Provider<FileCollection>,
-        ktfmtExtension: KtfmtExtension,
         topLevelFormat: TaskProvider<Task>,
         topLevelCheck: TaskProvider<Task>
     ) {
@@ -43,8 +42,8 @@ internal object KtfmtPluginUtils {
             return
         }
 
-        val srcCheckTask = createCheckTask(project, ktfmtExtension, srcSetName, srcSetDir)
-        val srcFormatTask = createFormatTask(project, ktfmtExtension, srcSetName, srcSetDir)
+        val srcCheckTask = createCheckTask(project, srcSetName, srcSetDir)
+        val srcFormatTask = createFormatTask(project, srcSetName, srcSetDir)
 
         // When running together with compileKotlin, ktfmt tasks should have precedence as
         // they're editing the source code
@@ -64,7 +63,6 @@ internal object KtfmtPluginUtils {
 
     private fun createCheckTask(
         project: Project,
-        ktfmtExtension: KtfmtExtension,
         name: String,
         srcDir: Provider<FileCollection>
     ): TaskProvider<KtfmtCheckTask> {
@@ -86,13 +84,11 @@ internal object KtfmtPluginUtils {
             it.setSource(srcDir)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
             it.setExcludes(KtfmtPlugin.defaultExcludes)
-            it.bean = ktfmtExtension.toBean()
         }
     }
 
     private fun createFormatTask(
         project: Project,
-        ktfmtExtension: KtfmtExtension,
         name: String,
         srcDir: Provider<FileCollection>
     ): TaskProvider<KtfmtFormatTask> {
@@ -114,7 +110,6 @@ internal object KtfmtPluginUtils {
             it.setSource(srcDir)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
             it.setExcludes(KtfmtPlugin.defaultExcludes)
-            it.bean = ktfmtExtension.toBean()
         }
     }
 }
