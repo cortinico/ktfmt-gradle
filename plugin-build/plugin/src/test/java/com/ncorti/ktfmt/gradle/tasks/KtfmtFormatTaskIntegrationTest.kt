@@ -3,9 +3,7 @@ package com.ncorti.ktfmt.gradle.tasks
 import com.google.common.truth.Truth.assertThat
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome.FAILED
-import org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
+import org.gradle.testkit.runner.TaskOutcome.*
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,7 +17,6 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @BeforeEach
     fun setUp() {
-        File(tempDir, "src/main/java").mkdirs()
         File("src/test/resources/jvmProject").copyRecursively(tempDir)
     }
 
@@ -343,12 +340,45 @@ internal class KtfmtFormatTaskIntegrationTest {
                 "}")
     }
 
+    @Test
+    fun `format task should detect the source and test files in a flattened project structure and format them`() {
+        appendToBuildGradle(
+            """
+            |kotlin {
+            |    sourceSets.main {
+            |       kotlin.srcDirs("src")
+            |    }
+            |    sourceSets.test {
+            |       kotlin.srcDirs("test")
+            |    }
+            |}
+        """
+                .trimMargin())
+
+        val sourceFile = createTempFile("val answer =  42\n", path = "src/someFolder")
+        val testFile = createTempFile("val answer =  42\n", path = "test/someOtherFolder")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormat")
+                .build()
+
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isNotEqualTo(NO_SOURCE)
+        assertThat(result.task(":ktfmtFormatTest")?.outcome).isEqualTo(NO_SOURCE)
+
+        assertThat(sourceFile.readText()).contains("val answer = 42\n")
+        assertThat(testFile.readText()).contains("val answer = 42\n")
+    }
+
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
         path: String = "src/main/java"
-    ) =
-        File(File(tempDir, path), fileName).apply {
+    ): File =
+        tempDir.resolve(path).resolve(fileName).apply {
+            parentFile.mkdirs()
             createNewFile()
             writeText(content)
         }
