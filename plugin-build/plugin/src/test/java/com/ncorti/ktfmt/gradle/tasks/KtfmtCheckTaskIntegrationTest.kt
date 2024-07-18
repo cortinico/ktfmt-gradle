@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import java.io.File
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.FROM_CACHE
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -21,8 +22,6 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @BeforeEach
     fun setUp() {
-        File(tempDir, "src/main/java").mkdirs()
-        File(tempDir, "src/test/java").mkdirs()
         File("src/test/resources/jvmProject").copyRecursively(tempDir)
     }
 
@@ -279,12 +278,49 @@ internal class KtfmtCheckTaskIntegrationTest {
             .build()
     }
 
+    @Test
+    fun `check task should detect the source and test files in a flattened project structure`() {
+        appendToBuildGradle(
+            """
+            |kotlin {
+            |    sourceSets.main {
+            |       kotlin.srcDirs("src")
+            |    }
+            |    sourceSets.test {
+            |       kotlin.srcDirs("test")
+            |    }
+            |}
+        """
+                .trimMargin())
+
+        createTempFile("val answer = 42\n", path = "src/someFolder")
+        createTempFile("val answer = 42\n", path = "test/someOtherFolder")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheck")
+                .build()
+
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isNotEqualTo(TaskOutcome.NO_SOURCE)
+        assertThat(result.task(":ktfmtCheckTest")?.outcome).isNotEqualTo(TaskOutcome.NO_SOURCE)
+    }
+
+    private fun appendToBuildGradle(content: String) {
+        tempDir.resolve("build.gradle.kts").apply {
+            appendText(System.lineSeparator())
+            appendText(content)
+        }
+    }
+
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
         path: String = "src/main/java"
-    ) =
-        File(File(tempDir, path), fileName).apply {
+    ): File =
+        tempDir.resolve(path).resolve(fileName).apply {
+            parentFile.mkdirs()
             createNewFile()
             writeText(content)
         }

@@ -6,6 +6,7 @@ Please add your entries according to this format.
 ## Unreleased
 
 - Fix custom KtFmt tasks not compatible with configuration cache (#290)
+- Fix custom source directories not correctly recognized (#292)
 
 ## Version 0.19.0 _(2024-07-03)_
 

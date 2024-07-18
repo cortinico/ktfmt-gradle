@@ -1,4 +1,6 @@
+import app.cash.sqldelight.gradle.SqlDelightWorkerTask
 import app.cash.sqldelight.gradle.VerifyMigrationTask
+import com.ncorti.ktfmt.gradle.tasks.KtfmtBaseTask
 
 plugins {
     kotlin("jvm")
@@ -22,6 +24,11 @@ dependencies {
 tasks.withType<Test> { useJUnitPlatform() }
 
 tasks.withType<VerifyMigrationTask> { enabled = false }
+
+tasks.withType<KtfmtBaseTask>(){
+    mustRunAfter(tasks.withType<SqlDelightWorkerTask>())
+}
+
 
 sqldelight { databases { create("Database") { packageName.set("com.example") } } }
 
