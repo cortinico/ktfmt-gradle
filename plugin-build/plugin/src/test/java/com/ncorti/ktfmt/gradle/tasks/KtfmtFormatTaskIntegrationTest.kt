@@ -366,7 +366,7 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isNotEqualTo(NO_SOURCE)
-        assertThat(result.task(":ktfmtFormatTest")?.outcome).isEqualTo(NO_SOURCE)
+        assertThat(result.task(":ktfmtFormatTest")?.outcome).isNotEqualTo(NO_SOURCE)
 
         assertThat(sourceFile.readText()).contains("val answer = 42\n")
         assertThat(testFile.readText()).contains("val answer = 42\n")
