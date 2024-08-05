@@ -29,7 +29,7 @@ internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
     }
 
     override fun execute(workQueue: WorkQueue) {
-        val results = inputFiles.submitToQueue(workQueue, KtfmtCheckAction::class.java)
+        val results = source.submitToQueue(workQueue, KtfmtCheckAction::class.java)
 
         logger.d("Check results: $results")
         val failures = results.filterIsInstance<Result.Failure>()

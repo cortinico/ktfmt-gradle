@@ -6,9 +6,7 @@ import com.ncorti.ktfmt.gradle.util.KtfmtUtils
 import com.ncorti.ktfmt.gradle.util.d
 import com.ncorti.ktfmt.gradle.util.i
 import javax.inject.Inject
-import org.gradle.api.file.FileCollection
 import org.gradle.api.file.ProjectLayout
-import org.gradle.api.tasks.OutputFiles
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
 
@@ -18,16 +16,13 @@ abstract class KtfmtFormatTask
 internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
     KtfmtBaseTask(workerExecutor, layout) {
 
-    @get:OutputFiles
-    protected val outputFiles: FileCollection
-        get() = inputFiles
-
     init {
         group = KtfmtUtils.GROUP_FORMATTING
+        outputs.upToDateWhen { true }
     }
 
     override fun execute(workQueue: WorkQueue) {
-        val results = inputFiles.submitToQueue(workQueue, KtfmtFormatAction::class.java)
+        val results = source.submitToQueue(workQueue, KtfmtFormatAction::class.java)
 
         logger.d("Format results: $results")
         val failures = results.filterIsInstance<Result.Failure>()

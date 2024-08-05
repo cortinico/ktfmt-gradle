@@ -349,10 +349,10 @@ internal class KtfmtFormatTaskIntegrationTest {
             """
             |kotlin {
             |    sourceSets.main {
-            |       kotlin.srcDirs("src")
+            |       kotlin.setSrcDirs(listOf("src"))
             |    }
             |    sourceSets.test {
-            |       kotlin.srcDirs("test")
+            |       kotlin.setSrcDirs(listOf("test"))
             |    }
             |}
         """
@@ -373,6 +373,85 @@ internal class KtfmtFormatTaskIntegrationTest {
 
         assertThat(sourceFile.readText()).contains("val answer = 42\n")
         assertThat(testFile.readText()).contains("val answer = 42\n")
+    }
+
+    @Test
+    fun `format task should by default not format sourceSets in the build folder`() {
+        appendToBuildGradle(
+            """
+            |kotlin {
+            |    sourceSets.main {
+            |       kotlin.srcDirs("build/main")
+            |    }
+            |}
+        """
+                .trimMargin())
+
+        val file = createTempFile(content = "val answer=42\n", path = "build/main")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormat")
+                .forwardOutput()
+                .build()
+
+        val actual = file.readText()
+        assertThat(actual).isEqualTo("val answer=42\n")
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(NO_SOURCE)
+    }
+
+    @Test
+    fun `format task should not ignore sourceSets in build folder when a custom exclusion pattern is specified`() {
+        appendToBuildGradle(
+            """
+            |kotlin {
+            |    sourceSets.main {
+            |       kotlin.srcDirs("build/generated")
+            |    }
+            |}
+            |
+            |ktfmt{
+            |    srcSetPathExclusionPattern.set(Regex("customRules.*"))
+            |}
+        """
+                .trimMargin())
+
+        val file = createTempFile(content = "val answer=42\n", path = "build/generated/main")
+
+        GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("ktfmtFormat", "--info")
+            .forwardOutput()
+            .build()
+
+        val actual = file.readText()
+        assertThat(actual).isEqualTo("val answer = 42\n")
+    }
+
+    @Test
+    fun `format task should ignore the main sourceSets when specified as exclusion pattern`() {
+        appendToBuildGradle(
+            """
+            |ktfmt{
+            |    srcSetPathExclusionPattern.set(Regex(".*/main/.*"))
+            |}
+        """
+                .trimMargin())
+
+        createTempFile(content = "val answer=42\n")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormat")
+                .forwardOutput()
+                .build()
+
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(NO_SOURCE)
     }
 
     private fun createTempFile(
