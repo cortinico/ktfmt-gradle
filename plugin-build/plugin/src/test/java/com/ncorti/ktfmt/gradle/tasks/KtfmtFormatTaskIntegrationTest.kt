@@ -436,7 +436,7 @@ internal class KtfmtFormatTaskIntegrationTest {
         appendToBuildGradle(
             """
             |ktfmt{
-            |    srcSetPathExclusionPattern.set(Regex(".*/main/.*"))
+            |    srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*"))
             |}
         """
                 .trimMargin())
