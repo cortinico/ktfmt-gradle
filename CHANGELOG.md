@@ -5,6 +5,7 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- Add new regex property to exclude sourceSets from analysis (#328)
 - Fix custom KtFmt tasks not compatible with configuration cache (#290)
 - Fix custom source directories not correctly recognized (#292)
 

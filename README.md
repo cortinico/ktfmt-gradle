@@ -114,11 +114,24 @@ ktfmt {
 }
 ```
 
+By default, sourceSets that are in your `build` folder are ignored. To customize this, you can set a regex pattern to
+exclude certain sourceSets:
+
+```kotlin
+ktfmt {
+    srcSetPathExclusionPattern = Regex(".*generated.*")
+}
+```
+
+Please note, that this property will only affect the sourceSet path and not the individual files inside the sourceSet.
+To include or exclude files inside a sourceSet, use the include and exclude properties of the ktfmt tasks.
+
 ## Using with a pre-commit hook 🎣
 
 You can leverage the `--include-only` to let ktfmt-gradle run only on a specific subset of files.
 
-To this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as follows:
+To this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as
+follows:
 
 ```kotlin
 import com.ncorti.ktfmt.gradle.tasks.*
@@ -129,7 +142,8 @@ tasks.register<KtfmtFormatTask>("ktfmtPrecommit") {
 }
 ```
 
-You can then invoke the task with `--include-only` and a comma-separated (or colon-separated) list of relative path of files:
+You can then invoke the task with `--include-only` and a comma-separated (or colon-separated) list of relative path of
+files:
 
 ```
 ./gradlew ktfmtPrecommit --include-only=src/main/java/File1.kt:src/main/java/File2.kt
