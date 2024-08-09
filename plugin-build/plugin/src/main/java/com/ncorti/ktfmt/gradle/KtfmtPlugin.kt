@@ -56,34 +56,35 @@ abstract class KtfmtPlugin : Plugin<Project> {
         topLevelFormat = createTopLevelFormatTask(project)
         topLevelCheck = createTopLevelCheckTask(project)
 
-        project.plugins.withId("kotlin") { applyKtfmt(project) }
+        project.plugins.withId("kotlin") { applyKtfmt(project, ktfmtExtension) }
         project.plugins.withId("kotlin-android") {
             if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
                 project.logger.i("Skipping Android task creation, as KMP is applied")
             } else {
-                applyKtfmtToAndroidProject(project, topLevelFormat, topLevelCheck)
+                applyKtfmtToAndroidProject(project, topLevelFormat, topLevelCheck, ktfmtExtension)
             }
         }
-        project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project) }
+        project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project, ktfmtExtension) }
         project.plugins.withId("org.jetbrains.kotlin.multiplatform") {
-            applyKtfmtToMultiplatformProject(project)
+            applyKtfmtToMultiplatformProject(project, ktfmtExtension)
         }
     }
 
-    private fun applyKtfmt(project: Project) {
+    private fun applyKtfmt(project: Project, ktfmtExtension: KtfmtExtension) {
         val extension = project.extensions.getByType(KotlinProjectExtension::class.java)
         extension.sourceSets.all {
             createTasksForSourceSet(
                 project,
                 it.name,
                 it.kotlin.sourceDirectories,
+                ktfmtExtension,
                 topLevelFormat,
                 topLevelCheck,
             )
         }
     }
 
-    private fun applyKtfmtToMultiplatformProject(project: Project) {
+    private fun applyKtfmtToMultiplatformProject(project: Project, ktfmtExtension: KtfmtExtension) {
         val extension = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
         extension.sourceSets.all {
             val name = "kmp ${it.name}"
@@ -96,6 +97,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 project,
                 name,
                 it.kotlin.sourceDirectories,
+                ktfmtExtension,
                 topLevelFormat,
                 topLevelCheck,
             )
@@ -104,7 +106,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
         extension.targets.all { kotlinTarget ->
             if (kotlinTarget.platformType == KotlinPlatformType.androidJvm) {
                 applyKtfmtToAndroidProject(
-                    project, topLevelFormat, topLevelCheck, isKmpProject = true)
+                    project, topLevelFormat, topLevelCheck, ktfmtExtension, isKmpProject = true)
             }
         }
     }
@@ -125,8 +127,6 @@ abstract class KtfmtPlugin : Plugin<Project> {
     }
 
     companion object {
-        internal val defaultExcludes = listOf("**/build/**")
-        internal val defaultExcludesRegex = Regex("^(.*[\\\\/])?build([\\\\/].*)?\$")
         internal val defaultIncludes = listOf("**/*.kt", "**/*.kts")
     }
 }

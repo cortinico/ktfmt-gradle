@@ -6,6 +6,7 @@ public abstract class com/ncorti/ktfmt/gradle/KtfmtExtension {
 	public abstract fun getManageTrailingCommas ()Lorg/gradle/api/provider/Property;
 	public abstract fun getMaxWidth ()Lorg/gradle/api/provider/Property;
 	public abstract fun getRemoveUnusedImports ()Lorg/gradle/api/provider/Property;
+	public abstract fun getSrcSetPathExclusionPattern ()Lorg/gradle/api/provider/Property;
 	public final fun googleStyle ()V
 	public final fun kotlinLangStyle ()V
 }
@@ -23,6 +24,7 @@ public final class com/ncorti/ktfmt/gradle/KtfmtPlugin$Companion {
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask : org/gradle/api/tasks/SourceTask {
 	protected abstract fun execute (Lorg/gradle/workers/WorkQueue;)V
 	public abstract fun getIncludeOnly ()Lorg/gradle/api/provider/Property;
+	public fun getSource ()Lorg/gradle/api/file/FileTree;
 }
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtCheckTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {
@@ -32,6 +34,5 @@ public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtCheckTask : com/ncorti/
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtFormatTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {
 	protected fun execute (Lorg/gradle/workers/WorkQueue;)V
-	protected final fun getOutputFiles ()Lorg/gradle/api/file/FileCollection;
 }
 

@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
+import org.gradle.testkit.runner.TaskOutcome.NO_SOURCE
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import org.intellij.lang.annotations.Language
@@ -19,7 +20,6 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @BeforeEach
     fun setUp() {
-        File(tempDir, "src/main/java").mkdirs()
         File("src/test/resources/jvmProject").copyRecursively(tempDir)
     }
 
@@ -343,12 +343,124 @@ internal class KtfmtFormatTaskIntegrationTest {
                 "}")
     }
 
+    @Test
+    fun `format task should detect the source and test files in a flattened project structure and format them`() {
+        appendToBuildGradle(
+            """
+            |kotlin {
+            |    sourceSets.main {
+            |       kotlin.setSrcDirs(listOf("src"))
+            |    }
+            |    sourceSets.test {
+            |       kotlin.setSrcDirs(listOf("test"))
+            |    }
+            |}
+        """
+                .trimMargin())
+
+        val sourceFile = createTempFile("val answer =  42\n", path = "src/someFolder")
+        val testFile = createTempFile("val answer =  42\n", path = "test/someOtherFolder")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormat")
+                .build()
+
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isNotEqualTo(NO_SOURCE)
+        assertThat(result.task(":ktfmtFormatTest")?.outcome).isNotEqualTo(NO_SOURCE)
+
+        assertThat(sourceFile.readText()).contains("val answer = 42\n")
+        assertThat(testFile.readText()).contains("val answer = 42\n")
+    }
+
+    @Test
+    fun `format task should by default not format sourceSets in the build folder`() {
+        appendToBuildGradle(
+            """
+            |kotlin {
+            |    sourceSets.main {
+            |       kotlin.srcDirs("build/main")
+            |    }
+            |}
+        """
+                .trimMargin())
+
+        val file = createTempFile(content = "val answer=42\n", path = "build/main")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormat")
+                .forwardOutput()
+                .build()
+
+        val actual = file.readText()
+        assertThat(actual).isEqualTo("val answer=42\n")
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(NO_SOURCE)
+    }
+
+    @Test
+    fun `format task should not ignore sourceSets in build folder when a custom exclusion pattern is specified`() {
+        appendToBuildGradle(
+            """
+            |kotlin {
+            |    sourceSets.main {
+            |       kotlin.srcDirs("build/generated")
+            |    }
+            |}
+            |
+            |ktfmt{
+            |    srcSetPathExclusionPattern.set(Regex("customRules.*"))
+            |}
+        """
+                .trimMargin())
+
+        val file = createTempFile(content = "val answer=42\n", path = "build/generated/main")
+
+        GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("ktfmtFormat", "--info")
+            .forwardOutput()
+            .build()
+
+        val actual = file.readText()
+        assertThat(actual).isEqualTo("val answer = 42\n")
+    }
+
+    @Test
+    fun `format task should ignore the main sourceSets when specified as exclusion pattern`() {
+        appendToBuildGradle(
+            """
+            |ktfmt{
+            |    srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*"))
+            |}
+        """
+                .trimMargin())
+
+        createTempFile(content = "val answer=42\n")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormat")
+                .forwardOutput()
+                .build()
+
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(NO_SOURCE)
+    }
+
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
         path: String = "src/main/java"
-    ) =
-        File(File(tempDir, path), fileName).apply {
+    ): File =
+        tempDir.resolve(path).resolve(fileName).apply {
+            parentFile.mkdirs()
             createNewFile()
             writeText(content)
         }

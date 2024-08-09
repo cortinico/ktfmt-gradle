@@ -39,27 +39,7 @@ internal class KtfmtBaseTaskTest {
         val file = createTempFile(fileName = "file.kt", content = "")
         underTest.source(file)
 
-        assertThat(underTest.inputFiles.files.contains(file)).isTrue()
-    }
-
-    @Test
-    fun `files in build folder are excluded`() {
-        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
-        val buildFile = createTempFile(fileName = "something/build/folder/file.kt", content = "")
-        underTest.source(buildFile)
-
-        assertThat(underTest.inputFiles.files.contains(buildFile)).isFalse()
-    }
-
-    @Test
-    fun `files in build folder are not excluded if users provided a custom exclude`() {
-        val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
-        val buildFile = createTempFile(fileName = "something/build/folder/file.kt", content = "")
-        underTest.source(buildFile)
-
-        underTest.exclude("**/generated/**")
-
-        assertThat(underTest.inputFiles.files.contains(buildFile)).isTrue()
+        assertThat(underTest.source.files.contains(file)).isTrue()
     }
 
     private fun createTempFile(

@@ -1,24 +1,22 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
-import com.ncorti.ktfmt.gradle.KtfmtPlugin
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtWorkAction
 import com.ncorti.ktfmt.gradle.tasks.worker.Result
 import com.ncorti.ktfmt.gradle.util.d
-import java.io.File
-import java.util.*
+import java.util.UUID
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
+import org.gradle.api.file.FileTree
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.provider.Property
-import org.gradle.api.specs.Spec
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
@@ -49,11 +47,11 @@ internal constructor(
     @get:Input
     abstract val includeOnly: Property<String>
 
-    @get:PathSensitive(PathSensitivity.RELATIVE)
-    @get:InputFiles
-    @get:IgnoreEmptyDirectories
-    internal val inputFiles: FileCollection
-        get() = super.getSource().filter(defaultExcludesFilter)
+    @PathSensitive(PathSensitivity.RELATIVE)
+    @InputFiles
+    @IgnoreEmptyDirectories
+    @SkipWhenEmpty
+    override fun getSource(): FileTree = super.getSource()
 
     @TaskAction
     internal fun taskAction() {
@@ -63,16 +61,6 @@ internal constructor(
     }
 
     protected abstract fun execute(workQueue: WorkQueue)
-
-    @get:Internal
-    internal val defaultExcludesFilter: Spec<File> =
-        Spec<File> {
-            if (this.excludes.containsAll(KtfmtPlugin.defaultExcludes) && this.excludes.size == 1) {
-                it.absolutePath.matches(KtfmtPlugin.defaultExcludesRegex).not()
-            } else {
-                true
-            }
-        }
 
     internal fun <T : KtfmtWorkAction> FileCollection.submitToQueue(
         queue: WorkQueue,
