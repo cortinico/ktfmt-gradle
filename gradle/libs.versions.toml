@@ -6,7 +6,7 @@ diffUtils = "4.12"
 junit = "5.11.0"
 kotlin = "2.0.10"
 ktfmt-plugin = "0.19.0"
-ktfmt = "0.51"
+ktfmt = "0.52"
 pluginPublish = "1.2.1"
 truth = "1.4.4"
 
