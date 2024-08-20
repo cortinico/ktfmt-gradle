@@ -7,6 +7,7 @@ Please add your entries according to this format.
 
 - Fix custom KtFmt tasks not compatible with configuration cache (#290)
 - Fix mixed up task descriptions (#342)
+- KtFmt to 0.52
 
 ## Version 0.19.0 _(2024-07-03)_
 
