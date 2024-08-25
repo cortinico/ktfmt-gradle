@@ -2,9 +2,11 @@ package com.ncorti.ktfmt.gradle
 
 import com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask
 import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
+import java.io.File
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -34,6 +36,7 @@ internal object KtfmtPluginUtils {
         project: Project,
         srcSetName: String,
         srcSetDir: FileCollection,
+        ktfmtExtension: KtfmtExtension,
         topLevelFormat: TaskProvider<Task>,
         topLevelCheck: TaskProvider<Task>
     ) {
@@ -41,8 +44,8 @@ internal object KtfmtPluginUtils {
             return
         }
 
-        val srcCheckTask = createCheckTask(project, srcSetName, srcSetDir)
-        val srcFormatTask = createFormatTask(project, srcSetName, srcSetDir)
+        val srcCheckTask = createCheckTask(project, srcSetName, srcSetDir, ktfmtExtension)
+        val srcFormatTask = createFormatTask(project, srcSetName, srcSetDir, ktfmtExtension)
 
         // When running together with compileKotlin, ktfmt tasks should have precedence as
         // they're editing the source code
@@ -63,7 +66,8 @@ internal object KtfmtPluginUtils {
     private fun createCheckTask(
         project: Project,
         name: String,
-        srcDir: FileCollection
+        srcDir: FileCollection,
+        ktfmtExtension: KtfmtExtension,
     ): TaskProvider<KtfmtCheckTask> {
         val capitalizedName =
             name.split(" ").joinToString("") {
@@ -77,20 +81,21 @@ internal object KtfmtPluginUtils {
                 charArray.concatToString()
             }
         val taskName = "$TASK_NAME_CHECK$capitalizedName"
-        val inputDirs = srcDir.toList()
+
+        val inputDirs = project.getSelectedSrcSets(srcDir, ktfmtExtension)
         return project.tasks.register(taskName, KtfmtCheckTask::class.java) {
             it.description =
                 "Run Ktfmt formatter validation for sourceSet '$name' on project '${project.name}'"
             it.setSource(inputDirs)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
-            it.setExcludes(KtfmtPlugin.defaultExcludes)
         }
     }
 
     private fun createFormatTask(
         project: Project,
         name: String,
-        srcDir: FileCollection
+        srcDir: FileCollection,
+        ktfmtExtension: KtfmtExtension,
     ): TaskProvider<KtfmtFormatTask> {
         val srcSetName =
             name.split(" ").joinToString("") {
@@ -104,13 +109,24 @@ internal object KtfmtPluginUtils {
                 charArray.concatToString()
             }
         val taskName = "$TASK_NAME_FORMAT$srcSetName"
-        val inputDirs = srcDir.toList()
+
+        val inputDirs = project.getSelectedSrcSets(srcDir, ktfmtExtension)
         return project.tasks.register(taskName, KtfmtFormatTask::class.java) {
             it.description =
                 "Run Ktfmt formatter for sourceSet '$name' on project '${project.name}'"
             it.setSource(inputDirs)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
-            it.setExcludes(KtfmtPlugin.defaultExcludes)
+        }
+    }
+
+    private fun Project.getSelectedSrcSets(
+        srcDir: FileCollection,
+        ktfmtExtension: KtfmtExtension
+    ): Provider<List<File>> {
+        val excludedSourceSets = ktfmtExtension.srcSetPathExclusionPattern
+
+        return provider {
+            srcDir.toList().filterNot { it.absolutePath.matches(excludedSourceSets.get()) }
         }
     }
 }

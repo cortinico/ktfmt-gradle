@@ -6,6 +6,7 @@ import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.FROM_CACHE
+import org.gradle.testkit.runner.TaskOutcome.NO_SOURCE
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import org.intellij.lang.annotations.Language
@@ -21,8 +22,6 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @BeforeEach
     fun setUp() {
-        File(tempDir, "src/main/java").mkdirs()
-        File(tempDir, "src/test/java").mkdirs()
         File("src/test/resources/jvmProject").copyRecursively(tempDir)
     }
 
@@ -279,12 +278,126 @@ internal class KtfmtCheckTaskIntegrationTest {
             .build()
     }
 
+    @Test
+    fun `check task should detect the source and test files in a flattened project structure`() {
+        appendToBuildGradle(
+            """
+            |kotlin {
+            |    sourceSets.main {
+            |       kotlin.setSrcDirs(listOf("src"))
+            |    }
+            |    sourceSets.test {
+            |       kotlin.setSrcDirs(listOf("test"))
+            |    }
+            |}
+        """
+                .trimMargin())
+
+        createTempFile("val answer = 42\n", path = "src/someFolder")
+        createTempFile("val answer = 42\n", path = "test/someOtherFolder")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheck")
+                .build()
+
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isNotEqualTo(NO_SOURCE)
+        assertThat(result.task(":ktfmtCheckTest")?.outcome).isNotEqualTo(NO_SOURCE)
+    }
+
+    @Test
+    fun `check task should by default ignore sourceSets in the build folder`() {
+        appendToBuildGradle(
+            """
+            |kotlin {
+            |    sourceSets.main {
+            |       kotlin.srcDirs("build/main")
+            |    }
+            |}
+        """
+                .trimMargin())
+
+        createTempFile(content = "val answer=42\n", path = "build/main")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheck")
+                .forwardOutput()
+                .build()
+
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(NO_SOURCE)
+    }
+
+    @Test
+    fun `check task should not ignore sourceSets in build folder when a custom exclusion pattern is specified`() {
+        appendToBuildGradle(
+            """
+            |kotlin {
+            |    sourceSets.main {
+            |       kotlin.srcDirs("build/generated")
+            |    }
+            |}
+            |
+            |ktfmt{
+            |    srcSetPathExclusionPattern.set(Regex("customRules.*"))
+            |}
+        """
+                .trimMargin())
+
+        createTempFile(content = "val answer=42\n", path = "build/generated/main")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheck")
+                .forwardOutput()
+                .buildAndFail()
+
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
+    }
+
+    @Test
+    fun `check task should ignore the main sourceSets when specified as exclusion pattern`() {
+        appendToBuildGradle(
+            """
+            |ktfmt{
+            |    srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*"))
+            |}
+        """
+                .trimMargin())
+
+        createTempFile(content = "val answer=42\n")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheck")
+                .forwardOutput()
+                .build()
+
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(NO_SOURCE)
+    }
+
+    private fun appendToBuildGradle(content: String) {
+        tempDir.resolve("build.gradle.kts").apply {
+            appendText(System.lineSeparator())
+            appendText(content)
+        }
+    }
+
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
         path: String = "src/main/java"
-    ) =
-        File(File(tempDir, path), fileName).apply {
+    ): File =
+        tempDir.resolve(path).resolve(fileName).apply {
+            parentFile.mkdirs()
             createNewFile()
             writeText(content)
         }

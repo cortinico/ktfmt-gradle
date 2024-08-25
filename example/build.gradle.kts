@@ -24,4 +24,3 @@ tasks.withType<Test> { useJUnitPlatform() }
 tasks.withType<VerifyMigrationTask> { enabled = false }
 
 sqldelight { databases { create("Database") { packageName.set("com.example") } } }
-
