@@ -130,7 +130,7 @@ To include or exclude files inside a sourceSet, use the include and exclude prop
 
 You can leverage the `--include-only` to let ktfmt-gradle run only on a specific subset of files.
 
-To this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as
+To do this you can register a simple task of type `KtfmtCheckTask` or `KtfmtFormatTask` in your `build.gradle.kts` as
 follows:
 
 ```kotlin
