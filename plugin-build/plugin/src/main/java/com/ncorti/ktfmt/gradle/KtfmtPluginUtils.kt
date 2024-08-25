@@ -85,7 +85,7 @@ internal object KtfmtPluginUtils {
         val inputDirs = project.getSelectedSrcSets(srcDir, ktfmtExtension)
         return project.tasks.register(taskName, KtfmtCheckTask::class.java) {
             it.description =
-                "Run Ktfmt formatter for sourceSet '$name' on project '${project.name}'"
+                "Run Ktfmt formatter validation for sourceSet '$name' on project '${project.name}'"
             it.setSource(inputDirs)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
         }
@@ -113,7 +113,7 @@ internal object KtfmtPluginUtils {
         val inputDirs = project.getSelectedSrcSets(srcDir, ktfmtExtension)
         return project.tasks.register(taskName, KtfmtFormatTask::class.java) {
             it.description =
-                "Run Ktfmt formatter validation for sourceSet '$name' on project '${project.name}'"
+                "Run Ktfmt formatter for sourceSet '$name' on project '${project.name}'"
             it.setSource(inputDirs)
             it.setIncludes(KtfmtPlugin.defaultIncludes)
         }

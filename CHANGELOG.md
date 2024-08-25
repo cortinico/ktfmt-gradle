@@ -8,6 +8,8 @@ Please add your entries according to this format.
 - Add new regex property to exclude sourceSets from analysis (#328)
 - Fix custom KtFmt tasks not compatible with configuration cache (#290)
 - Fix custom source directories not correctly recognized (#292)
+- Fix mixed up task descriptions (#342)
+- KtFmt to 0.52
 
 ## Version 0.19.0 _(2024-07-03)_
 
