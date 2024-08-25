@@ -18,6 +18,7 @@ internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
 
     init {
         group = KtfmtUtils.GROUP_FORMATTING
+        // Since the input files are also the output files, we do not have to specify outputs again
         outputs.upToDateWhen { true }
     }
 
