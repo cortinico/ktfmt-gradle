@@ -4,6 +4,8 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+
+## Version 0.20.1 _(2024-08-26)_
 - Set 'manageTrailingCommas' to 'true' for kotlinLangStyle to align with ktfmt 0.52
 
 ## Version 0.20.0 _(2024-08-25)_
