@@ -85,6 +85,7 @@ abstract class KtfmtExtension {
     fun kotlinLangStyle() {
         blockIndent.set(4)
         continuationIndent.set(4)
+        manageTrailingCommas.set(true)
     }
 
     internal fun toFormattingOptions(): FormattingOptionsBean =
