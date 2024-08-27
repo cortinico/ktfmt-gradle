@@ -158,7 +158,7 @@ internal sealed class KtfmtResult(open val input: File) {
     data class KtfmtSuccess(
         override val input: File,
         val isCorrectlyFormatted: Boolean,
-        @Language("kotlin") val formattedCode: String
+        @Language("kotlin") val formattedCode: String,
     ) : KtfmtResult(input)
 
     data class KtfmtFailure(override val input: File, val message: String, val reason: Throwable) :

@@ -62,7 +62,8 @@ internal class KtfmtCheckTaskIntegrationTest {
                 ````
             }
             """
-                .trimIndent())
+                .trimIndent()
+        )
 
         val result =
             GradleRunner.create()
@@ -166,7 +167,10 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
                 .withArguments(
-                    "ktfmtCheckMain", "--debug", "--include-only=${file2.relativeTo(tempDir)}")
+                    "ktfmtCheckMain",
+                    "--debug",
+                    "--include-only=${file2.relativeTo(tempDir)}",
+                )
                 .build()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
@@ -212,11 +216,20 @@ internal class KtfmtCheckTaskIntegrationTest {
     @Test
     fun `check task should be up-to-date when invoked twice with multiple different sized sourceSets`() {
         createTempFile(
-            content = "val answer = 42\n", fileName = "SrcFile.kt", path = "src/main/java")
+            content = "val answer = 42\n",
+            fileName = "SrcFile.kt",
+            path = "src/main/java",
+        )
         createTempFile(
-            content = "val answer = 42\n", fileName = "TestFile.kt", path = "src/test/java")
+            content = "val answer = 42\n",
+            fileName = "TestFile.kt",
+            path = "src/test/java",
+        )
         createTempFile(
-            content = "val answer = 42\n", fileName = "TestFile2.kt", path = "src/test/java")
+            content = "val answer = 42\n",
+            fileName = "TestFile2.kt",
+            path = "src/test/java",
+        )
 
         val firstRun: BuildResult =
             GradleRunner.create()
@@ -269,7 +282,8 @@ internal class KtfmtCheckTaskIntegrationTest {
                 |   source = fileTree("src/main/java")
                 |}
                 """
-                    .trimMargin())
+                    .trimMargin()
+            )
 
         GradleRunner.create()
             .withProjectDir(tempDir)
@@ -291,7 +305,8 @@ internal class KtfmtCheckTaskIntegrationTest {
             |    }
             |}
         """
-                .trimMargin())
+                .trimMargin()
+        )
 
         createTempFile("val answer = 42\n", path = "src/someFolder")
         createTempFile("val answer = 42\n", path = "test/someOtherFolder")
@@ -317,7 +332,8 @@ internal class KtfmtCheckTaskIntegrationTest {
             |    }
             |}
         """
-                .trimMargin())
+                .trimMargin()
+        )
 
         createTempFile(content = "val answer=42\n", path = "build/main")
 
@@ -346,7 +362,8 @@ internal class KtfmtCheckTaskIntegrationTest {
             |    srcSetPathExclusionPattern.set(Regex("customRules.*"))
             |}
         """
-                .trimMargin())
+                .trimMargin()
+        )
 
         createTempFile(content = "val answer=42\n", path = "build/generated/main")
 
@@ -369,7 +386,8 @@ internal class KtfmtCheckTaskIntegrationTest {
             |    srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*"))
             |}
         """
-                .trimMargin())
+                .trimMargin()
+        )
 
         createTempFile(content = "val answer=42\n")
 
@@ -394,7 +412,7 @@ internal class KtfmtCheckTaskIntegrationTest {
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
-        path: String = "src/main/java"
+        path: String = "src/main/java",
     ): File =
         tempDir.resolve(path).resolve(fileName).apply {
             parentFile.mkdirs()

@@ -231,7 +231,10 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
                 .withArguments(
-                    "ktfmtFormatMain", "--info", "--include-only=${file2.relativeTo(tempDir)}")
+                    "ktfmtFormatMain",
+                    "--info",
+                    "--include-only=${file2.relativeTo(tempDir)}",
+                )
                 .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
@@ -271,7 +274,8 @@ internal class KtfmtFormatTaskIntegrationTest {
                 |   source = fileTree("src/main/java")
                 |}
                 """
-                    .trimMargin())
+                    .trimMargin()
+            )
 
         GradleRunner.create()
             .withProjectDir(tempDir)
@@ -291,7 +295,8 @@ internal class KtfmtFormatTaskIntegrationTest {
                     |println("HelloWorld2")
                     |}
                     """
-                        .trimMargin())
+                        .trimMargin()
+            )
 
         appendToBuildGradle("ktfmt { kotlinLangStyle() }")
 
@@ -308,7 +313,8 @@ internal class KtfmtFormatTaskIntegrationTest {
                 "fun someFun() {",
                 "    println(\"Hello, World!\")",
                 "    println(\"HelloWorld2\")",
-                "}")
+                "}",
+            )
     }
 
     @Test
@@ -322,7 +328,8 @@ internal class KtfmtFormatTaskIntegrationTest {
                     |println("HelloWorld2")
                     |}
                     """
-                        .trimMargin())
+                        .trimMargin()
+            )
 
         appendToBuildGradle("ktfmt { googleStyle() }")
 
@@ -340,7 +347,8 @@ internal class KtfmtFormatTaskIntegrationTest {
                 "fun someFun() {",
                 "  println(\"Hello, World!\")",
                 "  println(\"HelloWorld2\")",
-                "}")
+                "}",
+            )
     }
 
     @Test
@@ -356,7 +364,8 @@ internal class KtfmtFormatTaskIntegrationTest {
             |    }
             |}
         """
-                .trimMargin())
+                .trimMargin()
+        )
 
         val sourceFile = createTempFile("val answer =  42\n", path = "src/someFolder")
         val testFile = createTempFile("val answer =  42\n", path = "test/someOtherFolder")
@@ -385,7 +394,8 @@ internal class KtfmtFormatTaskIntegrationTest {
             |    }
             |}
         """
-                .trimMargin())
+                .trimMargin()
+        )
 
         val file = createTempFile(content = "val answer=42\n", path = "build/main")
 
@@ -416,7 +426,8 @@ internal class KtfmtFormatTaskIntegrationTest {
             |    srcSetPathExclusionPattern.set(Regex("customRules.*"))
             |}
         """
-                .trimMargin())
+                .trimMargin()
+        )
 
         val file = createTempFile(content = "val answer=42\n", path = "build/generated/main")
 
@@ -439,7 +450,8 @@ internal class KtfmtFormatTaskIntegrationTest {
             |    srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*"))
             |}
         """
-                .trimMargin())
+                .trimMargin()
+        )
 
         createTempFile(content = "val answer=42\n")
 
@@ -457,7 +469,7 @@ internal class KtfmtFormatTaskIntegrationTest {
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
-        path: String = "src/main/java"
+        path: String = "src/main/java",
     ): File =
         tempDir.resolve(path).resolve(fileName).apply {
             parentFile.mkdirs()

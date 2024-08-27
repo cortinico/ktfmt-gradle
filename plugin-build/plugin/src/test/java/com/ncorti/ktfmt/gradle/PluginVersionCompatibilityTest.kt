@@ -62,7 +62,7 @@ internal class PluginVersionCompatibilityTest {
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
-        path: String = "src/main/java"
+        path: String = "src/main/java",
     ) =
         File(File(tempDir, path), fileName).apply {
             createNewFile()

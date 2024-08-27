@@ -44,7 +44,8 @@ internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
         if (notFormattedFiles.isNotEmpty()) {
             val fileList = notFormattedFiles.joinToString("\n") { it.relativePath }
             error(
-                "[ktfmt] Found ${notFormattedFiles.size} files that are not properly formatted:\n$fileList")
+                "[ktfmt] Found ${notFormattedFiles.size} files that are not properly formatted:\n$fileList"
+            )
         }
 
         val message = "Successfully checked ${results.size} files with Ktfmt"

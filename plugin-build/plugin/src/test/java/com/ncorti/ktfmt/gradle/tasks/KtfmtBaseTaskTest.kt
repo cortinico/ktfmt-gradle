@@ -45,7 +45,7 @@ internal class KtfmtBaseTaskTest {
     private fun createTempFile(
         @Language("kotlin") content: String,
         fileName: String = "TestFile.kt",
-        root: File = tempDir
+        root: File = tempDir,
     ): File =
         File(root, fileName).apply {
             parentFile.mkdirs()
