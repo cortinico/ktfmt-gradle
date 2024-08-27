@@ -35,7 +35,8 @@ abstract class KtfmtPlugin : Plugin<Project> {
                 attributes.apply {
                     attribute(
                         Usage.USAGE_ATTRIBUTE,
-                        project.objects.named(Usage::class.java, Usage.JAVA_RUNTIME))
+                        project.objects.named(Usage::class.java, Usage.JAVA_RUNTIME),
+                    )
                 }
                 isVisible = false
                 isCanBeConsumed = false
@@ -106,7 +107,12 @@ abstract class KtfmtPlugin : Plugin<Project> {
         extension.targets.all { kotlinTarget ->
             if (kotlinTarget.platformType == KotlinPlatformType.androidJvm) {
                 applyKtfmtToAndroidProject(
-                    project, topLevelFormat, topLevelCheck, ktfmtExtension, isKmpProject = true)
+                    project,
+                    topLevelFormat,
+                    topLevelCheck,
+                    ktfmtExtension,
+                    isKmpProject = true,
+                )
             }
         }
     }

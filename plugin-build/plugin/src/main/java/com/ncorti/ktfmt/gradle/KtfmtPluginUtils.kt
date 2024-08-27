@@ -38,7 +38,7 @@ internal object KtfmtPluginUtils {
         srcSetDir: FileCollection,
         ktfmtExtension: KtfmtExtension,
         topLevelFormat: TaskProvider<Task>,
-        topLevelCheck: TaskProvider<Task>
+        topLevelCheck: TaskProvider<Task>,
     ) {
         if (shouldCreateTasks(srcSetName).not()) {
             return
@@ -121,7 +121,7 @@ internal object KtfmtPluginUtils {
 
     private fun Project.getSelectedSrcSets(
         srcDir: FileCollection,
-        ktfmtExtension: KtfmtExtension
+        ktfmtExtension: KtfmtExtension,
     ): Provider<List<File>> {
         val excludedSourceSets = ktfmtExtension.srcSetPathExclusionPattern
 

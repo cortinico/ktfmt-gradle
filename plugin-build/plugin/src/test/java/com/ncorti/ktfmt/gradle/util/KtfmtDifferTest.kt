@@ -33,7 +33,8 @@ internal class KtfmtDifferTest {
                 val a = "So long,"
                 val b = "and thanks for all the fish!"
             """
-                        .trimIndent())
+                        .trimIndent()
+            )
 
         val input =
             KtfmtSuccess(
@@ -43,7 +44,8 @@ internal class KtfmtDifferTest {
                     """
                 val a = "So long,"
             """
-                        .trimIndent())
+                        .trimIndent(),
+            )
 
         val diff = KtfmtDiffer.computeDiff(input)
 
@@ -60,7 +62,8 @@ internal class KtfmtDifferTest {
                     """
                 val a = "So long,"
             """
-                        .trimIndent())
+                        .trimIndent()
+            )
 
         val input =
             KtfmtSuccess(
@@ -71,7 +74,8 @@ internal class KtfmtDifferTest {
                 val a = "So long,"
                 val b = "and thanks for all the fish!"
             """
-                        .trimIndent())
+                        .trimIndent(),
+            )
 
         val diff = KtfmtDiffer.computeDiff(input)
 
@@ -89,7 +93,8 @@ internal class KtfmtDifferTest {
                   val a = "So long,"
                 val b = "and thanks for all the fish!"
             """
-                        .trimIndent())
+                        .trimIndent()
+            )
 
         val input =
             KtfmtSuccess(
@@ -100,7 +105,8 @@ internal class KtfmtDifferTest {
                 val a = "So long,"
                 val b = "and thanks for all the fish!"
             """
-                        .trimIndent())
+                        .trimIndent(),
+            )
 
         val diff = KtfmtDiffer.computeDiff(input)
 
@@ -119,7 +125,8 @@ internal class KtfmtDifferTest {
                 val b = "and thanks!"
                  val c = "for all the fish!"
             """
-                        .trimIndent())
+                        .trimIndent()
+            )
 
         val input =
             KtfmtSuccess(
@@ -131,7 +138,8 @@ internal class KtfmtDifferTest {
                 val b = "and thanks!"
                 val c = "for all the fish!"
             """
-                        .trimIndent())
+                        .trimIndent(),
+            )
 
         val diff = KtfmtDiffer.computeDiff(input)
 
@@ -156,7 +164,7 @@ internal class KtfmtDifferTest {
 
     private fun createTempFile(
         @Language("kotlin") content: String,
-        fileName: String = "TestFile.kt"
+        fileName: String = "TestFile.kt",
     ): File =
         File(tempDir, fileName).apply {
             createNewFile()

@@ -28,7 +28,7 @@ import org.gradle.workers.WorkerExecutor
 abstract class KtfmtBaseTask
 internal constructor(
     private val workerExecutor: WorkerExecutor,
-    private val layout: ProjectLayout
+    private val layout: ProjectLayout,
 ) : SourceTask() {
 
     init {
@@ -43,7 +43,8 @@ internal constructor(
         option = "include-only",
         description =
             "A comma separate list of relative file paths to include exclusively. " +
-                "If set the task will run the processing only on such files.")
+                "If set the task will run the processing only on such files.",
+    )
     @get:Input
     abstract val includeOnly: Property<String>
 
@@ -64,7 +65,7 @@ internal constructor(
 
     internal fun <T : KtfmtWorkAction> FileCollection.submitToQueue(
         queue: WorkQueue,
-        action: Class<T>
+        action: Class<T>,
     ): List<Result> {
         val workingDir = temporaryDir.resolve(UUID.randomUUID().toString())
         workingDir.mkdirs()
@@ -72,7 +73,8 @@ internal constructor(
             val includedFiles =
                 IncludedFilesParser.parse(includeOnly.get(), layout.projectDirectory.asFile)
             logger.d(
-                "Preparing to format: includeOnly=${includeOnly.orNull}, includedFiles = $includedFiles")
+                "Preparing to format: includeOnly=${includeOnly.orNull}, includedFiles = $includedFiles"
+            )
             forEach {
                 queue.submit(action) { parameters ->
                     parameters.sourceFile.set(it)

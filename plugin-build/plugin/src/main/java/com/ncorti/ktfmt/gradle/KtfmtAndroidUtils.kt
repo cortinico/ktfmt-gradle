@@ -15,7 +15,7 @@ internal object KtfmtAndroidUtils {
         topLevelFormat: TaskProvider<Task>,
         topLevelCheck: TaskProvider<Task>,
         ktfmtExtension: KtfmtExtension,
-        isKmpProject: Boolean = false
+        isKmpProject: Boolean = false,
     ) {
         fun applyKtfmtForAndroid() {
             project.extensions.configure(BaseExtension::class.java) {

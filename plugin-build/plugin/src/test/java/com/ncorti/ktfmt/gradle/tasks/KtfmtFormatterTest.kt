@@ -50,7 +50,8 @@ internal class KtfmtFormatterTest {
         val newCtx =
             formatCtx.copy(
                 sourceFile = input2,
-                includedFiles = setOf(formatCtx.sourceFile.relativeTo(tempDir)))
+                includedFiles = setOf(formatCtx.sourceFile.relativeTo(tempDir)),
+            )
 
         val result = KtfmtFormatter.format(newCtx) as KtfmtResult.KtfmtSkipped
 
@@ -73,7 +74,7 @@ internal class KtfmtFormatterTest {
     private fun createTempFile(
         content: String,
         fileName: String = "TestFile.kt",
-        root: File = tempDir
+        root: File = tempDir,
     ): File =
         File(root, fileName).apply {
             parentFile.mkdirs()
@@ -83,7 +84,7 @@ internal class KtfmtFormatterTest {
 
     private fun createFormatContext(
         content: String,
-        fileName: String = "TestFile.kt"
+        fileName: String = "TestFile.kt",
     ): KtfmtFormatter.FormatContext {
         val input = createTempFile(content = content, fileName = fileName)
         return KtfmtFormatter.FormatContext(sourceFile = input, sourceRoot = tempDir)

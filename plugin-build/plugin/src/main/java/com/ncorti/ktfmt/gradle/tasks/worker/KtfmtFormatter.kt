@@ -19,7 +19,7 @@ internal object KtfmtFormatter {
         val sourceFile: File,
         val includedFiles: Set<File> = emptySet(),
         val formattingOptions: FormattingOptionsBean = FormattingOptionsBean(),
-        val sourceRoot: File
+        val sourceRoot: File,
     )
 
     fun format(ctx: FormatContext): KtfmtResult {
@@ -27,7 +27,9 @@ internal object KtfmtFormatter {
         if (ctx.includedFiles.isNotEmpty()) {
             if (ctx.sourceFile.canonicalFile !in ctx.includedFiles) {
                 return KtfmtResult.KtfmtSkipped(
-                    ctx.sourceFile, "Not included inside --include-only")
+                    ctx.sourceFile,
+                    "Not included inside --include-only",
+                )
             }
         }
         @Suppress("TooGenericExceptionCaught")
