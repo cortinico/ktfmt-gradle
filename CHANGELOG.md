@@ -5,6 +5,11 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+## Version 0.20.2 _(2024-10-31)_
+- KtFmt to 0.53
+- AGP to 8.7.1
+- Gradle to 8.10.2
+
 ## Version 0.20.1 _(2024-08-26)_
 - Set 'manageTrailingCommas' to 'true' for kotlinLangStyle to align with ktfmt 0.52
 
