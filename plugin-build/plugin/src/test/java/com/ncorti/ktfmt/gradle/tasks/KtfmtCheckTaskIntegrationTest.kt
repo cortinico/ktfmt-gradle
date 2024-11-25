@@ -384,6 +384,40 @@ internal class KtfmtCheckTaskIntegrationTest {
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(NO_SOURCE)
     }
 
+    @Test
+    fun `check script task should validate top-level script file`() {
+        createTempFile(content = "val answer=42\n", fileName = "TestFile.kts", path = "")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheckScript")
+                .buildAndFail()
+
+        assertThat(result.task(":ktfmtCheckScript")?.outcome).isEqualTo(FAILED)
+        assertThat(result.output).containsMatch("Invalid formatting for: .*TestFile.kts")
+    }
+
+    @Test
+    fun `check script task should ignore non top-level script files`() {
+        createTempFile(
+            content = "val answer=42\n",
+            fileName = "TestFile.kts",
+            path = "src/main/java",
+        )
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheckScript")
+                .forwardOutput()
+                .build()
+
+        assertThat(result.task(":ktfmtCheckScript")?.outcome).isEqualTo(SUCCESS)
+    }
+
     private fun appendToBuildGradle(content: String) {
         tempDir.resolve("build.gradle.kts").apply {
             appendText(System.lineSeparator())
