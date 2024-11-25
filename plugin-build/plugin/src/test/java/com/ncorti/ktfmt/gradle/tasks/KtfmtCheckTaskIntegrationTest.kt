@@ -273,17 +273,14 @@ internal class KtfmtCheckTaskIntegrationTest {
     fun `custom formatCheck task should be compatible with configuration cache`() {
         createTempFile(content = "val answer = 42\n")
 
-        tempDir
-            .resolve("build.gradle.kts")
-            .appendText(
-                """
-                |
-                |tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask>("customFormatCheck") {
-                |   source = fileTree("src/main/java")
-                |}
-                """
-                    .trimMargin()
-            )
+        appendToBuildGradle(
+            """
+            |tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask>("customFormatCheck") {
+            |   source = fileTree("src/main/java")
+            |}
+            """
+                .trimMargin()
+        )
 
         GradleRunner.create()
             .withProjectDir(tempDir)
