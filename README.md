@@ -56,6 +56,11 @@ By default, `ktfmt-gradle` will add two Gradle tasks to your build:
 
 Those two tasks will invoke `ktfmt` on the **whole module**. More specific tasks are avialable based on the module type.
 
+Additionally, the plugin will create check/format tasks for top-level Kotlin script files:
+
+- `ktfmtCheckScript` that will check if the top-level script files in your module is ktfmt-compliant
+- `ktfmtFormatScript` that will reformat top-level script files with ktfmt
+
 #### Jvm/Js Modules
 
 For Jvm/Js modules, the plugin will create a check/format task for **every source set**. For example, jvm modules will
