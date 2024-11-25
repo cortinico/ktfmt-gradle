@@ -63,6 +63,49 @@ internal object KtfmtPluginUtils {
         }
     }
 
+    internal fun createScriptTasks(
+        project: Project,
+        projectDir: File,
+        topLevelFormat: TaskProvider<Task>,
+        topLevelCheck: TaskProvider<Task>,
+    ) {
+        val checkTaskName = "${TASK_NAME_CHECK}Script"
+        val formatTaskName = "${TASK_NAME_FORMAT}Script"
+
+        val scriptFiles =
+            project
+                .fileTree(projectDir)
+                .filter { it.extension == "kts" }
+                .filter { it.parentFile == projectDir }
+
+        val scriptCheckTask =
+            project.tasks.register(checkTaskName, KtfmtCheckTask::class.java) {
+                it.description =
+                    "Run Ktfmt formatter validation for script files on project '${project.name}'"
+                it.setSource(scriptFiles)
+                it.setIncludes(KtfmtPlugin.defaultIncludes)
+            }
+        val scriptFormatTask =
+            project.tasks.register(formatTaskName, KtfmtFormatTask::class.java) {
+                it.description = "Run Ktfmt formatter for script files on project '${project.name}'"
+                it.setSource(scriptFiles)
+                it.setIncludes(KtfmtPlugin.defaultIncludes)
+            }
+
+        project.tasks.withType(KotlinCompile::class.java).all {
+            it.mustRunAfter(scriptCheckTask, scriptFormatTask)
+        }
+
+        topLevelFormat.configure { task -> task.dependsOn(scriptFormatTask) }
+        topLevelCheck.configure { task -> task.dependsOn(scriptCheckTask) }
+
+        project.plugins.withType(LifecycleBasePlugin::class.java) {
+            project.tasks.named(LifecycleBasePlugin.CHECK_TASK_NAME).configure { task ->
+                task.dependsOn(scriptCheckTask)
+            }
+        }
+    }
+
     private fun createCheckTask(
         project: Project,
         name: String,
