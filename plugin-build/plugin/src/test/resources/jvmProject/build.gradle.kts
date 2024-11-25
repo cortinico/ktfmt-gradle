@@ -3,6 +3,6 @@ plugins {
     id("com.ncorti.ktfmt.gradle")
 }
 
-repositories {
-    mavenCentral()
-}
+ktfmt { kotlinLangStyle() }
+
+repositories { mavenCentral() }

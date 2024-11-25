@@ -353,12 +353,8 @@ internal class KtfmtFormatTaskIntegrationTest {
         appendToBuildGradle(
             """
             |kotlin {
-            |    sourceSets.main {
-            |       kotlin.setSrcDirs(listOf("src"))
-            |    }
-            |    sourceSets.test {
-            |       kotlin.setSrcDirs(listOf("test"))
-            |    }
+            |    sourceSets.main { kotlin.setSrcDirs(listOf("src")) }
+            |    sourceSets.test { kotlin.setSrcDirs(listOf("test")) }
             |}
         """
                 .trimMargin()
@@ -385,11 +381,7 @@ internal class KtfmtFormatTaskIntegrationTest {
     fun `format task should by default not format sourceSets in the build folder`() {
         appendToBuildGradle(
             """
-            |kotlin {
-            |    sourceSets.main {
-            |       kotlin.srcDirs("build/main")
-            |    }
-            |}
+            |kotlin { sourceSets.main { kotlin.srcDirs("build/main") } }
         """
                 .trimMargin()
         )
@@ -413,15 +405,9 @@ internal class KtfmtFormatTaskIntegrationTest {
     fun `format task should not ignore sourceSets in build folder when a custom exclusion pattern is specified`() {
         appendToBuildGradle(
             """
-            |kotlin {
-            |    sourceSets.main {
-            |       kotlin.srcDirs("build/generated")
-            |    }
-            |}
+            |kotlin { sourceSets.main { kotlin.srcDirs("build/generated") } }
             |
-            |ktfmt{
-            |    srcSetPathExclusionPattern.set(Regex("customRules.*"))
-            |}
+            |ktfmt { srcSetPathExclusionPattern.set(Regex("customRules.*")) }
         """
                 .trimMargin()
         )
@@ -443,9 +429,7 @@ internal class KtfmtFormatTaskIntegrationTest {
     fun `format task should ignore the main sourceSets when specified as exclusion pattern`() {
         appendToBuildGradle(
             """
-            |ktfmt{
-            |    srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*"))
-            |}
+            |ktfmt { srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*")) }
         """
                 .trimMargin()
         )
@@ -478,6 +462,7 @@ internal class KtfmtFormatTaskIntegrationTest {
         tempDir.resolve("build.gradle.kts").apply {
             appendText(System.lineSeparator())
             appendText(content)
+            appendText(System.lineSeparator())
         }
     }
 }

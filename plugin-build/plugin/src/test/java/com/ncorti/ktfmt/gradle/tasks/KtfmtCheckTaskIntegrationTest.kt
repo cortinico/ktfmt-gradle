@@ -276,7 +276,7 @@ internal class KtfmtCheckTaskIntegrationTest {
         appendToBuildGradle(
             """
             |tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask>("customFormatCheck") {
-            |   source = fileTree("src/main/java")
+            |    source = fileTree("src/main/java")
             |}
             """
                 .trimMargin()
@@ -294,12 +294,8 @@ internal class KtfmtCheckTaskIntegrationTest {
         appendToBuildGradle(
             """
             |kotlin {
-            |    sourceSets.main {
-            |       kotlin.setSrcDirs(listOf("src"))
-            |    }
-            |    sourceSets.test {
-            |       kotlin.setSrcDirs(listOf("test"))
-            |    }
+            |    sourceSets.main { kotlin.setSrcDirs(listOf("src")) }
+            |    sourceSets.test { kotlin.setSrcDirs(listOf("test")) }
             |}
         """
                 .trimMargin()
@@ -323,11 +319,7 @@ internal class KtfmtCheckTaskIntegrationTest {
     fun `check task should by default ignore sourceSets in the build folder`() {
         appendToBuildGradle(
             """
-            |kotlin {
-            |    sourceSets.main {
-            |       kotlin.srcDirs("build/main")
-            |    }
-            |}
+            |kotlin { sourceSets.main { kotlin.srcDirs("build/main") } }
         """
                 .trimMargin()
         )
@@ -349,15 +341,9 @@ internal class KtfmtCheckTaskIntegrationTest {
     fun `check task should not ignore sourceSets in build folder when a custom exclusion pattern is specified`() {
         appendToBuildGradle(
             """
-            |kotlin {
-            |    sourceSets.main {
-            |       kotlin.srcDirs("build/generated")
-            |    }
-            |}
+            |kotlin { sourceSets.main { kotlin.srcDirs("build/generated") } }
             |
-            |ktfmt{
-            |    srcSetPathExclusionPattern.set(Regex("customRules.*"))
-            |}
+            |ktfmt { srcSetPathExclusionPattern.set(Regex("customRules.*")) }
         """
                 .trimMargin()
         )
@@ -373,15 +359,14 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
+        assertThat(result.output).containsMatch("Invalid formatting for: .*TestFile.kt")
     }
 
     @Test
     fun `check task should ignore the main sourceSets when specified as exclusion pattern`() {
         appendToBuildGradle(
             """
-            |ktfmt{
-            |    srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*"))
-            |}
+            |ktfmt { srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*")) }
         """
                 .trimMargin()
         )
@@ -403,6 +388,7 @@ internal class KtfmtCheckTaskIntegrationTest {
         tempDir.resolve("build.gradle.kts").apply {
             appendText(System.lineSeparator())
             appendText(content)
+            appendText(System.lineSeparator())
         }
     }
 
