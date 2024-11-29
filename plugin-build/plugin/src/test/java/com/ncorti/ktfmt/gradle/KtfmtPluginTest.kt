@@ -32,13 +32,13 @@ class KtfmtPluginTest {
         assertThat(project["ktfmtCheckTest"]).isInstanceOf(KtfmtCheckTask::class.java)
         assertThat(project["ktfmtFormatTest"]).isInstanceOf(KtfmtFormatTask::class.java)
 
-        assertThat(project["ktfmtCheckScript"]).isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project["ktfmtFormatScript"]).isInstanceOf(KtfmtFormatTask::class.java)
+        assertThat(project["ktfmtCheckScripts"]).isInstanceOf(KtfmtCheckTask::class.java)
+        assertThat(project["ktfmtFormatScripts"]).isInstanceOf(KtfmtFormatTask::class.java)
 
         assertThat(project["ktfmtCheck"].dependencies)
-            .containsExactly("ktfmtCheckMain", "ktfmtCheckTest", "ktfmtCheckScript")
+            .containsExactly("ktfmtCheckMain", "ktfmtCheckTest", "ktfmtCheckScripts")
         assertThat(project["ktfmtFormat"].dependencies)
-            .containsExactly("ktfmtFormatMain", "ktfmtFormatTest", "ktfmtFormatScript")
+            .containsExactly("ktfmtFormatMain", "ktfmtFormatTest", "ktfmtFormatScripts")
     }
 
     @Test
@@ -53,9 +53,9 @@ class KtfmtPluginTest {
         assertThat(project["ktfmtFormatTest"]).isInstanceOf(KtfmtFormatTask::class.java)
 
         assertThat(project["ktfmtCheck"].dependencies)
-            .containsExactly("ktfmtCheckMain", "ktfmtCheckTest", "ktfmtCheckScript")
+            .containsExactly("ktfmtCheckMain", "ktfmtCheckTest", "ktfmtCheckScripts")
         assertThat(project["ktfmtFormat"].dependencies)
-            .containsExactly("ktfmtFormatMain", "ktfmtFormatTest", "ktfmtFormatScript")
+            .containsExactly("ktfmtFormatMain", "ktfmtFormatTest", "ktfmtFormatScripts")
     }
 
     @Test
@@ -77,13 +77,13 @@ class KtfmtPluginTest {
             .containsExactly(
                 "ktfmtCheckKmpCommonMain",
                 "ktfmtCheckKmpCommonTest",
-                "ktfmtCheckScript",
+                "ktfmtCheckScripts",
             )
         assertThat(project["ktfmtFormat"].dependencies)
             .containsExactly(
                 "ktfmtFormatKmpCommonMain",
                 "ktfmtFormatKmpCommonTest",
-                "ktfmtFormatScript",
+                "ktfmtFormatScripts",
             )
     }
 
@@ -169,7 +169,7 @@ class KtfmtPluginTest {
                 "ktfmtCheckTestFixtures",
                 "ktfmtCheckTestFixturesRelease",
                 "ktfmtCheckTestFixturesDebug",
-                "ktfmtCheckScript",
+                "ktfmtCheckScripts",
             )
         assertThat(project["ktfmtFormat"].dependencies)
             .containsExactly(
@@ -185,7 +185,7 @@ class KtfmtPluginTest {
                 "ktfmtFormatTestFixtures",
                 "ktfmtFormatTestFixturesRelease",
                 "ktfmtFormatTestFixturesDebug",
-                "ktfmtFormatScript",
+                "ktfmtFormatScripts",
             )
     }
 

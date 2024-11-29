@@ -58,8 +58,8 @@ Those two tasks will invoke `ktfmt` on the **whole module**. More specific tasks
 
 Additionally, the plugin will create check/format tasks for top-level Kotlin script files:
 
-- `ktfmtCheckScript` that will check if the top-level script files in your module is ktfmt-compliant
-- `ktfmtFormatScript` that will reformat top-level script files with ktfmt
+- `ktfmtCheckScripts` that will check if the top-level script files in your module is ktfmt-compliant
+- `ktfmtFormatScripts` that will reformat top-level script files with ktfmt
 
 #### Jvm/Js Modules
 

@@ -63,14 +63,14 @@ internal object KtfmtPluginUtils {
         }
     }
 
-    internal fun createScriptTasks(
+    internal fun createScriptsTasks(
         project: Project,
         projectDir: File,
         topLevelFormat: TaskProvider<Task>,
         topLevelCheck: TaskProvider<Task>,
     ) {
-        val checkTaskName = "${TASK_NAME_CHECK}Script"
-        val formatTaskName = "${TASK_NAME_FORMAT}Script"
+        val checkTaskName = "${TASK_NAME_CHECK}Scripts"
+        val formatTaskName = "${TASK_NAME_FORMAT}Scripts"
 
         val scriptFiles =
             project

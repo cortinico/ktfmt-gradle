@@ -448,54 +448,54 @@ internal class KtfmtFormatTaskIntegrationTest {
     }
 
     @Test
-    fun `format script task should fail if top-level script file could not be parsed`() {
+    fun `format scripts task should fail if top-level script file could not be parsed`() {
         val scriptFile = createTempFile(content = "val answer=\n", fileName = "my.kts", path = "")
 
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("ktfmtFormatScript")
+                .withArguments("ktfmtFormatScripts")
                 .forwardOutput()
                 .buildAndFail()
 
         val actual = scriptFile.readText()
         assertThat(actual).isEqualTo("val answer=\n")
-        assertThat(result.task(":ktfmtFormatScript")?.outcome).isEqualTo(FAILED)
+        assertThat(result.task(":ktfmtFormatScripts")?.outcome).isEqualTo(FAILED)
     }
 
     @Test
-    fun `format script task should format top-level script file`() {
+    fun `format scripts task should format top-level script file`() {
         val scriptFile = createTempFile(content = "val answer=42\n", fileName = "my.kts", path = "")
 
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("ktfmtFormatScript")
+                .withArguments("ktfmtFormatScripts")
                 .forwardOutput()
                 .build()
 
         val actual = scriptFile.readText()
         assertThat(actual).isEqualTo("val answer = 42\n")
-        assertThat(result.task(":ktfmtFormatScript")?.outcome).isEqualTo(SUCCESS)
+        assertThat(result.task(":ktfmtFormatScripts")?.outcome).isEqualTo(SUCCESS)
     }
 
     @Test
-    fun `format script task should not format non top-level script file`() {
+    fun `format scripts task should not format non top-level script file`() {
         val scriptFile = createTempFile(content = "val answer=42\n", fileName = "my.kts")
 
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("ktfmtFormatScript")
+                .withArguments("ktfmtFormatScripts")
                 .forwardOutput()
                 .build()
 
         val actual = scriptFile.readText()
         assertThat(actual).isEqualTo("val answer=42\n")
-        assertThat(result.task(":ktfmtFormatScript")?.outcome).isEqualTo(SUCCESS)
+        assertThat(result.task(":ktfmtFormatScripts")?.outcome).isEqualTo(SUCCESS)
     }
 
     private fun createTempFile(
