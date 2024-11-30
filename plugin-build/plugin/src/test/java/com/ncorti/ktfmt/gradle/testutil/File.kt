@@ -6,7 +6,7 @@ import org.intellij.lang.annotations.Language
 fun File.appendToBuildGradle(content: String) {
     resolve("build.gradle.kts").apply {
         appendText(System.lineSeparator())
-        appendText(content)
+        appendText(content.ensureLineSeparator())
         appendText(System.lineSeparator())
     }
 }
