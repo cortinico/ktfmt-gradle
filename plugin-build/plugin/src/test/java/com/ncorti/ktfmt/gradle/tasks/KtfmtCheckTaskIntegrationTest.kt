@@ -1,6 +1,8 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.google.common.truth.Truth.assertThat
+import com.ncorti.ktfmt.gradle.testutil.appendToBuildGradle
+import com.ncorti.ktfmt.gradle.testutil.createTempFile
 import java.io.File
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
@@ -9,7 +11,6 @@ import org.gradle.testkit.runner.TaskOutcome.FROM_CACHE
 import org.gradle.testkit.runner.TaskOutcome.NO_SOURCE
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
-import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -27,7 +28,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task fails if there is invalid code`() {
-        createTempFile(content = "val answer = `")
+        tempDir.createTempFile(content = "val answer = `")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -41,7 +42,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task fails if there is not formatted code`() {
-        createTempFile(content = "val answer=42")
+        tempDir.createTempFile(content = "val answer=42")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -56,7 +57,7 @@ internal class KtfmtCheckTaskIntegrationTest {
     @Test
     fun `check task fails if ktfmt fails to parse the code`() {
         // The following code will case ktfmt to fail with error: Failed to parse file
-        createTempFile(
+        tempDir.createTempFile(
             """
             val res = when {
                 ````
@@ -79,7 +80,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task succeed if code is formatted`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -92,7 +93,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task runs before compilation`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -108,7 +109,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task prints formatted files with --info`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -123,7 +124,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `format task uses configuration cache correctly`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
         GradleRunner.create()
             .withProjectDir(tempDir)
             .withPluginClasspath()
@@ -142,8 +143,8 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task validates all the file with a failure`() {
-        createTempFile(content = "val answer = `\n", fileName = "File1.kt")
-        createTempFile(content = "val answer = 42\n", fileName = "File2.kt")
+        tempDir.createTempFile(content = "val answer = `\n", fileName = "File1.kt")
+        tempDir.createTempFile(content = "val answer = 42\n", fileName = "File2.kt")
 
         val result =
             GradleRunner.create()
@@ -159,8 +160,8 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task skips a file if with --include-only`() {
-        createTempFile(content = "val answer = `\n", fileName = "File1.kt")
-        val file2 = createTempFile(content = "val answer = 42\n", fileName = "File2.kt")
+        tempDir.createTempFile(content = "val answer = `\n", fileName = "File1.kt")
+        val file2 = tempDir.createTempFile(content = "val answer = 42\n", fileName = "File2.kt")
 
         val result =
             GradleRunner.create()
@@ -183,7 +184,10 @@ internal class KtfmtCheckTaskIntegrationTest {
     @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
     fun `check task can check the formatting of multiple files`(n: Int) {
         repeat(n) { index ->
-            createTempFile(content = "val answer${index} = 42\n", fileName = "TestFile$index.kt")
+            tempDir.createTempFile(
+                content = "val answer${index} = 42\n",
+                fileName = "TestFile$index.kt",
+            )
         }
         val result =
             GradleRunner.create()
@@ -198,7 +202,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task is cacheable`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
 
         var result: BuildResult? = null
         repeat(2) {
@@ -215,17 +219,17 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task should be up-to-date when invoked twice with multiple different sized sourceSets`() {
-        createTempFile(
+        tempDir.createTempFile(
             content = "val answer = 42\n",
             fileName = "SrcFile.kt",
             path = "src/main/java",
         )
-        createTempFile(
+        tempDir.createTempFile(
             content = "val answer = 42\n",
             fileName = "TestFile.kt",
             path = "src/test/java",
         )
-        createTempFile(
+        tempDir.createTempFile(
             content = "val answer = 42\n",
             fileName = "TestFile2.kt",
             path = "src/test/java",
@@ -254,7 +258,7 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task is configuration cache compatible`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
 
         var result: BuildResult? = null
         repeat(2) {
@@ -271,19 +275,16 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `custom formatCheck task should be compatible with configuration cache`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
 
-        tempDir
-            .resolve("build.gradle.kts")
-            .appendText(
-                """
-                |
-                |tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask>("customFormatCheck") {
-                |   source = fileTree("src/main/java")
-                |}
-                """
-                    .trimMargin()
-            )
+        tempDir.appendToBuildGradle(
+            """
+            |tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask>("customFormatCheck") {
+            |    source = fileTree("src/main/java")
+            |}
+            """
+                .trimMargin()
+        )
 
         GradleRunner.create()
             .withProjectDir(tempDir)
@@ -294,22 +295,18 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task should detect the source and test files in a flattened project structure`() {
-        appendToBuildGradle(
+        tempDir.appendToBuildGradle(
             """
             |kotlin {
-            |    sourceSets.main {
-            |       kotlin.setSrcDirs(listOf("src"))
-            |    }
-            |    sourceSets.test {
-            |       kotlin.setSrcDirs(listOf("test"))
-            |    }
+            |    sourceSets.main { kotlin.setSrcDirs(listOf("src")) }
+            |    sourceSets.test { kotlin.setSrcDirs(listOf("test")) }
             |}
         """
                 .trimMargin()
         )
 
-        createTempFile("val answer = 42\n", path = "src/someFolder")
-        createTempFile("val answer = 42\n", path = "test/someOtherFolder")
+        tempDir.createTempFile("val answer = 42\n", path = "src/someFolder")
+        tempDir.createTempFile("val answer = 42\n", path = "test/someOtherFolder")
 
         val result =
             GradleRunner.create()
@@ -324,18 +321,14 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task should by default ignore sourceSets in the build folder`() {
-        appendToBuildGradle(
+        tempDir.appendToBuildGradle(
             """
-            |kotlin {
-            |    sourceSets.main {
-            |       kotlin.srcDirs("build/main")
-            |    }
-            |}
+            |kotlin { sourceSets.main { kotlin.srcDirs("build/main") } }
         """
                 .trimMargin()
         )
 
-        createTempFile(content = "val answer=42\n", path = "build/main")
+        tempDir.createTempFile(content = "val answer=42\n", path = "build/main")
 
         val result =
             GradleRunner.create()
@@ -350,22 +343,16 @@ internal class KtfmtCheckTaskIntegrationTest {
 
     @Test
     fun `check task should not ignore sourceSets in build folder when a custom exclusion pattern is specified`() {
-        appendToBuildGradle(
+        tempDir.appendToBuildGradle(
             """
-            |kotlin {
-            |    sourceSets.main {
-            |       kotlin.srcDirs("build/generated")
-            |    }
-            |}
+            |kotlin { sourceSets.main { kotlin.srcDirs("build/generated") } }
             |
-            |ktfmt{
-            |    srcSetPathExclusionPattern.set(Regex("customRules.*"))
-            |}
+            |ktfmt { srcSetPathExclusionPattern.set(Regex("customRules.*")) }
         """
                 .trimMargin()
         )
 
-        createTempFile(content = "val answer=42\n", path = "build/generated/main")
+        tempDir.createTempFile(content = "val answer=42\n", path = "build/generated/main")
 
         val result =
             GradleRunner.create()
@@ -376,20 +363,19 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
+        assertThat(result.output).containsMatch("Invalid formatting for: .*TestFile.kt")
     }
 
     @Test
     fun `check task should ignore the main sourceSets when specified as exclusion pattern`() {
-        appendToBuildGradle(
+        tempDir.appendToBuildGradle(
             """
-            |ktfmt{
-            |    srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*"))
-            |}
+            |ktfmt { srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*")) }
         """
                 .trimMargin()
         )
 
-        createTempFile(content = "val answer=42\n")
+        tempDir.createTempFile(content = "val answer=42\n")
 
         val result =
             GradleRunner.create()
@@ -402,21 +388,37 @@ internal class KtfmtCheckTaskIntegrationTest {
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(NO_SOURCE)
     }
 
-    private fun appendToBuildGradle(content: String) {
-        tempDir.resolve("build.gradle.kts").apply {
-            appendText(System.lineSeparator())
-            appendText(content)
-        }
+    @Test
+    fun `check scripts task should validate top-level script file`() {
+        tempDir.createTempFile(content = "val answer=42\n", fileName = "TestFile.kts", path = "")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheckScripts")
+                .buildAndFail()
+
+        assertThat(result.task(":ktfmtCheckScripts")?.outcome).isEqualTo(FAILED)
+        assertThat(result.output).containsMatch("Invalid formatting for: .*TestFile.kts")
     }
 
-    private fun createTempFile(
-        @Language("kotlin") content: String,
-        fileName: String = "TestFile.kt",
-        path: String = "src/main/java",
-    ): File =
-        tempDir.resolve(path).resolve(fileName).apply {
-            parentFile.mkdirs()
-            createNewFile()
-            writeText(content)
-        }
+    @Test
+    fun `check scripts task should ignore non top-level script files`() {
+        tempDir.createTempFile(
+            content = "val answer=42\n",
+            fileName = "TestFile.kts",
+            path = "src/main/java",
+        )
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheckScripts")
+                .forwardOutput()
+                .build()
+
+        assertThat(result.task(":ktfmtCheckScripts")?.outcome).isEqualTo(SUCCESS)
+    }
 }

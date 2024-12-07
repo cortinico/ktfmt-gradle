@@ -1,13 +1,14 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.google.common.truth.Truth.assertThat
+import com.ncorti.ktfmt.gradle.testutil.appendToBuildGradle
+import com.ncorti.ktfmt.gradle.testutil.createTempFile
 import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.NO_SOURCE
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
-import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -25,7 +26,7 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task fails if there is invalid code`() {
-        createTempFile(content = "val answer = `")
+        tempDir.createTempFile(content = "val answer = `")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -39,7 +40,7 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format formats correctly`() {
-        val tempFile = createTempFile(content = "val answer=42")
+        val tempFile = tempDir.createTempFile(content = "val answer=42")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -53,7 +54,7 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task succeed if code is formatted`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -66,7 +67,7 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task is up to date after subsequent execution`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
         var result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -88,7 +89,7 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task is up to date after subsequent execution when formatting`() {
-        createTempFile(content = "val answer=42")
+        tempDir.createTempFile(content = "val answer=42")
         var result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -117,7 +118,7 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task is up to executed again after edit`() {
-        val tempFile = createTempFile(content = "val answer = 42\n")
+        val tempFile = tempDir.createTempFile(content = "val answer = 42\n")
         var result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -152,7 +153,7 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task prints formatted files with --info`() {
-        createTempFile(content = "val answer=42\n")
+        tempDir.createTempFile(content = "val answer=42\n")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -167,7 +168,7 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task uses configuration cache correctly`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
         GradleRunner.create()
             .withProjectDir(tempDir)
             .withPluginClasspath()
@@ -186,8 +187,8 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task reformats all the file even with a failure`() {
-        val file1 = createTempFile(content = "val answer = `", fileName = "File1.kt")
-        val file2 = createTempFile(content = "val answer=42", fileName = "File2.kt")
+        val file1 = tempDir.createTempFile(content = "val answer = `", fileName = "File1.kt")
+        val file2 = tempDir.createTempFile(content = "val answer=42", fileName = "File2.kt")
 
         val result =
             GradleRunner.create()
@@ -207,7 +208,7 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task runs before compilation`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
         val result =
             GradleRunner.create()
                 .withProjectDir(tempDir)
@@ -223,8 +224,8 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task skips a file if with --include-only`() {
-        createTempFile(content = "val answer = `\n", fileName = "File1.kt")
-        val file2 = createTempFile(content = "val answer=42\n", fileName = "File2.kt")
+        tempDir.createTempFile(content = "val answer = `\n", fileName = "File1.kt")
+        val file2 = tempDir.createTempFile(content = "val answer=42\n", fileName = "File2.kt")
 
         val result =
             GradleRunner.create()
@@ -248,7 +249,10 @@ internal class KtfmtFormatTaskIntegrationTest {
     @ValueSource(ints = [10, 15, 30, 50, 100, 1000])
     fun `format task can format multiple files`(n: Int) {
         repeat(n) { index ->
-            createTempFile(content = "val answer${index}=42\n", fileName = "TestFile$index.kt")
+            tempDir.createTempFile(
+                content = "val answer${index}=42\n",
+                fileName = "TestFile$index.kt",
+            )
         }
         val result =
             GradleRunner.create()
@@ -263,19 +267,16 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `custom format task should be compatible with configuration cache`() {
-        createTempFile(content = "val answer = 42\n")
+        tempDir.createTempFile(content = "val answer = 42\n")
 
-        tempDir
-            .resolve("build.gradle.kts")
-            .appendText(
-                """
-                |
-                |tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask>("customFormatTask") {
-                |   source = fileTree("src/main/java")
-                |}
-                """
-                    .trimMargin()
-            )
+        tempDir.appendToBuildGradle(
+            """
+            |tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask>("customFormatTask") {
+            |    source = fileTree("src/main/java")
+            |}
+        """
+                .trimMargin()
+        )
 
         GradleRunner.create()
             .withProjectDir(tempDir)
@@ -287,7 +288,7 @@ internal class KtfmtFormatTaskIntegrationTest {
     @Test
     fun `should format the files in kotlinLang style with a 4 space indentation`() {
         val file =
-            createTempFile(
+            tempDir.createTempFile(
                 content =
                     """
                     |fun someFun(){
@@ -298,7 +299,7 @@ internal class KtfmtFormatTaskIntegrationTest {
                         .trimMargin()
             )
 
-        appendToBuildGradle("ktfmt { kotlinLangStyle() }")
+        tempDir.appendToBuildGradle("ktfmt { kotlinLangStyle() }")
 
         GradleRunner.create()
             .withProjectDir(tempDir)
@@ -320,7 +321,7 @@ internal class KtfmtFormatTaskIntegrationTest {
     @Test
     fun `should format the files in googleStyle style with a 2 space indentation`() {
         val file =
-            createTempFile(
+            tempDir.createTempFile(
                 content =
                     """
                     |fun someFun(){
@@ -331,7 +332,7 @@ internal class KtfmtFormatTaskIntegrationTest {
                         .trimMargin()
             )
 
-        appendToBuildGradle("ktfmt { googleStyle() }")
+        tempDir.appendToBuildGradle("ktfmt { googleStyle() }")
 
         GradleRunner.create()
             .withProjectDir(tempDir)
@@ -353,22 +354,18 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task should detect the source and test files in a flattened project structure and format them`() {
-        appendToBuildGradle(
+        tempDir.appendToBuildGradle(
             """
             |kotlin {
-            |    sourceSets.main {
-            |       kotlin.setSrcDirs(listOf("src"))
-            |    }
-            |    sourceSets.test {
-            |       kotlin.setSrcDirs(listOf("test"))
-            |    }
+            |    sourceSets.main { kotlin.setSrcDirs(listOf("src")) }
+            |    sourceSets.test { kotlin.setSrcDirs(listOf("test")) }
             |}
         """
                 .trimMargin()
         )
 
-        val sourceFile = createTempFile("val answer =  42\n", path = "src/someFolder")
-        val testFile = createTempFile("val answer =  42\n", path = "test/someOtherFolder")
+        val sourceFile = tempDir.createTempFile("val answer =  42\n", path = "src/someFolder")
+        val testFile = tempDir.createTempFile("val answer =  42\n", path = "test/someOtherFolder")
 
         val result =
             GradleRunner.create()
@@ -386,18 +383,14 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task should by default not format sourceSets in the build folder`() {
-        appendToBuildGradle(
+        tempDir.appendToBuildGradle(
             """
-            |kotlin {
-            |    sourceSets.main {
-            |       kotlin.srcDirs("build/main")
-            |    }
-            |}
+            |kotlin { sourceSets.main { kotlin.srcDirs("build/main") } }
         """
                 .trimMargin()
         )
 
-        val file = createTempFile(content = "val answer=42\n", path = "build/main")
+        val file = tempDir.createTempFile(content = "val answer=42\n", path = "build/main")
 
         val result =
             GradleRunner.create()
@@ -414,22 +407,17 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task should not ignore sourceSets in build folder when a custom exclusion pattern is specified`() {
-        appendToBuildGradle(
+        tempDir.appendToBuildGradle(
             """
-            |kotlin {
-            |    sourceSets.main {
-            |       kotlin.srcDirs("build/generated")
-            |    }
-            |}
+            |kotlin { sourceSets.main { kotlin.srcDirs("build/generated") } }
             |
-            |ktfmt{
-            |    srcSetPathExclusionPattern.set(Regex("customRules.*"))
-            |}
+            |ktfmt { srcSetPathExclusionPattern.set(Regex("customRules.*")) }
         """
                 .trimMargin()
         )
 
-        val file = createTempFile(content = "val answer=42\n", path = "build/generated/main")
+        val file =
+            tempDir.createTempFile(content = "val answer=42\n", path = "build/generated/main")
 
         GradleRunner.create()
             .withProjectDir(tempDir)
@@ -444,16 +432,14 @@ internal class KtfmtFormatTaskIntegrationTest {
 
     @Test
     fun `format task should ignore the main sourceSets when specified as exclusion pattern`() {
-        appendToBuildGradle(
+        tempDir.appendToBuildGradle(
             """
-            |ktfmt{
-            |    srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*"))
-            |}
+            |ktfmt { srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*")) }
         """
                 .trimMargin()
         )
 
-        createTempFile(content = "val answer=42\n")
+        tempDir.createTempFile(content = "val answer=42\n")
 
         val result =
             GradleRunner.create()
@@ -466,21 +452,56 @@ internal class KtfmtFormatTaskIntegrationTest {
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(NO_SOURCE)
     }
 
-    private fun createTempFile(
-        @Language("kotlin") content: String,
-        fileName: String = "TestFile.kt",
-        path: String = "src/main/java",
-    ): File =
-        tempDir.resolve(path).resolve(fileName).apply {
-            parentFile.mkdirs()
-            createNewFile()
-            writeText(content)
-        }
+    @Test
+    fun `format scripts task should fail if top-level script file could not be parsed`() {
+        val scriptFile =
+            tempDir.createTempFile(content = "val answer=\n", fileName = "my.kts", path = "")
 
-    private fun appendToBuildGradle(content: String) {
-        tempDir.resolve("build.gradle.kts").apply {
-            appendText(System.lineSeparator())
-            appendText(content)
-        }
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatScripts")
+                .forwardOutput()
+                .buildAndFail()
+
+        val actual = scriptFile.readText()
+        assertThat(actual).isEqualTo("val answer=\n")
+        assertThat(result.task(":ktfmtFormatScripts")?.outcome).isEqualTo(FAILED)
+    }
+
+    @Test
+    fun `format scripts task should format top-level script file`() {
+        val scriptFile =
+            tempDir.createTempFile(content = "val answer=42\n", fileName = "my.kts", path = "")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatScripts")
+                .forwardOutput()
+                .build()
+
+        val actual = scriptFile.readText()
+        assertThat(actual).isEqualTo("val answer = 42\n")
+        assertThat(result.task(":ktfmtFormatScripts")?.outcome).isEqualTo(SUCCESS)
+    }
+
+    @Test
+    fun `format scripts task should not format non top-level script file`() {
+        val scriptFile = tempDir.createTempFile(content = "val answer=42\n", fileName = "my.kts")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatScripts")
+                .forwardOutput()
+                .build()
+
+        val actual = scriptFile.readText()
+        assertThat(actual).isEqualTo("val answer=42\n")
+        assertThat(result.task(":ktfmtFormatScripts")?.outcome).isEqualTo(SUCCESS)
     }
 }

@@ -32,10 +32,13 @@ class KtfmtPluginTest {
         assertThat(project["ktfmtCheckTest"]).isInstanceOf(KtfmtCheckTask::class.java)
         assertThat(project["ktfmtFormatTest"]).isInstanceOf(KtfmtFormatTask::class.java)
 
+        assertThat(project["ktfmtCheckScripts"]).isInstanceOf(KtfmtCheckTask::class.java)
+        assertThat(project["ktfmtFormatScripts"]).isInstanceOf(KtfmtFormatTask::class.java)
+
         assertThat(project["ktfmtCheck"].dependencies)
-            .containsExactly("ktfmtCheckMain", "ktfmtCheckTest")
+            .containsExactly("ktfmtCheckMain", "ktfmtCheckTest", "ktfmtCheckScripts")
         assertThat(project["ktfmtFormat"].dependencies)
-            .containsExactly("ktfmtFormatMain", "ktfmtFormatTest")
+            .containsExactly("ktfmtFormatMain", "ktfmtFormatTest", "ktfmtFormatScripts")
     }
 
     @Test
@@ -50,9 +53,9 @@ class KtfmtPluginTest {
         assertThat(project["ktfmtFormatTest"]).isInstanceOf(KtfmtFormatTask::class.java)
 
         assertThat(project["ktfmtCheck"].dependencies)
-            .containsExactly("ktfmtCheckMain", "ktfmtCheckTest")
+            .containsExactly("ktfmtCheckMain", "ktfmtCheckTest", "ktfmtCheckScripts")
         assertThat(project["ktfmtFormat"].dependencies)
-            .containsExactly("ktfmtFormatMain", "ktfmtFormatTest")
+            .containsExactly("ktfmtFormatMain", "ktfmtFormatTest", "ktfmtFormatScripts")
     }
 
     @Test
@@ -71,9 +74,17 @@ class KtfmtPluginTest {
             .isInstanceOf(KtfmtFormatTask::class.java)
 
         assertThat(project["ktfmtCheck"].dependencies)
-            .containsExactly("ktfmtCheckKmpCommonMain", "ktfmtCheckKmpCommonTest")
+            .containsExactly(
+                "ktfmtCheckKmpCommonMain",
+                "ktfmtCheckKmpCommonTest",
+                "ktfmtCheckScripts",
+            )
         assertThat(project["ktfmtFormat"].dependencies)
-            .containsExactly("ktfmtFormatKmpCommonMain", "ktfmtFormatKmpCommonTest")
+            .containsExactly(
+                "ktfmtFormatKmpCommonMain",
+                "ktfmtFormatKmpCommonTest",
+                "ktfmtFormatScripts",
+            )
     }
 
     @Suppress("LongMethod")
@@ -158,6 +169,7 @@ class KtfmtPluginTest {
                 "ktfmtCheckTestFixtures",
                 "ktfmtCheckTestFixturesRelease",
                 "ktfmtCheckTestFixturesDebug",
+                "ktfmtCheckScripts",
             )
         assertThat(project["ktfmtFormat"].dependencies)
             .containsExactly(
@@ -173,6 +185,7 @@ class KtfmtPluginTest {
                 "ktfmtFormatTestFixtures",
                 "ktfmtFormatTestFixturesRelease",
                 "ktfmtFormatTestFixturesDebug",
+                "ktfmtFormatScripts",
             )
     }
 

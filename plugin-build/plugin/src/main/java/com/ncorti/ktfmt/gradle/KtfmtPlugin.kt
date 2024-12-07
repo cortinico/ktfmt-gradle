@@ -4,6 +4,7 @@ import com.ncorti.ktfmt.gradle.KtfmtAndroidUtils.applyKtfmtToAndroidProject
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.EXTENSION_NAME
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.TASK_NAME_CHECK
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.TASK_NAME_FORMAT
+import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.createScriptsTasks
 import com.ncorti.ktfmt.gradle.KtfmtPluginUtils.createTasksForSourceSet
 import com.ncorti.ktfmt.gradle.tasks.KtfmtBaseTask
 import com.ncorti.ktfmt.gradle.util.i
@@ -62,6 +63,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
             if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
                 project.logger.i("Skipping Android task creation, as KMP is applied")
             } else {
+                createScriptsTasks(project, project.projectDir, topLevelFormat, topLevelCheck)
                 applyKtfmtToAndroidProject(project, topLevelFormat, topLevelCheck, ktfmtExtension)
             }
         }
@@ -73,6 +75,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
 
     private fun applyKtfmt(project: Project, ktfmtExtension: KtfmtExtension) {
         val extension = project.extensions.getByType(KotlinProjectExtension::class.java)
+        createScriptsTasks(project, project.projectDir, topLevelFormat, topLevelCheck)
         extension.sourceSets.all {
             createTasksForSourceSet(
                 project,
@@ -87,6 +90,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
 
     private fun applyKtfmtToMultiplatformProject(project: Project, ktfmtExtension: KtfmtExtension) {
         val extension = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
+        createScriptsTasks(project, project.projectDir, topLevelFormat, topLevelCheck)
         extension.sourceSets.all {
             val name = "kmp ${it.name}"
             if (it.name.startsWith("android")) {
