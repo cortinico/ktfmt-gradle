@@ -5,6 +5,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 
+- Add tasks `ktfmtCheckScripts` and `ktfmtFormatScripts` to check and format the `.kts` files in the project folder.
+
 ## Version 0.21.0 _(2024-11-01)_
 - KtFmt to 0.53
 - AGP to 8.7.1
