@@ -3,12 +3,12 @@ package com.ncorti.ktfmt.gradle.tasks.worker
 import com.facebook.ktfmt.format.Formatter
 import com.facebook.ktfmt.format.FormattingOptions
 import com.facebook.ktfmt.format.ParseError
-import com.google.googlejavaformat.FormattingError
+import com.google.googlejavaformat.java.FormatterException
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
 import com.ncorti.ktfmt.gradle.util.d
+import org.gradle.api.logging.Logging
 import java.io.File
 import java.io.IOException
-import org.gradle.api.logging.Logging
 
 // format the specific file and return the result
 // this implementation is decoupled from Gradle APIs for ease of testing
@@ -44,7 +44,7 @@ internal object KtfmtFormatter {
                 when (cause) {
                     is IOException -> "Unable to read file"
                     is ParseError -> "Failed to parse file"
-                    is FormattingError ->
+                    is FormatterException ->
                         cause.diagnostics().joinToString("\n") { "${ctx.sourceFile}:$it" }
                     else -> "Generic error during file processing"
                 }
