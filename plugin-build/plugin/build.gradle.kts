@@ -41,7 +41,10 @@ tasks.withType<PluginUnderTestMetadata>().configureEach {
 }
 
 dependencies {
-    compileOnly(libs.ktfmt)
+    compileOnly(libs.ktfmt){
+//        isTransitive = false
+        exclude("org.jetbrains.kotlin")
+    }
     implementation(libs.diffUtils)
 
     compileOnly(gradleApi())
@@ -55,7 +58,10 @@ dependencies {
     testImplementation(libs.jupiter)
     testImplementation(libs.truth)
 
-    testImplementation(libs.ktfmt)
+    testImplementation(libs.ktfmt){
+//        isTransitive = false
+        exclude(group = "org.jetbrains.kotlin")
+    }
 }
 
 @Suppress("UnstableApiUsage")
