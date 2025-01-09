@@ -6,6 +6,8 @@ Please add your entries according to this format.
 ## Unreleased
 
 - Add tasks `ktfmtCheckScripts` and `ktfmtFormatScripts` to check and format the `.kts` files in the project folder.
+- Kotlin to 2.1.0
+- Gradle to 8.12
 
 ## Version 0.21.0 _(2024-11-01)_
 - KtFmt to 0.53

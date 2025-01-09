@@ -15,8 +15,8 @@ java {
 
 kotlin {
     compilerOptions {
-        apiVersion.set(KotlinVersion.fromVersion("1.4"))
-        languageVersion.set(KotlinVersion.fromVersion("1.4"))
+        apiVersion.set(KotlinVersion.fromVersion("1.6"))
+        languageVersion.set(KotlinVersion.fromVersion("1.6"))
         jvmTarget = JvmTarget.JVM_11
     }
 }
@@ -41,7 +41,10 @@ tasks.withType<PluginUnderTestMetadata>().configureEach {
 }
 
 dependencies {
-    compileOnly(libs.ktfmt)
+    compileOnly(libs.ktfmt){
+//        isTransitive = false
+        exclude("org.jetbrains.kotlin")
+    }
     implementation(libs.diffUtils)
 
     compileOnly(gradleApi())
@@ -55,7 +58,10 @@ dependencies {
     testImplementation(libs.jupiter)
     testImplementation(libs.truth)
 
-    testImplementation(libs.ktfmt)
+    testImplementation(libs.ktfmt){
+//        isTransitive = false
+        exclude(group = "org.jetbrains.kotlin")
+    }
 }
 
 @Suppress("UnstableApiUsage")
