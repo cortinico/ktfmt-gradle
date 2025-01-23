@@ -1,20 +1,16 @@
 package com.ncorti.ktfmt.gradle.tasks
 
-import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtWorkAction
+import com.ncorti.ktfmt.gradle.util.KtfmtResultSummary
 import com.ncorti.ktfmt.gradle.util.KtfmtUtils
 import com.ncorti.ktfmt.gradle.util.i
 import javax.inject.Inject
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.tasks.CacheableTask
-import org.gradle.workers.WorkQueue
-import org.gradle.workers.WorkerExecutor
 
 /** ktfmt-gradle Check task. Verifies if the output of ktfmt is the same as the input */
 @CacheableTask
-abstract class KtfmtCheckTask
-@Inject
-internal constructor(workerExecutor: WorkerExecutor, private val layout: ProjectLayout) :
-    KtfmtBaseTask(workerExecutor, layout) {
+abstract class KtfmtCheckTask @Inject internal constructor(private val layout: ProjectLayout) :
+    KtfmtBaseTask(layout) {
 
     init {
         group = KtfmtUtils.GROUP_VERIFICATION
@@ -23,9 +19,7 @@ internal constructor(workerExecutor: WorkerExecutor, private val layout: Project
     override val reformatFiles: Boolean
         get() = false
 
-    override fun execute(workQueue: WorkQueue) {
-        val resultSummary = source.submitToQueue(workQueue, KtfmtWorkAction::class.java)
-
+    override fun handleResultSummary(resultSummary: KtfmtResultSummary) {
         if (resultSummary.failedFiles.isNotEmpty()) {
             error("Ktfmt failed to run with ${resultSummary.failedFiles.size} failures")
         }

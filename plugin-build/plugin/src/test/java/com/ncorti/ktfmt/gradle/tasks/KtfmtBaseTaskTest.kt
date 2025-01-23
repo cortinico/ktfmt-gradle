@@ -24,7 +24,7 @@ internal class KtfmtBaseTaskTest {
 
     @Test
     fun `outputFile contains a summary of the formatted files`() {
-        val project = ProjectBuilder.builder().build()
+        val project = ProjectBuilder.builder().withProjectDir(tempDir).build()
         project.pluginManager.apply("org.jetbrains.kotlin.jvm")
         project.pluginManager.apply("com.ncorti.ktfmt.gradle")
 
