@@ -1,7 +1,7 @@
 package com.ncorti.ktfmt.gradle.tasks
 
-import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatAction
-import com.ncorti.ktfmt.gradle.tasks.worker.Result
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtWorkAction
 import com.ncorti.ktfmt.gradle.util.KtfmtUtils
 import com.ncorti.ktfmt.gradle.util.d
 import com.ncorti.ktfmt.gradle.util.i
@@ -22,18 +22,23 @@ internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
         outputs.upToDateWhen { true }
     }
 
+    override val reformatFiles: Boolean
+        get() = true
+
     override fun execute(workQueue: WorkQueue) {
-        val results = source.submitToQueue(workQueue, KtfmtFormatAction::class.java)
+        val results = source.submitToQueue(workQueue, KtfmtWorkAction::class.java)
 
         logger.d("Format results: $results")
-        val failures = results.filterIsInstance<Result.Failure>()
+        val failures = results.filterIsInstance<KtfmtFormatResult.KtfmtFormatFailure>()
 
         if (failures.isNotEmpty()) {
             error("Ktfmt failed to run with ${failures.size} failures")
         }
 
         val notFormattedFiles =
-            results.filterIsInstance<Result.Success>().filterNot { it.correctlyFormatted }
+            results.filterIsInstance<KtfmtFormatResult.KtfmtFormatSuccess>().filterNot {
+                it.wasCorrectlyFormatted
+            }
 
         logger.i("Successfully reformatted ${notFormattedFiles.count()} files with Ktfmt")
     }

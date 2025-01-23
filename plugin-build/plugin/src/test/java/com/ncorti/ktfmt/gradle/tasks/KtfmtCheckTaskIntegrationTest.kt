@@ -37,7 +37,7 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
-        assertThat(result.output).contains("e: Failed to parse file")
+        assertThat(result.output).contains("Ktfmt failed to run with 1 failures")
     }
 
     @Test
@@ -70,12 +70,12 @@ internal class KtfmtCheckTaskIntegrationTest {
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("ktfmtCheckMain", "--debug")
+                .withArguments("ktfmtCheckMain", "--info")
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
-        assertThat(result.output).contains("[ktfmt] Failed to analyse:")
-        assertThat(result.output).contains("e: Failed to parse file")
+        assertThat(result.output).containsMatch("Failed to format file: .*TestFile.kt \\(reason =")
+        assertThat(result.output).contains("Ktfmt failed to run with 1 failures")
     }
 
     @Test
@@ -154,8 +154,8 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
-        assertThat(result.output).contains("Failed to parse file")
-        assertThat(result.output).contains("Valid formatting for:")
+        assertThat(result.output).containsMatch("Failed to format file: .*File1.kt \\(reason =")
+        assertThat(result.output).containsMatch("Valid formatting for: .*File2.kt")
     }
 
     @Test
@@ -175,9 +175,9 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .build()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(SUCCESS)
-        assertThat(result.output).contains("Skipping for:")
-        assertThat(result.output).contains("Not included inside --include-only")
-        assertThat(result.output).contains("Valid formatting for:")
+        assertThat(result.output).containsMatch("Valid formatting for: .*File2.kt")
+        assertThat(result.output)
+            .containsMatch("Skipping format for .*File1.kt because it is not included")
     }
 
     @ParameterizedTest

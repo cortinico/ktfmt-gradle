@@ -1,8 +1,8 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtWorkAction
-import com.ncorti.ktfmt.gradle.tasks.worker.Result
 import com.ncorti.ktfmt.gradle.util.d
 import java.util.UUID
 import org.gradle.api.file.ConfigurableFileCollection
@@ -14,6 +14,7 @@ import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
@@ -54,6 +55,8 @@ internal constructor(
     @SkipWhenEmpty
     override fun getSource(): FileTree = super.getSource()
 
+    @get:Internal internal abstract val reformatFiles: Boolean
+
     @TaskAction
     internal fun taskAction() {
         val workQueue =
@@ -66,7 +69,7 @@ internal constructor(
     internal fun <T : KtfmtWorkAction> FileCollection.submitToQueue(
         queue: WorkQueue,
         action: Class<T>,
-    ): List<Result> {
+    ): List<KtfmtFormatResult> {
         val workingDir = temporaryDir.resolve(UUID.randomUUID().toString())
         workingDir.mkdirs()
         try {
@@ -80,8 +83,8 @@ internal constructor(
                     parameters.sourceFile.set(it)
                     parameters.formattingOptions.set(formattingOptionsBean.get())
                     parameters.includedFiles.set(includedFiles)
-                    parameters.projectDir.set(layout.projectDirectory)
-                    parameters.workingDir.set(workingDir)
+                    parameters.resultDirectory.set(workingDir)
+                    parameters.reformatFiles.set(reformatFiles)
                 }
             }
             queue.await()
@@ -90,7 +93,7 @@ internal constructor(
             return files
                 .asSequence()
                 .filter { it.isFile }
-                .map { Result.fromResultString(it.readText()) }
+                .map { KtfmtFormatResult.parse(it.readText()) }
                 .toList()
         } finally {
             // remove working directory and everything in it
