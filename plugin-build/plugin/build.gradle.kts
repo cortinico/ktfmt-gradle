@@ -87,8 +87,6 @@ signing {
     useInMemoryPgpKeys(signingKey, signingPwd)
 }
 
-tasks.withType<Sign>().configureEach { onlyIf { project.properties["skip-signing"] != "true" } }
-
 tasks.withType<Test> { useJUnitPlatform() }
 
 val persistKtfmtVersion by
