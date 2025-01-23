@@ -23,14 +23,15 @@ internal class KtfmtBaseTaskTest {
     }
 
     @Test
-    fun `outputFile is the same as source files`() {
+    fun `outputFile contains a summary of the formatted files`() {
         val project = ProjectBuilder.builder().build()
         project.pluginManager.apply("org.jetbrains.kotlin.jvm")
         project.pluginManager.apply("com.ncorti.ktfmt.gradle")
 
         val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
-        assertThat(underTest.outputs.files.toList()).isEqualTo(underTest.source.files.toList())
+        val expectedFile = tempDir.resolve("build/ktfmt/ktfmtFormatMain/output.txt").canonicalFile
+        assertThat(underTest.outputs.files.map { it.canonicalFile }).containsExactly(expectedFile)
     }
 
     @Test

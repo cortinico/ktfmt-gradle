@@ -2,19 +2,28 @@ package com.ncorti.ktfmt.gradle.tasks
 
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatFailure
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatSkipped
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatSuccess
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtWorkAction
+import com.ncorti.ktfmt.gradle.tasks.worker.files
+import com.ncorti.ktfmt.gradle.util.KtfmtResultSummary
 import com.ncorti.ktfmt.gradle.util.d
+import java.io.File
 import java.util.UUID
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.FileTree
 import org.gradle.api.file.ProjectLayout
+import org.gradle.api.file.RegularFile
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
@@ -55,6 +64,9 @@ internal constructor(
     @SkipWhenEmpty
     override fun getSource(): FileTree = super.getSource()
 
+    @get:OutputFile
+    val output: Provider<RegularFile> = layout.buildDirectory.file("ktfmt/${this.name}/output.txt")
+
     @get:Internal internal abstract val reformatFiles: Boolean
 
     @TaskAction
@@ -69,7 +81,7 @@ internal constructor(
     internal fun <T : KtfmtWorkAction> FileCollection.submitToQueue(
         queue: WorkQueue,
         action: Class<T>,
-    ): List<KtfmtFormatResult> {
+    ): KtfmtResultSummary {
         val workingDir = temporaryDir.resolve(UUID.randomUUID().toString())
         workingDir.mkdirs()
         try {
@@ -89,15 +101,35 @@ internal constructor(
             }
             queue.await()
 
-            val files = workingDir.listFiles() ?: emptyArray()
-            return files
-                .asSequence()
-                .filter { it.isFile }
-                .map { KtfmtFormatResult.parse(it.readText()) }
-                .toList()
+            val results = collectResults(workingDir)
+
+            writeResultsSummaryToOutput(results)
+            return results
         } finally {
             // remove working directory and everything in it
             workingDir.deleteRecursively()
         }
     }
+
+    private fun collectResults(tmpResultDirectory: File): KtfmtResultSummary {
+        val formatResultFiles = tmpResultDirectory.listFiles() ?: emptyArray()
+
+        val results =
+            formatResultFiles
+                .asSequence()
+                .filter { it.isFile }
+                .map { KtfmtFormatResult.parse(it.readText()) }
+
+        val correctFiles =
+            results.filter { it is KtfmtFormatSuccess && it.wasCorrectlyFormatted }.files()
+        val incorrectFiles =
+            results.filter { it is KtfmtFormatSuccess && !it.wasCorrectlyFormatted }.files()
+        val skippedFiles = results.filter { it is KtfmtFormatSkipped }.files()
+        val failedFiles = results.filter { it is KtfmtFormatFailure }.files()
+
+        return KtfmtResultSummary(correctFiles, incorrectFiles, skippedFiles, failedFiles)
+    }
+
+    private fun writeResultsSummaryToOutput(results: KtfmtResultSummary) =
+        output.get().asFile.writeText(results.prettyPrint())
 }
