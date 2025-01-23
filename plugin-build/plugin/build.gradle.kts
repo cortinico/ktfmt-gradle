@@ -41,10 +41,13 @@ tasks.withType<PluginUnderTestMetadata>().configureEach {
 }
 
 dependencies {
-    compileOnly(libs.ktfmt){
-//        isTransitive = false
-        exclude("org.jetbrains.kotlin")
-    }
+        compileOnly(libs.ktfmt) {
+            // This dependency is used with a separate classloader, which downloads the ktfmt jar and its transitive
+            // dependencies at runtime. We only need it for compilation.
+            // We do not want the transitive dependencies of ktfmt in our classpath, because different Kotlin versions
+            // (especially the Kotlin compiler embeddable of ktfmt) can lead to compatibility issues
+            isTransitive = false
+        }
     implementation(libs.diffUtils)
 
     compileOnly(gradleApi())
@@ -57,11 +60,6 @@ dependencies {
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.jupiter)
     testImplementation(libs.truth)
-
-    testImplementation(libs.ktfmt){
-//        isTransitive = false
-        exclude(group = "org.jetbrains.kotlin")
-    }
 }
 
 @Suppress("UnstableApiUsage")
