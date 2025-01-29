@@ -28,10 +28,11 @@ internal sealed class KtfmtFormatResult(open val input: File) {
 
             @Suppress("MagicNumber")
             check(pieces.size == 3) { "Expected three components; got $str" }
-            return when (pieces[0]) {
-                "success" -> KtfmtFormatSuccess(File(pieces[2]), pieces[1].toBoolean())
-                "skipped" -> KtfmtFormatSkipped(File(pieces[2]))
-                "failure" -> KtfmtFormatFailure(File(pieces[2]))
+            val (status, wasCorrectlyFormatted, filePath) = pieces
+            return when (status) {
+                "success" -> KtfmtFormatSuccess(File(filePath), wasCorrectlyFormatted.toBoolean())
+                "skipped" -> KtfmtFormatSkipped(File(filePath))
+                "failure" -> KtfmtFormatFailure(File(filePath))
                 else -> error("Unknown status: ${pieces[0]}")
             }
         }
