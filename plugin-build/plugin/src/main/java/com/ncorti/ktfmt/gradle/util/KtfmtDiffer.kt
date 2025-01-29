@@ -4,15 +4,15 @@ import com.github.difflib.DiffUtils
 import com.github.difflib.patch.ChangeDelta
 import com.github.difflib.patch.DeleteDelta
 import com.github.difflib.patch.InsertDelta
-import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtResult
+import java.io.File
 import org.gradle.api.logging.Logger
 
 internal object KtfmtDiffer {
 
-    fun computeDiff(formatterResult: KtfmtResult.KtfmtSuccess): List<KtfmtDiffEntry> {
-        val input = formatterResult.input.readText()
-        val output = formatterResult.formattedCode
-        return DiffUtils.diff(input, output, null).deltas.map {
+    fun computeDiff(originalFile: File, reformattedCode: String): List<KtfmtDiffEntry> {
+        val originalContent = originalFile.readText()
+
+        return DiffUtils.diff(originalContent, reformattedCode, null).deltas.map {
             val line = it.source.position + 1
             val message: String =
                 when (it) {
@@ -21,7 +21,7 @@ internal object KtfmtDiffer {
                     is InsertDelta -> "Line added"
                     else -> ""
                 }
-            KtfmtDiffEntry(formatterResult.input, line, message)
+            KtfmtDiffEntry(originalFile, line, message)
         }
     }
 

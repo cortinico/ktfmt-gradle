@@ -15,8 +15,8 @@ java {
 
 kotlin {
     compilerOptions {
-        apiVersion.set(KotlinVersion.fromVersion("1.4"))
-        languageVersion.set(KotlinVersion.fromVersion("1.4"))
+        apiVersion.set(KotlinVersion.fromVersion("1.6"))
+        languageVersion.set(KotlinVersion.fromVersion("1.6"))
         jvmTarget = JvmTarget.JVM_11
     }
 }
@@ -41,7 +41,13 @@ tasks.withType<PluginUnderTestMetadata>().configureEach {
 }
 
 dependencies {
-    compileOnly(libs.ktfmt)
+        compileOnly(libs.ktfmt) {
+            // This dependency is used with a separate classloader, which downloads the ktfmt jar and its transitive
+            // dependencies at runtime. We only need it for compilation.
+            // We do not want the transitive dependencies of ktfmt in our classpath, because different Kotlin versions
+            // (especially the Kotlin compiler embeddable of ktfmt) can lead to compatibility issues
+            isTransitive = false
+        }
     implementation(libs.diffUtils)
 
     compileOnly(gradleApi())
@@ -54,8 +60,6 @@ dependencies {
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.jupiter)
     testImplementation(libs.truth)
-
-    testImplementation(libs.ktfmt)
 }
 
 @Suppress("UnstableApiUsage")
@@ -80,8 +84,6 @@ signing {
     val signingPwd = findProperty("SIGNING_PWD") as? String
     useInMemoryPgpKeys(signingKey, signingPwd)
 }
-
-tasks.withType<Sign>().configureEach { onlyIf { project.properties["skip-signing"] != "true" } }
 
 tasks.withType<Test> { useJUnitPlatform() }
 

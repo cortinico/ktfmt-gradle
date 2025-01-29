@@ -16,12 +16,12 @@
             </builds>
           </compositeBuild>
         </compositeConfiguration>
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/example" />
+            <option value="$PROJECT_DIR$/example-kmp" />
             <option value="$PROJECT_DIR$/plugin-build" />
             <option value="$PROJECT_DIR$/plugin-build/plugin" />
           </set>

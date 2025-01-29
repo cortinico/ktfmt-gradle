@@ -1,7 +1,6 @@
 package com.ncorti.ktfmt.gradle.util
 
 import com.google.common.truth.Truth.assertThat
-import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtResult.KtfmtSuccess
 import java.io.File
 import org.gradle.testfixtures.ProjectBuilder
 import org.intellij.lang.annotations.Language
@@ -12,42 +11,34 @@ internal class KtfmtDifferTest {
 
     @TempDir lateinit var tempDir: File
 
-    val logger = TestLogger(ProjectBuilder.builder().build())
+    private val logger = TestLogger(ProjectBuilder.builder().build())
 
     @Test
     fun `computeDiff with empty diff returns empty`() {
         val inputFile = createTempFile(content = "")
-        val input = KtfmtSuccess(inputFile, isCorrectlyFormatted = true, formattedCode = "")
 
-        val diff = KtfmtDiffer.computeDiff(input)
+        val diff = KtfmtDiffer.computeDiff(inputFile, "")
 
         assertThat(diff).isEmpty()
     }
 
     @Test
     fun `computeDiff with deleted line returns valid diff`() {
-        val inputFile =
-            createTempFile(
-                content =
-                    """
-                val a = "So long,"
-                val b = "and thanks for all the fish!"
+        val originalContent =
             """
-                        .trimIndent()
-            )
-
-        val input =
-            KtfmtSuccess(
-                inputFile,
-                isCorrectlyFormatted = false,
-                formattedCode =
+                    |val a = "So long,"
+                    |val b = "and thanks for all the fish!"
                     """
-                val a = "So long,"
+                .trimMargin()
+        val reformattedCode =
             """
-                        .trimIndent(),
-            )
+                |val a = "So long,"
+                """
+                .trimMargin()
 
-        val diff = KtfmtDiffer.computeDiff(input)
+        val inputFile = createTempFile(content = originalContent)
+
+        val diff = KtfmtDiffer.computeDiff(inputFile, reformattedCode)
 
         assertThat(diff).hasSize(1)
         assertThat(diff.first().lineNumber).isEqualTo(2)
@@ -56,28 +47,21 @@ internal class KtfmtDifferTest {
 
     @Test
     fun `computeDiff with added line returns valid diff`() {
-        val inputFile =
-            createTempFile(
-                content =
-                    """
-                val a = "So long,"
+        val originalContent =
             """
-                        .trimIndent()
-            )
-
-        val input =
-            KtfmtSuccess(
-                inputFile,
-                isCorrectlyFormatted = false,
-                formattedCode =
-                    """
-                val a = "So long,"
-                val b = "and thanks for all the fish!"
+                |val a = "So long,"
             """
-                        .trimIndent(),
-            )
+                .trimMargin()
+        val reformattedCode =
+            """
+                |val a = "So long,"
+                |val b = "and thanks for all the fish!"
+            """
+                .trimMargin()
 
-        val diff = KtfmtDiffer.computeDiff(input)
+        val inputFile = createTempFile(content = originalContent)
+
+        val diff = KtfmtDiffer.computeDiff(inputFile, reformattedCode)
 
         assertThat(diff).hasSize(1)
         assertThat(diff.first().lineNumber).isEqualTo(2)
@@ -86,29 +70,22 @@ internal class KtfmtDifferTest {
 
     @Test
     fun `computeDiff with changed line returns valid diff`() {
-        val inputFile =
-            createTempFile(
-                content =
-                    """
-                  val a = "So long,"
-                val b = "and thanks for all the fish!"
+        val originalContent =
             """
-                        .trimIndent()
-            )
-
-        val input =
-            KtfmtSuccess(
-                inputFile,
-                isCorrectlyFormatted = false,
-                formattedCode =
-                    """
-                val a = "So long,"
-                val b = "and thanks for all the fish!"
+                  |  val a = "So long,"
+                  |val b = "and thanks for all the fish!"
             """
-                        .trimIndent(),
-            )
+                .trimMargin()
+        val reformattedCode =
+            """
+                |val a = "So long,"
+                |val b = "and thanks for all the fish!"
+            """
+                .trimMargin()
 
-        val diff = KtfmtDiffer.computeDiff(input)
+        val inputFile = createTempFile(content = originalContent)
+
+        val diff = KtfmtDiffer.computeDiff(inputFile, reformattedCode)
 
         assertThat(diff).hasSize(1)
         assertThat(diff.first().lineNumber).isEqualTo(1)
@@ -117,31 +94,24 @@ internal class KtfmtDifferTest {
 
     @Test
     fun `computeDiff with multiple changed lines returns multiple entries`() {
-        val inputFile =
-            createTempFile(
-                content =
-                    """
-                   val a = "So long,"
-                val b = "and thanks!"
-                 val c = "for all the fish!"
+        val originalContent =
             """
-                        .trimIndent()
-            )
-
-        val input =
-            KtfmtSuccess(
-                inputFile,
-                isCorrectlyFormatted = false,
-                formattedCode =
-                    """
-                val a = "So long,"
-                val b = "and thanks!"
-                val c = "for all the fish!"
+                   |   val a = "So long,"
+                   |val b = "and thanks!"
+                   | val c = "for all the fish!"
             """
-                        .trimIndent(),
-            )
+                .trimMargin()
+        val reformattedCode =
+            """
+                |val a = "So long,"
+                |val b = "and thanks!"
+                |val c = "for all the fish!"
+            """
+                .trimMargin()
 
-        val diff = KtfmtDiffer.computeDiff(input)
+        val inputFile = createTempFile(content = originalContent)
+
+        val diff = KtfmtDiffer.computeDiff(inputFile, reformattedCode)
 
         assertThat(diff).hasSize(2)
 
@@ -154,9 +124,8 @@ internal class KtfmtDifferTest {
     @Test
     fun `printDiff adds valid line numbers`() {
         val inputFile = createTempFile(content = "val a = 42\nval b = 24", fileName = "TestFile.kt")
-        val input = KtfmtSuccess(inputFile, false, "val a = 42")
 
-        KtfmtDiffer.printDiff(KtfmtDiffer.computeDiff(input), logger)
+        KtfmtDiffer.printDiff(KtfmtDiffer.computeDiff(inputFile, "val a = 42"), logger)
 
         assertThat(logger.infoMessages).hasSize(1)
         assertThat(logger.infoMessages.first()).isEqualTo("[ktfmt] $inputFile:2 - Line deleted")

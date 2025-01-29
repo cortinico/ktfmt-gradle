@@ -1,55 +1,39 @@
 package com.ncorti.ktfmt.gradle.tasks
 
-import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtCheckAction
-import com.ncorti.ktfmt.gradle.tasks.worker.Result
+import com.ncorti.ktfmt.gradle.util.KtfmtResultSummary
 import com.ncorti.ktfmt.gradle.util.KtfmtUtils
-import com.ncorti.ktfmt.gradle.util.d
 import com.ncorti.ktfmt.gradle.util.i
 import javax.inject.Inject
 import org.gradle.api.file.ProjectLayout
-import org.gradle.api.file.RegularFile
-import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.CacheableTask
-import org.gradle.api.tasks.OutputFile
-import org.gradle.workers.WorkQueue
-import org.gradle.workers.WorkerExecutor
 
 /** ktfmt-gradle Check task. Verifies if the output of ktfmt is the same as the input */
 @CacheableTask
-abstract class KtfmtCheckTask
-@Inject
-internal constructor(workerExecutor: WorkerExecutor, layout: ProjectLayout) :
-    KtfmtBaseTask(workerExecutor, layout) {
-
-    @get:OutputFile
-    val output: Provider<RegularFile> = layout.buildDirectory.file("ktfmt/${this.name}/output.txt")
+abstract class KtfmtCheckTask @Inject internal constructor(private val layout: ProjectLayout) :
+    KtfmtBaseTask(layout) {
 
     init {
         group = KtfmtUtils.GROUP_VERIFICATION
     }
 
-    override fun execute(workQueue: WorkQueue) {
-        val results = source.submitToQueue(workQueue, KtfmtCheckAction::class.java)
+    override val reformatFiles: Boolean = false
 
-        logger.d("Check results: $results")
-        val failures = results.filterIsInstance<Result.Failure>()
-
-        if (failures.isNotEmpty()) {
-            error("Ktfmt failed to run with ${failures.size} failures")
+    override fun handleResultSummary(resultSummary: KtfmtResultSummary) {
+        if (resultSummary.failedFiles.isNotEmpty()) {
+            error("Ktfmt failed to run with ${resultSummary.failedFiles.size} failures")
         }
 
-        val notFormattedFiles =
-            results.filterIsInstance<Result.Success>().filterNot { it.correctlyFormatted }
-
-        if (notFormattedFiles.isNotEmpty()) {
-            val fileList = notFormattedFiles.joinToString("\n") { it.relativePath }
+        if (resultSummary.invalidFormattedFiles.isNotEmpty()) {
+            val fileList =
+                resultSummary.invalidFormattedFiles.joinToString("\n") {
+                    it.relativeTo(layout.projectDirectory.asFile).path
+                }
+            val invalidFilesSize = resultSummary.invalidFormattedFiles.size
             error(
-                "[ktfmt] Found ${notFormattedFiles.size} files that are not properly formatted:\n$fileList"
+                "[ktfmt] Found $invalidFilesSize files that are not properly formatted:\n$fileList"
             )
         }
 
-        val message = "Successfully checked ${results.size} files with Ktfmt"
-        logger.i(message)
-        output.get().asFile.writeText(message)
+        logger.i("Successfully checked ${resultSummary.validFormattedFiles.size} files with Ktfmt")
     }
 }

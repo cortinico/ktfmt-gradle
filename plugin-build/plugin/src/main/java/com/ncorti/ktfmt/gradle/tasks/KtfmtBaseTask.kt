@@ -1,35 +1,41 @@
 package com.ncorti.ktfmt.gradle.tasks
 
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatFailure
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatSkipped
+import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatSuccess
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtWorkAction
-import com.ncorti.ktfmt.gradle.tasks.worker.Result
+import com.ncorti.ktfmt.gradle.tasks.worker.files
+import com.ncorti.ktfmt.gradle.util.KtfmtResultSummary
 import com.ncorti.ktfmt.gradle.util.d
+import java.io.File
 import java.util.UUID
+import javax.inject.Inject
 import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.FileCollection
 import org.gradle.api.file.FileTree
 import org.gradle.api.file.ProjectLayout
+import org.gradle.api.file.RegularFile
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
-import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
 
 /** ktfmt-gradle base Gradle tasks. Contains methods to properly process a single file with ktfmt */
 @Suppress("LeakingThis")
-abstract class KtfmtBaseTask
-internal constructor(
-    private val workerExecutor: WorkerExecutor,
-    private val layout: ProjectLayout,
-) : SourceTask() {
+abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLayout) :
+    SourceTask() {
 
     init {
         includeOnly.convention("")
@@ -54,47 +60,78 @@ internal constructor(
     @SkipWhenEmpty
     override fun getSource(): FileTree = super.getSource()
 
+    @get:OutputFile
+    val output: Provider<RegularFile> = layout.buildDirectory.file("ktfmt/${this.name}/output.txt")
+
+    @get:Inject internal abstract val workerExecutor: WorkerExecutor
+
+    @get:Internal internal abstract val reformatFiles: Boolean
+
+    protected abstract fun handleResultSummary(resultSummary: KtfmtResultSummary)
+
     @TaskAction
     internal fun taskAction() {
-        val workQueue =
-            workerExecutor.processIsolation { spec -> spec.classpath.from(ktfmtClasspath) }
-        execute(workQueue)
-    }
+        val tmpResultDirectory =
+            temporaryDir.resolve(UUID.randomUUID().toString()).apply { mkdirs() }
 
-    protected abstract fun execute(workQueue: WorkQueue)
-
-    internal fun <T : KtfmtWorkAction> FileCollection.submitToQueue(
-        queue: WorkQueue,
-        action: Class<T>,
-    ): List<Result> {
-        val workingDir = temporaryDir.resolve(UUID.randomUUID().toString())
-        workingDir.mkdirs()
         try {
-            val includedFiles =
-                IncludedFilesParser.parse(includeOnly.get(), layout.projectDirectory.asFile)
-            logger.d(
-                "Preparing to format: includeOnly=${includeOnly.orNull}, includedFiles = $includedFiles"
-            )
-            forEach {
-                queue.submit(action) { parameters ->
-                    parameters.sourceFile.set(it)
-                    parameters.formattingOptions.set(formattingOptionsBean.get())
-                    parameters.includedFiles.set(includedFiles)
-                    parameters.projectDir.set(layout.projectDirectory)
-                    parameters.workingDir.set(workingDir)
-                }
-            }
-            queue.await()
+            submitFilesToFormatterWorker(tmpResultDirectory)
 
-            val files = workingDir.listFiles() ?: emptyArray()
-            return files
-                .asSequence()
-                .filter { it.isFile }
-                .map { Result.fromResultString(it.readText()) }
-                .toList()
+            val results = collectResults(tmpResultDirectory)
+
+            handleResultSummary(results)
+            writeResultsSummaryToOutput(results)
         } finally {
-            // remove working directory and everything in it
-            workingDir.deleteRecursively()
+            tmpResultDirectory.deleteRecursively()
         }
     }
+
+    private fun submitFilesToFormatterWorker(tmpResultDirectory: File) {
+        val queue = workerExecutor.processIsolation { it.classpath.from(ktfmtClasspath) }
+
+        val includedFiles = getIncludedFiles()
+
+        source.forEach { file ->
+            queue.submit(KtfmtWorkAction::class.java) {
+                it.sourceFile.set(file)
+                it.formattingOptions.set(formattingOptionsBean.get())
+                it.includedFiles.set(includedFiles)
+                it.resultDirectory.set(tmpResultDirectory)
+                it.reformatFiles.set(reformatFiles)
+            }
+        }
+
+        queue.await()
+    }
+
+    private fun getIncludedFiles(): Set<File> {
+        val includedFiles =
+            IncludedFilesParser.parse(includeOnly.get(), layout.projectDirectory.asFile)
+        logger.d(
+            "Preparing to format: includeOnly=${includeOnly.orNull}, includedFiles = $includedFiles"
+        )
+        return includedFiles
+    }
+
+    private fun collectResults(tmpResultDirectory: File): KtfmtResultSummary {
+        val formatResultFiles = tmpResultDirectory.listFiles() ?: emptyArray()
+
+        val results =
+            formatResultFiles
+                .asSequence()
+                .filter { it.isFile }
+                .map { KtfmtFormatResult.parse(it.readText()) }
+
+        val correctFiles =
+            results.filter { it is KtfmtFormatSuccess && it.wasCorrectlyFormatted }.files()
+        val incorrectFiles =
+            results.filter { it is KtfmtFormatSuccess && !it.wasCorrectlyFormatted }.files()
+        val skippedFiles = results.filter { it is KtfmtFormatSkipped }.files()
+        val failedFiles = results.filter { it is KtfmtFormatFailure }.files()
+
+        return KtfmtResultSummary(correctFiles, incorrectFiles, skippedFiles, failedFiles)
+    }
+
+    private fun writeResultsSummaryToOutput(results: KtfmtResultSummary) =
+        output.get().asFile.writeText(results.prettyPrint())
 }

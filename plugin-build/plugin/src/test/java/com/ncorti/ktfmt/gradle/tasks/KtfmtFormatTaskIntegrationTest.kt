@@ -35,7 +35,7 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(FAILED)
-        assertThat(result.output).contains("e: Failed to parse file")
+        assertThat(result.output).containsMatch("Failed to format file: .*TestFile.kt \\(reason =")
     }
 
     @Test
@@ -162,8 +162,8 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
-        assertThat(result.output).contains("[ktfmt] Reformatting...")
-        assertThat(result.output).contains("[ktfmt] Successfully reformatted 1 files with Ktfmt")
+        assertThat(result.output).containsMatch("Reformatting .*TestFile.kt")
+        assertThat(result.output).contains("Successfully reformatted 1 files with Ktfmt")
     }
 
     @Test
@@ -202,8 +202,8 @@ internal class KtfmtFormatTaskIntegrationTest {
         // File 1 contains a parsing error and is untouched.
         assertThat(file1.readText()).isEqualTo("val answer = `")
         assertThat(file2.readText()).isEqualTo("val answer = 42\n")
-        assertThat(result.output).contains("Failed to analyse:")
-        assertThat(result.output).contains("Reformatting...:")
+        assertThat(result.output).containsMatch("Failed to format file: .*File1.kt \\(reason =")
+        assertThat(result.output).containsMatch("Reformatting .*File2.kt")
     }
 
     @Test
@@ -239,9 +239,9 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
-        assertThat(result.output).contains("[ktfmt] Skipping for:")
-        assertThat(result.output).contains("Not included inside --include-only")
-        assertThat(result.output).contains("[ktfmt] Reformatting...")
+        assertThat(result.output).containsMatch("Reformatting .*File2.kt")
+        assertThat(result.output)
+            .containsMatch("Skipping format for .*File1.kt because it is not included")
         assertThat(result.output).contains("[ktfmt] Successfully reformatted 1 files with Ktfmt")
     }
 

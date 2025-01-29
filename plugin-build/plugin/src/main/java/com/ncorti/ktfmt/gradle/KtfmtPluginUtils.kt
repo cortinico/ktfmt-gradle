@@ -116,10 +116,7 @@ internal object KtfmtPluginUtils {
             name.split(" ").joinToString("") {
                 val charArray = it.toCharArray()
                 if (charArray[0].isLowerCase()) {
-                    // We use toUpperCase here to retain compatibility with Gradle 6.9 and Kotlin
-                    // 1.4
-                    @Suppress("DEPRECATION")
-                    charArray[0] = charArray[0].toUpperCase()
+                    charArray[0] = charArray[0].uppercaseChar()
                 }
                 charArray.concatToString()
             }
@@ -144,10 +141,7 @@ internal object KtfmtPluginUtils {
             name.split(" ").joinToString("") {
                 val charArray = it.toCharArray()
                 if (charArray[0].isLowerCase()) {
-                    // We use toUpperCase here to retain compatibility with Gradle 6.9 and Kotlin
-                    // 1.4
-                    @Suppress("DEPRECATION")
-                    charArray[0] = charArray[0].toUpperCase()
+                    charArray[0] = charArray[0].uppercaseChar()
                 }
                 charArray.concatToString()
             }

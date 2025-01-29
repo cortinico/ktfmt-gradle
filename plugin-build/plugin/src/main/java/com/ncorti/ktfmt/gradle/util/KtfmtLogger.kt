@@ -6,7 +6,9 @@ private const val TAG = "[ktfmt]"
 
 internal fun Logger.i(message: String) = this.info("$TAG $message")
 
-internal fun Logger.d(message: String) = this.debug("$TAG $message")
+internal fun Logger.d(message: String, throwable: Throwable? = null) {
+    this.debug("$TAG $message", throwable)
+}
 
 internal fun Logger.w(message: String, throwable: Throwable? = null) =
     if (throwable != null) {

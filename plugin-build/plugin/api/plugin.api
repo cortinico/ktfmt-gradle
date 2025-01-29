@@ -22,17 +22,35 @@ public final class com/ncorti/ktfmt/gradle/KtfmtPlugin$Companion {
 }
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask : org/gradle/api/tasks/SourceTask {
-	protected abstract fun execute (Lorg/gradle/workers/WorkQueue;)V
 	public abstract fun getIncludeOnly ()Lorg/gradle/api/provider/Property;
+	public final fun getOutput ()Lorg/gradle/api/provider/Provider;
 	public fun getSource ()Lorg/gradle/api/file/FileTree;
+	protected abstract fun handleResultSummary (Lcom/ncorti/ktfmt/gradle/util/KtfmtResultSummary;)V
 }
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtCheckTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {
-	protected fun execute (Lorg/gradle/workers/WorkQueue;)V
-	public final fun getOutput ()Lorg/gradle/api/provider/Provider;
+	protected fun handleResultSummary (Lcom/ncorti/ktfmt/gradle/util/KtfmtResultSummary;)V
 }
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtFormatTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {
-	protected fun execute (Lorg/gradle/workers/WorkQueue;)V
+	protected fun handleResultSummary (Lcom/ncorti/ktfmt/gradle/util/KtfmtResultSummary;)V
+}
+
+public final class com/ncorti/ktfmt/gradle/util/KtfmtResultSummary {
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Lcom/ncorti/ktfmt/gradle/util/KtfmtResultSummary;
+	public static synthetic fun copy$default (Lcom/ncorti/ktfmt/gradle/util/KtfmtResultSummary;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/ncorti/ktfmt/gradle/util/KtfmtResultSummary;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFailedFiles ()Ljava/util/List;
+	public final fun getInvalidFormattedFiles ()Ljava/util/List;
+	public final fun getSkippedFiles ()Ljava/util/List;
+	public final fun getValidFormattedFiles ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun prettyPrint ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
 }
 

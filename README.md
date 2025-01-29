@@ -43,8 +43,6 @@ Please note that `ktfmt-gradle` relies on `ktfmt` hence the minimum supported JD
 
 Please also note the following requirements:
 
-* **Kotlin 1.4+**. In order to reformat Kotlin 1.4 code, you need run on **Gradle to 6.8+** (This is due to Gradle 6.7 embedding Kotlin 1.3.x - See [#12660](https://github.com/gradle/gradle/issues/12660)).
-
 * **Android**. `ktfmt-gradle` relies on features from **Android Gradle Plugin 4.1+**. So make sure you bump AGP before applying this plugin.
 
 ### Task
