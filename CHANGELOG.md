@@ -6,7 +6,7 @@ Please add your entries according to this format.
 ## Unreleased
 
 - Add tasks `ktfmtCheckScripts` and `ktfmtFormatScripts` to check and format the `.kts` files in the project folder.
-- Remove transitive ktfmt dependencies from the plugin to avoid conflicts with the project dependencies.
+- Remove transitive ktfmt dependencies from the plugin to avoid conflicts with the project dependencies. (#394, #181)
 - Change output format of ktfmtCheck task
 - Add output file for ktfmtFormat task
 - Improve logging messages from ktfmt tasks
