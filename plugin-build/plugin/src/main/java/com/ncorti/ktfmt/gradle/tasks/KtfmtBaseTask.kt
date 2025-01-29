@@ -79,8 +79,8 @@ abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLay
 
             val results = collectResults(tmpResultDirectory)
 
-            writeResultsSummaryToOutput(results)
             handleResultSummary(results)
+            writeResultsSummaryToOutput(results)
         } finally {
             tmpResultDirectory.deleteRecursively()
         }
