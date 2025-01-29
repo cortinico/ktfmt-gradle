@@ -16,8 +16,7 @@ abstract class KtfmtCheckTask @Inject internal constructor(private val layout: P
         group = KtfmtUtils.GROUP_VERIFICATION
     }
 
-    override val reformatFiles: Boolean
-        get() = false
+    override val reformatFiles: Boolean = false
 
     override fun handleResultSummary(resultSummary: KtfmtResultSummary) {
         if (resultSummary.failedFiles.isNotEmpty()) {

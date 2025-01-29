@@ -14,8 +14,7 @@ abstract class KtfmtFormatTask @Inject internal constructor(layout: ProjectLayou
         group = KtfmtUtils.GROUP_FORMATTING
     }
 
-    override val reformatFiles: Boolean
-        get() = true
+    override val reformatFiles: Boolean = true
 
     override fun handleResultSummary(resultSummary: KtfmtResultSummary) {
         if (resultSummary.failedFiles.isNotEmpty()) {
