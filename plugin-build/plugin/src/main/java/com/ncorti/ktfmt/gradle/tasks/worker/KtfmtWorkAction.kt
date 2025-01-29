@@ -23,7 +23,7 @@ import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 
 /**
- * Gradle WorkAction to format a single Kotlin file using ktfmt.
+ * Gradle [WorkAction] to format a single Kotlin file using ktfmt.
  *
  * This class is the ONLY class that should use classes from ktfmt (`com.facebook.ktfmt`) to
  * maintain classloader isolation.
