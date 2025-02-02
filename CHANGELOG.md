@@ -5,13 +5,16 @@ Please add your entries according to this format.
 
 ## Unreleased
 
-- Add tasks `ktfmtCheckScripts` and `ktfmtFormatScripts` to check and format the `.kts` files in the project folder.
+## Version 0.22.0 _(2025-02-06)_
+- Add tasks `ktfmtCheckScripts` and `ktfmtFormatScripts` to check and format the `.kts` files in the project folder. (#382)
 - Remove transitive ktfmt dependencies from the plugin to avoid conflicts with the project dependencies. (#394, #181)
 - Change output format of ktfmtCheck task
 - Add output file for ktfmtFormat task
 - Improve logging messages from ktfmt tasks
-- Kotlin to 2.1.0
-- Gradle to 8.12
+- Kotlin to 2.1.10
+- Gradle to 8.12.1
+- AGP to 8.8.0
+- KtFmt to 0.54
 
 ## Version 0.21.0 _(2024-11-01)_
 - KtFmt to 0.53
