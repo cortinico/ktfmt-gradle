@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.0"
+agp = "8.8.1"
 binaryCompatibilityValidator = "0.17.0"
 detekt = "1.23.7"
 diffUtils = "4.15"
