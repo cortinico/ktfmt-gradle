@@ -41,13 +41,14 @@ tasks.withType<PluginUnderTestMetadata>().configureEach {
 }
 
 dependencies {
-        compileOnly(libs.ktfmt) {
-            // This dependency is used with a separate classloader, which downloads the ktfmt jar and its transitive
-            // dependencies at runtime. We only need it for compilation.
-            // We do not want the transitive dependencies of ktfmt in our classpath, because different Kotlin versions
-            // (especially the Kotlin compiler embeddable of ktfmt) can lead to compatibility issues
-            isTransitive = false
-        }
+    compileOnly(libs.ktfmt) {
+        // This dependency is used with a separate classloader, which downloads the ktfmt jar and
+        // its transitive dependencies at runtime. We only need it for compilation.
+        // We do not want the transitive dependencies of ktfmt in our classpath, because different
+        // Kotlin versions (especially the Kotlin compiler embeddable of ktfmt) can lead to
+        // compatibility issues
+        isTransitive = false
+    }
     implementation(libs.diffUtils)
 
     compileOnly(gradleApi())
