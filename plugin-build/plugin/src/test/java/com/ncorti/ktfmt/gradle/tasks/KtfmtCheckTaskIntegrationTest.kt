@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.ncorti.ktfmt.gradle.testutil.appendToBuildGradle
 import com.ncorti.ktfmt.gradle.testutil.createTempFile
 import java.io.File
+import java.nio.file.Files
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
@@ -420,5 +421,24 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .build()
 
         assertThat(result.task(":ktfmtCheckScripts")?.outcome).isEqualTo(SUCCESS)
+    }
+
+    @Test
+    fun `should be able to check symlinked files`() {
+        val target = tempDir.createTempFile(content = "val answer =42\n", path = "other")
+
+        val symlink =
+            tempDir.resolve("src/main/java/symlinkedFile.kt").apply { parentFile.mkdirs() }.toPath()
+        Files.createSymbolicLink(symlink, target.toPath())
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheckMain")
+                .buildAndFail()
+
+        assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
+        assertThat(result.output).contains("[ktfmt] Found 1 files that are not properly formatted:")
     }
 }
