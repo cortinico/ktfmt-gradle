@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.ncorti.ktfmt.gradle.testutil.appendToBuildGradle
 import com.ncorti.ktfmt.gradle.testutil.createTempFile
 import java.io.File
+import java.nio.file.Files
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.NO_SOURCE
@@ -503,5 +504,24 @@ internal class KtfmtFormatTaskIntegrationTest {
         val actual = scriptFile.readText()
         assertThat(actual).isEqualTo("val answer=42\n")
         assertThat(result.task(":ktfmtFormatScripts")?.outcome).isEqualTo(SUCCESS)
+    }
+
+    @Test
+    fun `should be able to format symlinked files`() {
+        val target = tempDir.createTempFile(content = "val answer =42\n", path = "other")
+
+        val symlink =
+            tempDir.resolve("src/main/java/symlinkedFile.kt").apply { parentFile.mkdirs() }.toPath()
+        Files.createSymbolicLink(symlink, target.toPath())
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormat")
+                .build()
+
+        assertThat(result.task(":ktfmtFormat")?.outcome).isEqualTo(SUCCESS)
+        assertThat(target.readText()).isEqualTo("val answer = 42\n")
     }
 }

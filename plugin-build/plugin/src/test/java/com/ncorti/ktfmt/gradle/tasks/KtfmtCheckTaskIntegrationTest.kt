@@ -435,7 +435,7 @@ internal class KtfmtCheckTaskIntegrationTest {
             GradleRunner.create()
                 .withProjectDir(tempDir)
                 .withPluginClasspath()
-                .withArguments("ktfmtCheckMain")
+                .withArguments("ktfmtCheck")
                 .buildAndFail()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
