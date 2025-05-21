@@ -1,7 +1,20 @@
-*.iml
-.gradle
-/local.properties
-.DS_Store
-/build
+### Intellij+all ###
+# All
 .idea/
+
+### Gradle ###
+.gradle
+**/build/
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+
+### Kotlin ###
 .kotlin/
+
+### macOS ###
+# General
+.DS_Store
