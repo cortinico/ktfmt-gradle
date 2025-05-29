@@ -61,6 +61,8 @@ dependencies {
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.jupiter)
     testImplementation(libs.truth)
+
+    testRuntimeOnly(libs.jupiter.platform.launcher)
 }
 
 @Suppress("UnstableApiUsage")
