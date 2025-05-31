@@ -163,7 +163,10 @@ internal object KtfmtPluginUtils {
         val excludedSourceSets = ktfmtExtension.srcSetPathExclusionPattern
 
         return provider {
-            srcDir.toList().filterNot { it.absolutePath.matches(excludedSourceSets.get()) }
+            srcDir
+                .toList()
+                .filterNot { it.absolutePath.matches(excludedSourceSets.get().toRegex()) }
+                .filter { it.exists() }
         }
     }
 }

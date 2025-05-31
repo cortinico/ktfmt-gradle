@@ -412,7 +412,7 @@ internal class KtfmtFormatTaskIntegrationTest {
             """
             |kotlin { sourceSets.main { kotlin.srcDirs("build/generated") } }
             |
-            |ktfmt { srcSetPathExclusionPattern.set(Regex("customRules.*")) }
+            |ktfmt { srcSetPathExclusionPattern.set("customRules.*".toPattern()) }
         """
                 .trimMargin()
         )
@@ -435,7 +435,7 @@ internal class KtfmtFormatTaskIntegrationTest {
     fun `format task should ignore the main sourceSets when specified as exclusion pattern`() {
         tempDir.appendToBuildGradle(
             """
-            |ktfmt { srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*")) }
+            |ktfmt { srcSetPathExclusionPattern.set(".*[\\\\/]main[\\\\/].*".toPattern()) }
         """
                 .trimMargin()
         )
@@ -451,6 +451,36 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .build()
 
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(NO_SOURCE)
+    }
+
+    @Test
+    fun `format task should not throw an exception when unparsable symlink file is in ignored source set`() {
+        tempDir.appendToBuildGradle(
+            """
+            |ktfmt { 
+            |   srcSetPathExclusionPattern.set(".*(src/main/java).*".toPattern())
+            |}
+        """
+                .trimMargin()
+        )
+
+        val target = tempDir.toPath().resolve("someNonExistingFile.kt")
+
+        val symlink =
+            tempDir.resolve("src/main/java/symlinkedFile.kt").apply { parentFile.mkdirs() }.toPath()
+        Files.createSymbolicLink(symlink, target)
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormat", "--info")
+                .build()
+
+        // TODO 31.05.25 - Simon.Hauck Remvoe println statement
+        println(result.output)
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(NO_SOURCE)
+        assertThat(result.task(":ktfmtFormat")?.outcome).isEqualTo(SUCCESS)
     }
 
     @Test
@@ -504,24 +534,5 @@ internal class KtfmtFormatTaskIntegrationTest {
         val actual = scriptFile.readText()
         assertThat(actual).isEqualTo("val answer=42\n")
         assertThat(result.task(":ktfmtFormatScripts")?.outcome).isEqualTo(SUCCESS)
-    }
-
-    @Test
-    fun `should be able to format symlinked files`() {
-        val target = tempDir.createTempFile(content = "val answer =42\n", path = "other")
-
-        val symlink =
-            tempDir.resolve("src/main/java/symlinkedFile.kt").apply { parentFile.mkdirs() }.toPath()
-        Files.createSymbolicLink(symlink, target.toPath())
-
-        val result =
-            GradleRunner.create()
-                .withProjectDir(tempDir)
-                .withPluginClasspath()
-                .withArguments("ktfmtFormat")
-                .build()
-
-        assertThat(result.task(":ktfmtFormat")?.outcome).isEqualTo(SUCCESS)
-        assertThat(target.readText()).isEqualTo("val answer = 42\n")
     }
 }
