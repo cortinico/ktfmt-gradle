@@ -39,6 +39,7 @@ abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLay
 
     init {
         includeOnly.convention("")
+        useClassloaderIsolation.convention(false)
     }
 
     @get:Classpath @get:InputFiles internal abstract val ktfmtClasspath: ConfigurableFileCollection
@@ -53,6 +54,8 @@ abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLay
     )
     @get:Input
     abstract val includeOnly: Property<String>
+
+    @get:Input abstract val useClassloaderIsolation: Property<Boolean>
 
     @PathSensitive(PathSensitivity.RELATIVE)
     @InputFiles
@@ -87,7 +90,12 @@ abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLay
     }
 
     private fun submitFilesToFormatterWorker(tmpResultDirectory: File) {
-        val queue = workerExecutor.processIsolation { it.classpath.from(ktfmtClasspath) }
+        val queue =
+            if (useClassloaderIsolation.get()) {
+                workerExecutor.classLoaderIsolation { it.classpath.from(ktfmtClasspath) }
+            } else {
+                workerExecutor.processIsolation { it.classpath.from(ktfmtClasspath) }
+            }
 
         val includedFiles = getIncludedFiles()
 
