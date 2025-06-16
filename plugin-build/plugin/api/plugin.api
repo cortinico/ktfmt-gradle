@@ -25,6 +25,7 @@ public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask : org/gradle/a
 	public abstract fun getIncludeOnly ()Lorg/gradle/api/provider/Property;
 	public final fun getOutput ()Lorg/gradle/api/provider/Provider;
 	public fun getSource ()Lorg/gradle/api/file/FileTree;
+	public abstract fun getUseClassloaderIsolation ()Lorg/gradle/api/provider/Property;
 	protected abstract fun handleResultSummary (Lcom/ncorti/ktfmt/gradle/util/KtfmtResultSummary;)V
 }
 
