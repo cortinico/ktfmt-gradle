@@ -6,6 +6,10 @@ Please add your entries according to this format.
 ## Unreleased
 
 - Add `ktfmt.useClassloaderIsolation` property to toggle between processIsolation and classloaderIsolation for the Gradle Worker (#427)
+- Kotlin to 2.1.21
+- Gradle to 8.14.1
+- AGP to 8.10.1
+- KtFmt to 0.55
 
 ## Version 0.22.0 _(2025-02-06)_
 - Add tasks `ktfmtCheckScripts` and `ktfmtFormatScripts` to check and format the `.kts` files in the project folder. (#382)
