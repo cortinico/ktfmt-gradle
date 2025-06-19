@@ -5,7 +5,7 @@ Please add your entries according to this format.
 
 ## Unreleased
 
-- Add `ktfmt.useClassloaderIsolation` property to toggle between processIsolation and classloaderIsolation for the Gradle Worker
+- Add `ktfmt.useClassloaderIsolation` property to toggle between processIsolation and classloaderIsolation for the Gradle Worker (#427)
 
 ## Version 0.22.0 _(2025-02-06)_
 - Add tasks `ktfmtCheckScripts` and `ktfmtFormatScripts` to check and format the `.kts` files in the project folder. (#382)

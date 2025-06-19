@@ -39,7 +39,6 @@ abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLay
 
     init {
         includeOnly.convention("")
-        useClassloaderIsolation.convention(false)
     }
 
     @get:Classpath @get:InputFiles internal abstract val ktfmtClasspath: ConfigurableFileCollection

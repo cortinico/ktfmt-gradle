@@ -13,6 +13,7 @@ abstract class KtfmtExtension {
         debuggingPrintOpsAfterFormatting.convention(DEFAULT_DEBUGGING_PRINT_OPTS)
         manageTrailingCommas.convention(DEFAULT_MANAGE_TRAILING_COMMAS)
         srcSetPathExclusionPattern.convention(DEFAULT_SRC_SET_PATH_EXCLUSION_PATTERN)
+        useClassloaderIsolation.convention(DEFAULT_USE_CLASSLOADER_ISOLATION)
     }
 
     /** ktfmt breaks lines longer than maxWidth. Default 100. */
@@ -69,6 +70,12 @@ abstract class KtfmtExtension {
      */
     abstract val debuggingPrintOpsAfterFormatting: Property<Boolean>
 
+    /**
+     * Whether the Gradle Worker should use ClassLoader isolation (true) or Process isolation
+     * (false - default).
+     */
+    abstract val useClassloaderIsolation: Property<Boolean>
+
     /** Sets the Google style (equivalent to set blockIndent to 2 and continuationIndent to 2). */
     @Suppress("MagicNumber")
     fun googleStyle() {
@@ -105,6 +112,7 @@ abstract class KtfmtExtension {
         internal const val DEFAULT_REMOVE_UNUSED_IMPORTS: Boolean = true
         internal const val DEFAULT_DEBUGGING_PRINT_OPTS: Boolean = false
         internal const val DEFAULT_MANAGE_TRAILING_COMMAS: Boolean = false
+        internal const val DEFAULT_USE_CLASSLOADER_ISOLATION: Boolean = false
         internal val DEFAULT_SRC_SET_PATH_EXCLUSION_PATTERN =
             Regex("^(.*[\\\\/])?build([\\\\/].*)?\$")
     }
