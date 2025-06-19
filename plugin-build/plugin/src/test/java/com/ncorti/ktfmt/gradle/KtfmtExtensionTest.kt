@@ -6,6 +6,7 @@ import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_CONTINUATION_IND
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_DEBUGGING_PRINT_OPTS
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_MAX_WIDTH
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_REMOVE_UNUSED_IMPORTS
+import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_USE_CLASSLOADER_ISOLATION
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.Test
 
@@ -45,6 +46,14 @@ class KtfmtExtensionTest {
 
         assertThat(extension.debuggingPrintOpsAfterFormatting.get())
             .isEqualTo(DEFAULT_DEBUGGING_PRINT_OPTS)
+    }
+
+    @Test
+    fun `useClassloaderIsolation has default value`() {
+        val extension = createExtension()
+
+        assertThat(extension.useClassloaderIsolation.get())
+            .isEqualTo(DEFAULT_USE_CLASSLOADER_ISOLATION)
     }
 
     @Test

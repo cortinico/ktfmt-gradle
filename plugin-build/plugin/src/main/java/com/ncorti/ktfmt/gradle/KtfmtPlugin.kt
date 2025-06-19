@@ -53,6 +53,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
         project.tasks.withType(KtfmtBaseTask::class.java).configureEach {
             it.ktfmtClasspath.from(ktFmt)
             it.formattingOptionsBean.set(ktfmtExtension.toFormattingOptions())
+            it.useClassloaderIsolation.set(ktfmtExtension.useClassloaderIsolation)
         }
 
         topLevelFormat = createTopLevelFormatTask(project)
