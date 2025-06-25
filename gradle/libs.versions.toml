@@ -1,6 +1,6 @@
 [versions]
 agp = "8.10.1"
-binaryCompatibilityValidator = "0.17.0"
+binaryCompatibilityValidator = "0.18.0"
 detekt = "1.23.8"
 diffUtils = "4.15"
 junit = "5.13.1"
