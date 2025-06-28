@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.ncorti.ktfmt.gradle.testutil.appendToBuildGradle
 import com.ncorti.ktfmt.gradle.testutil.createTempFile
 import java.io.File
+import java.nio.file.Files
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
@@ -386,6 +387,35 @@ internal class KtfmtCheckTaskIntegrationTest {
                 .build()
 
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(NO_SOURCE)
+    }
+
+    @Test
+    fun `check task should not throw an exception when unparsable symlink file is in ignored source set`() {
+        tempDir.appendToBuildGradle(
+            """
+            |ktfmt { 
+            |   srcSetPathExclusionPattern.set(".*(src/main/java).*".toPattern())
+            |}
+        """
+                .trimMargin()
+        )
+
+        val target = tempDir.toPath().resolve("someNonExistingFile.kt")
+
+        val symlink =
+            tempDir.resolve("src/main/java/symlinkedFile.kt").apply { parentFile.mkdirs() }.toPath()
+        Files.createSymbolicLink(symlink, target)
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheck", "--info")
+                .build()
+
+        // TODO 31.05.25 - Simon.Hauck Remvoe println statement
+        println(result.output)
+        assertThat(result.task(":ktfmtCheck")?.outcome).isEqualTo(SUCCESS)
     }
 
     @Test
