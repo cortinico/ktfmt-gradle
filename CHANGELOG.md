@@ -4,6 +4,7 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+- Add support for android projects with the `com.android.kotlin.multiplatform.library` plugin (#422)
 
 - Add `ktfmt.useClassloaderIsolation` property to toggle between processIsolation and classloaderIsolation for the Gradle Worker (#427)
 - Kotlin to 2.1.21
