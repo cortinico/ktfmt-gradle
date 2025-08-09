@@ -92,9 +92,19 @@ abstract class KtfmtPlugin : Plugin<Project> {
     private fun applyKtfmtToMultiplatformProject(project: Project, ktfmtExtension: KtfmtExtension) {
         val extension = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
         createScriptsTasks(project, project.projectDir, topLevelFormat, topLevelCheck)
+
+        // This plugin doesn't have any Android specific build types or features and the Android
+        // target is similar to all other KMP targets. Therefore we can use the regular source
+        // set to create the ktfmt tasks.
+        //
+        // Note that this plugin uses "android" in the source set name, but uses
+        // `KotlinPlatformType.jvm` instead of `KotlinPlatformType.androidJvm`.
+        val hasAndroidKmpLibraryPlugin =
+            project.plugins.hasPlugin("com.android.kotlin.multiplatform.library")
+
         extension.sourceSets.all {
             val name = "kmp ${it.name}"
-            if (it.name.startsWith("android")) {
+            if (!hasAndroidKmpLibraryPlugin && it.name.startsWith("android")) {
                 // We'll delegate Android Task Creation to the applyKtfmtToAndroidProject function
                 // below
                 return@all

@@ -18,6 +18,7 @@ rootProject.name = ("ktfmt-gradle")
 include(
     ":example",
     ":example-kmp",
+    ":example-kmp-android",
 )
 
 includeBuild(
