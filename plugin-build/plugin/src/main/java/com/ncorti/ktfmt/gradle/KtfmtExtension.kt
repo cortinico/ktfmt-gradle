@@ -11,7 +11,7 @@ abstract class KtfmtExtension {
         continuationIndent.convention(DEFAULT_CONTINUATION_INDENT)
         removeUnusedImports.convention(DEFAULT_REMOVE_UNUSED_IMPORTS)
         debuggingPrintOpsAfterFormatting.convention(DEFAULT_DEBUGGING_PRINT_OPTS)
-        manageTrailingCommas.convention(DEFAULT_MANAGE_TRAILING_COMMAS)
+        trailingCommaManagementStrategy.convention(DEFAULT_TRAILING_COMMAS_STRATEGY)
         srcSetPathExclusionPattern.convention(DEFAULT_SRC_SET_PATH_EXCLUSION_PATTERN)
         useClassloaderIsolation.convention(DEFAULT_USE_CLASSLOADER_ISOLATION)
     }
@@ -44,13 +44,22 @@ abstract class KtfmtExtension {
     abstract val continuationIndent: Property<Int>
 
     /**
-     * Automatically remove and insert trialing commas.
+     * Strategy for managing trailing commas.
      *
-     * Lists that cannot fit on one line will have trailing commas inserted. Lists that span
-     * multiple lines will have them removed. Manually inserted trailing commas cannot be used as a
-     * hint to force breaking lists to multiple lines.
+     * Options:
+     * - NONE
+     *     - Do not manage trailing commas at all, only format what is already present
+     * - ONLY_ADD
+     *     - Only add trailing commas when necessary, but do not remove them.
+     *     - Lists that cannot fit on one line will have trailing commas inserted. Trailing commas
+     *       can to be used to "hint" ktfmt that the list should be broken to multiple lines.
+     * - COMPLETE
+     *     - Fully manage trailing commas, adding and removing them where necessary.
+     *     - Lists that cannot fit on one line will have trailing commas inserted. Lists that span
+     *       multiple lines will have them removed. Manually inserted trailing commas cannot be used
+     *       as a hint to force breaking lists to multiple lines.
      */
-    abstract val manageTrailingCommas: Property<Boolean>
+    abstract val trailingCommaManagementStrategy: Property<String>
 
     /** Whether ktfmt should remove imports that are not used. */
     abstract val removeUnusedImports: Property<Boolean>
@@ -76,12 +85,22 @@ abstract class KtfmtExtension {
      */
     abstract val useClassloaderIsolation: Property<Boolean>
 
+    @Deprecated(
+        "This was updated to trailingCommaManagementStrategy and will be removed in a future release.",
+        ReplaceWith("trailingCommaManagementStrategy"),
+    )
+    var manageTrailingCommas: Boolean
+        set(value) {
+            trailingCommaManagementStrategy.set(if (value) "COMPLETE" else "NONE")
+        }
+        get() = trailingCommaManagementStrategy.get().uppercase() != "COMPLETE"
+
     /** Sets the Google style (equivalent to set blockIndent to 2 and continuationIndent to 2). */
     @Suppress("MagicNumber")
     fun googleStyle() {
         blockIndent.set(2)
         continuationIndent.set(2)
-        manageTrailingCommas.set(true)
+        trailingCommaManagementStrategy.set("COMPLETE")
     }
 
     /**
@@ -92,7 +111,7 @@ abstract class KtfmtExtension {
     fun kotlinLangStyle() {
         blockIndent.set(4)
         continuationIndent.set(4)
-        manageTrailingCommas.set(true)
+        trailingCommaManagementStrategy.set("COMPLETE")
     }
 
     internal fun toFormattingOptions(): FormattingOptionsBean =
@@ -100,8 +119,8 @@ abstract class KtfmtExtension {
             maxWidth = maxWidth.get(),
             blockIndent = blockIndent.get(),
             continuationIndent = continuationIndent.get(),
+            trailingCommaManagementStrategy = trailingCommaManagementStrategy.get(),
             removeUnusedImports = removeUnusedImports.get(),
-            manageTrailingCommas = manageTrailingCommas.get(),
             debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting.get(),
         )
 
@@ -111,7 +130,7 @@ abstract class KtfmtExtension {
         internal const val DEFAULT_CONTINUATION_INDENT: Int = 4
         internal const val DEFAULT_REMOVE_UNUSED_IMPORTS: Boolean = true
         internal const val DEFAULT_DEBUGGING_PRINT_OPTS: Boolean = false
-        internal const val DEFAULT_MANAGE_TRAILING_COMMAS: Boolean = false
+        internal const val DEFAULT_TRAILING_COMMAS_STRATEGY: String = "NONE"
         internal const val DEFAULT_USE_CLASSLOADER_ISOLATION: Boolean = false
         internal val DEFAULT_SRC_SET_PATH_EXCLUSION_PATTERN =
             Regex("^(.*[\\\\/])?build([\\\\/].*)?\$")

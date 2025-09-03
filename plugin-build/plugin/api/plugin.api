@@ -3,13 +3,15 @@ public abstract class com/ncorti/ktfmt/gradle/KtfmtExtension {
 	public abstract fun getBlockIndent ()Lorg/gradle/api/provider/Property;
 	public abstract fun getContinuationIndent ()Lorg/gradle/api/provider/Property;
 	public abstract fun getDebuggingPrintOpsAfterFormatting ()Lorg/gradle/api/provider/Property;
-	public abstract fun getManageTrailingCommas ()Lorg/gradle/api/provider/Property;
+	public final fun getManageTrailingCommas ()Z
 	public abstract fun getMaxWidth ()Lorg/gradle/api/provider/Property;
 	public abstract fun getRemoveUnusedImports ()Lorg/gradle/api/provider/Property;
 	public abstract fun getSrcSetPathExclusionPattern ()Lorg/gradle/api/provider/Property;
+	public abstract fun getTrailingCommaManagementStrategy ()Lorg/gradle/api/provider/Property;
 	public abstract fun getUseClassloaderIsolation ()Lorg/gradle/api/provider/Property;
 	public final fun googleStyle ()V
 	public final fun kotlinLangStyle ()V
+	public final fun setManageTrailingCommas (Z)V
 }
 
 public abstract class com/ncorti/ktfmt/gradle/KtfmtPlugin : org/gradle/api/Plugin {

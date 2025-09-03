@@ -2,6 +2,7 @@ package com.ncorti.ktfmt.gradle.tasks.worker
 
 import com.facebook.ktfmt.format.Formatter
 import com.facebook.ktfmt.format.FormattingOptions
+import com.facebook.ktfmt.format.TrailingCommaManagementStrategy
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatFailure
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatSkipped
@@ -109,8 +110,27 @@ internal abstract class KtfmtWorkAction : WorkAction<KtfmtWorkAction.KtfmtWorkPa
             maxWidth = maxWidth,
             blockIndent = blockIndent,
             continuationIndent = continuationIndent,
+            trailingCommaManagementStrategy =
+                trailingCommaManagementStrategy.toTrailingCommaManagementStrategy(),
             removeUnusedImports = removeUnusedImports,
-            manageTrailingCommas = manageTrailingCommas,
             debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting,
         )
+
+    private fun String.toTrailingCommaManagementStrategy(): TrailingCommaManagementStrategy =
+        when (uppercase()) {
+            "NONE" -> TrailingCommaManagementStrategy.NONE
+            "ONLY_ADD" -> TrailingCommaManagementStrategy.ONLY_ADD
+            "COMPLETE" -> TrailingCommaManagementStrategy.COMPLETE
+            else ->
+                throw IllegalArgumentException(
+                    """
+                    Unknown trailing comma management strategy: '$this'.
+                    Must be one of 
+                    """
+                        .trimIndent() +
+                        TrailingCommaManagementStrategy.values().joinToString(", ") {
+                            "'${it.name}'"
+                        }
+                )
+        }
 }

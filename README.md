@@ -112,8 +112,8 @@ ktfmt {
     continuationIndent.set(8)
     // Whether ktfmt should remove imports that are not used.
     removeUnusedImports.set(false)
-    // Whether ktfmt should automatically add/remove trailing commas.
-    manageTrailingCommas.set(false)
+    // Whether ktfmt should automatically add/remove trailing commas (one of "NONE", "ONLY_ADD" or "COMPLETE").
+    trailingCommaManagementStrategy.set("NONE")
 }
 ```
 
