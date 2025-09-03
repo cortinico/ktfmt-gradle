@@ -93,7 +93,7 @@ abstract class KtfmtExtension {
         set(value) {
             trailingCommaManagementStrategy.set(if (value) "COMPLETE" else "NONE")
         }
-        get() = trailingCommaManagementStrategy.get().uppercase() != "COMPLETE"
+        get() = trailingCommaManagementStrategy.get().uppercase() != "NONE"
 
     /** Sets the Google style (equivalent to set blockIndent to 2 and continuationIndent to 2). */
     @Suppress("MagicNumber")
