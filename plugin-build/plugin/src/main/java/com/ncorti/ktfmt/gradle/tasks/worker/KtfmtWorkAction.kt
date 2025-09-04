@@ -4,6 +4,7 @@ import com.facebook.ktfmt.format.Formatter
 import com.facebook.ktfmt.format.FormattingOptions
 import com.facebook.ktfmt.format.TrailingCommaManagementStrategy
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
+import com.ncorti.ktfmt.gradle.TrailingCommaManagementStrategy as TrailingCommaStrategyBean
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatFailure
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatSkipped
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatSuccess
@@ -116,21 +117,11 @@ internal abstract class KtfmtWorkAction : WorkAction<KtfmtWorkAction.KtfmtWorkPa
             debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting,
         )
 
-    private fun String.toTrailingCommaManagementStrategy(): TrailingCommaManagementStrategy =
-        when (uppercase()) {
-            "NONE" -> TrailingCommaManagementStrategy.NONE
-            "ONLY_ADD" -> TrailingCommaManagementStrategy.ONLY_ADD
-            "COMPLETE" -> TrailingCommaManagementStrategy.COMPLETE
-            else ->
-                throw IllegalArgumentException(
-                    """
-                    Unknown trailing comma management strategy: '$this'.
-                    Must be one of 
-                    """
-                        .trimIndent() +
-                        TrailingCommaManagementStrategy.values().joinToString(", ") {
-                            "'${it.name}'"
-                        }
-                )
+    private fun TrailingCommaStrategyBean.toTrailingCommaManagementStrategy():
+        TrailingCommaManagementStrategy =
+        when (this) {
+            TrailingCommaStrategyBean.NONE -> TrailingCommaManagementStrategy.NONE
+            TrailingCommaStrategyBean.ONLY_ADD -> TrailingCommaManagementStrategy.ONLY_ADD
+            TrailingCommaStrategyBean.COMPLETE -> TrailingCommaManagementStrategy.COMPLETE
         }
 }

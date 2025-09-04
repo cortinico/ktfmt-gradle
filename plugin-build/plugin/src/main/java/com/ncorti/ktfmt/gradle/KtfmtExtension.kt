@@ -46,20 +46,9 @@ abstract class KtfmtExtension {
     /**
      * Strategy for managing trailing commas.
      *
-     * Options:
-     * - NONE
-     *     - Do not manage trailing commas at all, only format what is already present
-     * - ONLY_ADD
-     *     - Only add trailing commas when necessary, but do not remove them.
-     *     - Lists that cannot fit on one line will have trailing commas inserted. Trailing commas
-     *       can to be used to "hint" ktfmt that the list should be broken to multiple lines.
-     * - COMPLETE
-     *     - Fully manage trailing commas, adding and removing them where necessary.
-     *     - Lists that cannot fit on one line will have trailing commas inserted. Lists that span
-     *       multiple lines will have them removed. Manually inserted trailing commas cannot be used
-     *       as a hint to force breaking lists to multiple lines.
+     * See [TrailingCommaManagementStrategy] for more details.
      */
-    abstract val trailingCommaManagementStrategy: Property<String>
+    abstract val trailingCommaManagementStrategy: Property<TrailingCommaManagementStrategy>
 
     /** Whether ktfmt should remove imports that are not used. */
     abstract val removeUnusedImports: Property<Boolean>
@@ -91,16 +80,19 @@ abstract class KtfmtExtension {
     )
     var manageTrailingCommas: Boolean
         set(value) {
-            trailingCommaManagementStrategy.set(if (value) "COMPLETE" else "NONE")
+            trailingCommaManagementStrategy.set(
+                if (value) TrailingCommaManagementStrategy.COMPLETE
+                else TrailingCommaManagementStrategy.NONE
+            )
         }
-        get() = trailingCommaManagementStrategy.get().uppercase() != "NONE"
+        get() = trailingCommaManagementStrategy.get() != TrailingCommaManagementStrategy.NONE
 
     /** Sets the Google style (equivalent to set blockIndent to 2 and continuationIndent to 2). */
     @Suppress("MagicNumber")
     fun googleStyle() {
         blockIndent.set(2)
         continuationIndent.set(2)
-        trailingCommaManagementStrategy.set("COMPLETE")
+        trailingCommaManagementStrategy.set(TrailingCommaManagementStrategy.COMPLETE)
     }
 
     /**
@@ -111,7 +103,7 @@ abstract class KtfmtExtension {
     fun kotlinLangStyle() {
         blockIndent.set(4)
         continuationIndent.set(4)
-        trailingCommaManagementStrategy.set("COMPLETE")
+        trailingCommaManagementStrategy.set(TrailingCommaManagementStrategy.COMPLETE)
     }
 
     internal fun toFormattingOptions(): FormattingOptionsBean =
@@ -130,7 +122,8 @@ abstract class KtfmtExtension {
         internal const val DEFAULT_CONTINUATION_INDENT: Int = 4
         internal const val DEFAULT_REMOVE_UNUSED_IMPORTS: Boolean = true
         internal const val DEFAULT_DEBUGGING_PRINT_OPTS: Boolean = false
-        internal const val DEFAULT_TRAILING_COMMAS_STRATEGY: String = "NONE"
+        internal val DEFAULT_TRAILING_COMMAS_STRATEGY: TrailingCommaManagementStrategy =
+            TrailingCommaManagementStrategy.NONE
         internal const val DEFAULT_USE_CLASSLOADER_ISOLATION: Boolean = false
         internal val DEFAULT_SRC_SET_PATH_EXCLUSION_PATTERN =
             Regex("^(.*[\\\\/])?build([\\\\/].*)?\$")

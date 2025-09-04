@@ -34,20 +34,9 @@ internal data class FormattingOptionsBean(
     /**
      * Strategy for managing trailing commas.
      *
-     * Options:
-     * - NONE
-     *     - Do not manage trailing commas at all, only format what is already present
-     * - ONLY_ADD
-     *     - Only add trailing commas when necessary, but do not remove them.
-     *     - Lists that cannot fit on one line will have trailing commas inserted. Trailing commas
-     *       can to be used to "hint" ktfmt that the list should be broken to multiple lines.
-     * - COMPLETE
-     *     - Fully manage trailing commas, adding and removing them where necessary.
-     *     - Lists that cannot fit on one line will have trailing commas inserted. Lists that span
-     *       multiple lines will have them removed. Manually inserted trailing commas cannot be used
-     *       as a hint to force breaking lists to multiple lines.
+     * See [TrailingCommaManagementStrategy] for more details.
      */
-    val trailingCommaManagementStrategy: String,
+    val trailingCommaManagementStrategy: TrailingCommaManagementStrategy,
 
     /** Whether ktfmt should remove imports that are not used. */
     val removeUnusedImports: Boolean = true,
