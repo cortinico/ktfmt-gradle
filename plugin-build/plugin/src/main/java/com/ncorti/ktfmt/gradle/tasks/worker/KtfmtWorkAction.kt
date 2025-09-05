@@ -2,7 +2,9 @@ package com.ncorti.ktfmt.gradle.tasks.worker
 
 import com.facebook.ktfmt.format.Formatter
 import com.facebook.ktfmt.format.FormattingOptions
+import com.facebook.ktfmt.format.TrailingCommaManagementStrategy
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
+import com.ncorti.ktfmt.gradle.TrailingCommaManagementStrategy as TrailingCommaStrategyBean
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatFailure
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatSkipped
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatSuccess
@@ -109,8 +111,17 @@ internal abstract class KtfmtWorkAction : WorkAction<KtfmtWorkAction.KtfmtWorkPa
             maxWidth = maxWidth,
             blockIndent = blockIndent,
             continuationIndent = continuationIndent,
+            trailingCommaManagementStrategy =
+                trailingCommaManagementStrategy.toTrailingCommaManagementStrategy(),
             removeUnusedImports = removeUnusedImports,
-            manageTrailingCommas = manageTrailingCommas,
             debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting,
         )
+
+    private fun TrailingCommaStrategyBean.toTrailingCommaManagementStrategy():
+        TrailingCommaManagementStrategy =
+        when (this) {
+            TrailingCommaStrategyBean.NONE -> TrailingCommaManagementStrategy.NONE
+            TrailingCommaStrategyBean.ONLY_ADD -> TrailingCommaManagementStrategy.ONLY_ADD
+            TrailingCommaStrategyBean.COMPLETE -> TrailingCommaManagementStrategy.COMPLETE
+        }
 }

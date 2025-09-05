@@ -32,13 +32,11 @@ internal data class FormattingOptionsBean(
     val continuationIndent: Int = 4,
 
     /**
-     * Automatically remove and insert trialing commas.
+     * Strategy for managing trailing commas.
      *
-     * Lists that cannot fit on one line will have trailing commas inserted. Lists that span
-     * multiple lines will have them removed. Manually inserted trailing commas cannot be used as a
-     * hint to force breaking lists to multiple lines.
+     * See [TrailingCommaManagementStrategy] for more details.
      */
-    val manageTrailingCommas: Boolean = false,
+    val trailingCommaManagementStrategy: TrailingCommaManagementStrategy,
 
     /** Whether ktfmt should remove imports that are not used. */
     val removeUnusedImports: Boolean = true,

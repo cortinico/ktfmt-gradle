@@ -108,12 +108,13 @@ ktfmt {
     maxWidth.set(80)
     // blockIndent is the indent size used when a new block is opened, in spaces.
     blockIndent.set(8)
-    // continuationIndent is the indent size used when a line is broken because it's too
+    // continuationIndent is the indent size used when a line is broken because it's too.
     continuationIndent.set(8)
     // Whether ktfmt should remove imports that are not used.
     removeUnusedImports.set(false)
     // Whether ktfmt should automatically add/remove trailing commas.
-    manageTrailingCommas.set(false)
+    // This will be one of the options in the enum com.ncorti.ktfmt.gradle.TrailingCommaManagementStrategy.
+    trailingCommaManagementStrategy.set(NONE)
 }
 ```
 
