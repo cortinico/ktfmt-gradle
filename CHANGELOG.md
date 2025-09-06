@@ -8,7 +8,7 @@ Please add your entries according to this format.
 - KtFmt to 0.58
 - Deprecated `manageTrailingCommas` in favor of new `trailingCommaManagementStrategy` property
 
-##  Version 0.23.0
+## Version 0.23.0 _(2025-06-20)_
 - Add `ktfmt.useClassloaderIsolation` property to toggle between processIsolation and classloaderIsolation for the Gradle Worker (#427)
 - Kotlin to 2.1.21
 - Gradle to 8.14.1
