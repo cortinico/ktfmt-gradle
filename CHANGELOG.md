@@ -4,9 +4,14 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+
+## Version 0.24.0 _(2025-09-08)_
 - Add support for android projects with the `com.android.kotlin.multiplatform.library` plugin (#422)
-- KtFmt to 0.58
 - Deprecated `manageTrailingCommas` in favor of new `trailingCommaManagementStrategy` property
+- Kotlin to 2.2.10
+- Gradle to 9.0.0
+- AGP to 8.13.0
+- KtFmt to 0.58
 
 ## Version 0.23.0 _(2025-06-20)_
 - Add `ktfmt.useClassloaderIsolation` property to toggle between processIsolation and classloaderIsolation for the Gradle Worker (#427)
