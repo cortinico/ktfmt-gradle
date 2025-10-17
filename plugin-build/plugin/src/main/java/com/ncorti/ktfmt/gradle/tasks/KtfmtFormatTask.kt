@@ -7,7 +7,7 @@ import javax.inject.Inject
 import org.gradle.api.file.ProjectLayout
 
 /** ktfmt-gradle Format task. Replaces input file content with its formatted equivalent. */
-abstract class KtfmtFormatTask @Inject internal constructor(layout: ProjectLayout) :
+public abstract class KtfmtFormatTask @Inject internal constructor(layout: ProjectLayout) :
     KtfmtBaseTask(layout) {
 
     init {

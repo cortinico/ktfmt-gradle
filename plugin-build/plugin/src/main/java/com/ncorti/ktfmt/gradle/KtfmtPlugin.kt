@@ -21,7 +21,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
  * Top level class for the ktfmt-gradle plugin. Takes care of creating all the necessary classes
  * based on which other plugins are applied in the build.
  */
-abstract class KtfmtPlugin : Plugin<Project> {
+public abstract class KtfmtPlugin : Plugin<Project> {
 
     private lateinit var ktfmtExtension: KtfmtExtension
     private lateinit var topLevelFormat: TaskProvider<Task>
@@ -147,7 +147,7 @@ abstract class KtfmtPlugin : Plugin<Project> {
         }
     }
 
-    companion object {
-        internal val defaultIncludes = listOf("**/*.kt", "**/*.kts")
+    internal companion object {
+        val defaultIncludes = listOf("**/*.kt", "**/*.kts")
     }
 }
