@@ -2,14 +2,14 @@ package com.ncorti.ktfmt.gradle.util
 
 import java.io.File
 
-data class KtfmtResultSummary(
+public data class KtfmtResultSummary(
     val validFormattedFiles: List<File>,
     val invalidFormattedFiles: List<File>,
     val skippedFiles: List<File>,
     val failedFiles: List<File>,
 ) {
 
-    fun prettyPrint(): String {
+    public fun prettyPrint(): String {
         return """
         |Ktfmt Summary:
         |  - Valid formatted files: ${validFormattedFiles.size}

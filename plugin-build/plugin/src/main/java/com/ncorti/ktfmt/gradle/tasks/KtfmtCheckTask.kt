@@ -9,8 +9,9 @@ import org.gradle.api.tasks.CacheableTask
 
 /** ktfmt-gradle Check task. Verifies if the output of ktfmt is the same as the input */
 @CacheableTask
-abstract class KtfmtCheckTask @Inject internal constructor(private val layout: ProjectLayout) :
-    KtfmtBaseTask(layout) {
+public abstract class KtfmtCheckTask
+@Inject
+internal constructor(private val layout: ProjectLayout) : KtfmtBaseTask(layout) {
 
     init {
         group = KtfmtUtils.GROUP_VERIFICATION

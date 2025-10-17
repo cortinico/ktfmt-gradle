@@ -19,6 +19,8 @@ kotlin {
         languageVersion.set(KotlinVersion.fromVersion("1.8"))
         jvmTarget = JvmTarget.JVM_17
     }
+
+    explicitApi()
 }
 
 /**

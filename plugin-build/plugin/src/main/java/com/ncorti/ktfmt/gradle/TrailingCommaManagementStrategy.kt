@@ -1,6 +1,6 @@
 package com.ncorti.ktfmt.gradle
 
-enum class TrailingCommaManagementStrategy {
+public enum class TrailingCommaManagementStrategy {
     /** Do not manage trailing commas at all, only format what is already present */
     NONE,
     /**

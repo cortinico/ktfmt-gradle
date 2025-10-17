@@ -34,7 +34,7 @@ import org.gradle.workers.WorkerExecutor
 
 /** ktfmt-gradle base Gradle tasks. Contains methods to properly process a single file with ktfmt */
 @Suppress("LeakingThis")
-abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLayout) :
+public abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLayout) :
     SourceTask() {
 
     init {
@@ -52,9 +52,9 @@ abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLay
                 "If set the task will run the processing only on such files.",
     )
     @get:Input
-    abstract val includeOnly: Property<String>
+    public abstract val includeOnly: Property<String>
 
-    @get:Input abstract val useClassloaderIsolation: Property<Boolean>
+    @get:Input public abstract val useClassloaderIsolation: Property<Boolean>
 
     @PathSensitive(PathSensitivity.RELATIVE)
     @InputFiles
@@ -63,7 +63,8 @@ abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLay
     override fun getSource(): FileTree = super.getSource()
 
     @get:OutputFile
-    val output: Provider<RegularFile> = layout.buildDirectory.file("ktfmt/${this.name}/output.txt")
+    public val output: Provider<RegularFile> =
+        layout.buildDirectory.file("ktfmt/${this.name}/output.txt")
 
     @get:Inject internal abstract val workerExecutor: WorkerExecutor
 

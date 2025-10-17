@@ -15,13 +15,9 @@ public abstract class com/ncorti/ktfmt/gradle/KtfmtExtension {
 }
 
 public abstract class com/ncorti/ktfmt/gradle/KtfmtPlugin : org/gradle/api/Plugin {
-	public static final field Companion Lcom/ncorti/ktfmt/gradle/KtfmtPlugin$Companion;
 	public fun <init> ()V
 	public synthetic fun apply (Ljava/lang/Object;)V
 	public fun apply (Lorg/gradle/api/Project;)V
-}
-
-public final class com/ncorti/ktfmt/gradle/KtfmtPlugin$Companion {
 }
 
 public final class com/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy : java/lang/Enum {
