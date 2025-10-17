@@ -17,10 +17,6 @@ public abstract class KtfmtFormatTask @Inject internal constructor(layout: Proje
     override val reformatFiles: Boolean = true
 
     override fun handleResultSummary(resultSummary: KtfmtResultSummary) {
-        if (resultSummary.failedFiles.isNotEmpty()) {
-            error("Ktfmt failed to run with ${resultSummary.failedFiles.size} failures")
-        }
-
         if (resultSummary.invalidFormattedFiles.isNotEmpty()) {
             val countInvalidFiles = resultSummary.invalidFormattedFiles.size
             logger.i("Successfully reformatted $countInvalidFiles files with Ktfmt")
