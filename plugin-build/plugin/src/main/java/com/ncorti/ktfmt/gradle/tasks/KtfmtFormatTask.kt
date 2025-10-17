@@ -7,14 +7,14 @@ import javax.inject.Inject
 import org.gradle.api.file.ProjectLayout
 
 /** ktfmt-gradle Format task. Replaces input file content with its formatted equivalent. */
-public abstract class KtfmtFormatTask @Inject internal constructor(layout: ProjectLayout) :
+public abstract class KtfmtFormatTask @Inject public constructor(layout: ProjectLayout) :
     KtfmtBaseTask(layout) {
 
     init {
         group = KtfmtUtils.GROUP_FORMATTING
     }
 
-    override val reformatFiles: Boolean = true
+    final override val reformatFiles: Boolean = true
 
     override fun handleResultSummary(resultSummary: KtfmtResultSummary) {
         if (resultSummary.invalidFormattedFiles.isNotEmpty()) {

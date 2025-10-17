@@ -2,7 +2,7 @@ package com.ncorti.ktfmt.gradle
 
 import java.io.Serializable
 
-internal data class FormattingOptionsBean(
+public data class FormattingOptionsBean(
 
     /** ktfmt breaks lines longer than maxWidth. */
     val maxWidth: Int = defaultMaxWidth,
@@ -48,8 +48,8 @@ internal data class FormattingOptionsBean(
     val debuggingPrintOpsAfterFormatting: Boolean = false,
 ) : Serializable {
 
-    companion object {
-        private const val serialVersionUID: Long = 1L
-        private const val defaultMaxWidth = 100
+    private companion object {
+        const val serialVersionUID: Long = 1L
+        const val defaultMaxWidth = 100
     }
 }

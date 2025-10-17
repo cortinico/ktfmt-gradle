@@ -34,16 +34,15 @@ import org.gradle.workers.WorkerExecutor
 
 /** ktfmt-gradle base Gradle tasks. Contains methods to properly process a single file with ktfmt */
 @Suppress("LeakingThis")
-public abstract class KtfmtBaseTask internal constructor(private val layout: ProjectLayout) :
-    SourceTask() {
+public abstract class KtfmtBaseTask(private val layout: ProjectLayout) : SourceTask() {
 
     init {
         includeOnly.convention("")
     }
 
-    @get:Classpath @get:InputFiles internal abstract val ktfmtClasspath: ConfigurableFileCollection
+    @get:Classpath @get:InputFiles public abstract val ktfmtClasspath: ConfigurableFileCollection
 
-    @get:Input internal abstract val formattingOptionsBean: Property<FormattingOptionsBean>
+    @get:Input public abstract val formattingOptionsBean: Property<FormattingOptionsBean>
 
     @get:Option(
         option = "include-only",
@@ -68,8 +67,11 @@ public abstract class KtfmtBaseTask internal constructor(private val layout: Pro
 
     @get:Inject internal abstract val workerExecutor: WorkerExecutor
 
-    @get:Internal internal abstract val reformatFiles: Boolean
+    @get:Internal public abstract val reformatFiles: Boolean
 
+    /**
+     * Called after all files have been analyzed and [resultSummary] has been written into [output].
+     */
     protected abstract fun handleResultSummary(resultSummary: KtfmtResultSummary)
 
     @TaskAction
@@ -83,8 +85,8 @@ public abstract class KtfmtBaseTask internal constructor(private val layout: Pro
             val results = collectResults(tmpResultDirectory)
 
             reportFailedFiles(results)
-            handleResultSummary(results)
             writeResultsSummaryToOutput(results)
+            handleResultSummary(results)
         } finally {
             tmpResultDirectory.deleteRecursively()
         }
