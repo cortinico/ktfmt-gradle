@@ -4,6 +4,7 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+- Print the paths of files ktfmt failed to analyze instead of only how many files failed to be analyzed (#469) 
 
 ## Version 0.24.0 _(2025-09-08)_
 - Add support for android projects with the `com.android.kotlin.multiplatform.library` plugin (#422)

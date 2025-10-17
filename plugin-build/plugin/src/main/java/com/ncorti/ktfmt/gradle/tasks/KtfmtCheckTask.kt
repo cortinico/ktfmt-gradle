@@ -20,10 +20,6 @@ internal constructor(private val layout: ProjectLayout) : KtfmtBaseTask(layout) 
     override val reformatFiles: Boolean = false
 
     override fun handleResultSummary(resultSummary: KtfmtResultSummary) {
-        if (resultSummary.failedFiles.isNotEmpty()) {
-            error("Ktfmt failed to run with ${resultSummary.failedFiles.size} failures")
-        }
-
         if (resultSummary.invalidFormattedFiles.isNotEmpty()) {
             val fileList =
                 resultSummary.invalidFormattedFiles.joinToString("\n") {

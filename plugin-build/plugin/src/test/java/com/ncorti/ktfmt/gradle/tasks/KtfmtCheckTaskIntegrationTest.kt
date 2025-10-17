@@ -76,6 +76,8 @@ internal class KtfmtCheckTaskIntegrationTest {
         assertThat(result.task(":ktfmtCheckMain")?.outcome).isEqualTo(FAILED)
         assertThat(result.output).containsMatch("Failed to format file: .*TestFile.kt \\(reason =")
         assertThat(result.output).contains("Ktfmt failed to run with 1 failures")
+        assertThat(result.output)
+            .contains("src${File.separator}main${File.separator}java${File.separator}TestFile.kt")
     }
 
     @Test

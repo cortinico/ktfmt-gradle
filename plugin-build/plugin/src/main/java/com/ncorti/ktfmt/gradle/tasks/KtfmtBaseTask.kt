@@ -82,6 +82,7 @@ public abstract class KtfmtBaseTask internal constructor(private val layout: Pro
 
             val results = collectResults(tmpResultDirectory)
 
+            reportFailedFiles(results)
             handleResultSummary(results)
             writeResultsSummaryToOutput(results)
         } finally {
@@ -138,6 +139,17 @@ public abstract class KtfmtBaseTask internal constructor(private val layout: Pro
         val failedFiles = results.filter { it is KtfmtFormatFailure }.files()
 
         return KtfmtResultSummary(correctFiles, incorrectFiles, skippedFiles, failedFiles)
+    }
+
+    private fun reportFailedFiles(resultSummary: KtfmtResultSummary) {
+        if (resultSummary.failedFiles.isNotEmpty()) {
+            val fileList =
+                resultSummary.failedFiles.joinToString("\n") {
+                    it.relativeTo(layout.projectDirectory.asFile).path
+                }
+
+            error("Ktfmt failed to run with ${resultSummary.failedFiles.size} failures:\n$fileList")
+        }
     }
 
     private fun writeResultsSummaryToOutput(results: KtfmtResultSummary) =
