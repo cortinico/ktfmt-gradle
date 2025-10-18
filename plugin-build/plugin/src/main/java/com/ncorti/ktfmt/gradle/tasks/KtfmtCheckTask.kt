@@ -9,15 +9,14 @@ import org.gradle.api.tasks.CacheableTask
 
 /** ktfmt-gradle Check task. Verifies if the output of ktfmt is the same as the input */
 @CacheableTask
-public abstract class KtfmtCheckTask
-@Inject
-internal constructor(private val layout: ProjectLayout) : KtfmtBaseTask(layout) {
+public abstract class KtfmtCheckTask @Inject public constructor(private val layout: ProjectLayout) :
+    KtfmtBaseTask(layout) {
 
     init {
         group = KtfmtUtils.GROUP_VERIFICATION
     }
 
-    override val reformatFiles: Boolean = false
+    final override val reformatFiles: Boolean = false
 
     override fun handleResultSummary(resultSummary: KtfmtResultSummary) {
         if (resultSummary.invalidFormattedFiles.isNotEmpty()) {

@@ -1,3 +1,27 @@
+public final class com/ncorti/ktfmt/gradle/FormattingOptionsBean : java/io/Serializable {
+	public static final field defaultMaxWidth I
+	public static final field serialVersionUID J
+	public fun <init> (IIILcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;ZZ)V
+	public synthetic fun <init> (IIILcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()Lcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun copy (IIILcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;ZZ)Lcom/ncorti/ktfmt/gradle/FormattingOptionsBean;
+	public static synthetic fun copy$default (Lcom/ncorti/ktfmt/gradle/FormattingOptionsBean;IIILcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;ZZILjava/lang/Object;)Lcom/ncorti/ktfmt/gradle/FormattingOptionsBean;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBlockIndent ()I
+	public final fun getContinuationIndent ()I
+	public final fun getDebuggingPrintOpsAfterFormatting ()Z
+	public final fun getMaxWidth ()I
+	public final fun getRemoveUnusedImports ()Z
+	public final fun getTrailingCommaManagementStrategy ()Lcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract class com/ncorti/ktfmt/gradle/KtfmtExtension {
 	public fun <init> ()V
 	public abstract fun getBlockIndent ()Lorg/gradle/api/provider/Property;
@@ -29,18 +53,26 @@ public final class com/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy : jav
 }
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask : org/gradle/api/tasks/SourceTask {
+	public fun <init> (Lorg/gradle/api/file/ProjectLayout;)V
+	public abstract fun getFormattingOptionsBean ()Lorg/gradle/api/provider/Property;
 	public abstract fun getIncludeOnly ()Lorg/gradle/api/provider/Property;
+	public abstract fun getKtfmtClasspath ()Lorg/gradle/api/file/ConfigurableFileCollection;
 	public final fun getOutput ()Lorg/gradle/api/provider/Provider;
+	public abstract fun getReformatFiles ()Z
 	public fun getSource ()Lorg/gradle/api/file/FileTree;
 	public abstract fun getUseClassloaderIsolation ()Lorg/gradle/api/provider/Property;
 	protected abstract fun handleResultSummary (Lcom/ncorti/ktfmt/gradle/util/KtfmtResultSummary;)V
 }
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtCheckTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {
+	public fun <init> (Lorg/gradle/api/file/ProjectLayout;)V
+	public final fun getReformatFiles ()Z
 	protected fun handleResultSummary (Lcom/ncorti/ktfmt/gradle/util/KtfmtResultSummary;)V
 }
 
 public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtFormatTask : com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask {
+	public fun <init> (Lorg/gradle/api/file/ProjectLayout;)V
+	public final fun getReformatFiles ()Z
 	protected fun handleResultSummary (Lcom/ncorti/ktfmt/gradle/util/KtfmtResultSummary;)V
 }
 
