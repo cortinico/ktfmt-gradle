@@ -4,8 +4,12 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
-- Print the paths of files ktfmt failed to analyze instead of only how many files failed to be analyzed (#469) 
+
+## Version 0.25.0 _(2025-10-23)_
+- Print the paths of files ktfmt failed to analyze instead of only how many files failed to be analyzed (#470) 
 - Make Gradle tasks `KtfmtBaseTask`, `KtfmtCheckTask` and `KtfmtFormatTask` reusable from other Gradle plugins (#467)
+- Kotlin to 2.2.20
+- Gradle to 9.1.0
 
 ## Version 0.24.0 _(2025-09-08)_
 - Add support for android projects with the `com.android.kotlin.multiplatform.library` plugin (#422)
