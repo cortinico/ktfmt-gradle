@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew ktfmtCheck
 
       - name: Upload Test Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: test-results-${{ matrix.os }}
           path: plugin-build/plugin/build/reports/tests/
