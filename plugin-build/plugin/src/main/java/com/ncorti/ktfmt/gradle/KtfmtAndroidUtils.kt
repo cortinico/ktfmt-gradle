@@ -19,7 +19,7 @@ internal object KtfmtAndroidUtils {
     ) {
         fun applyKtfmtForAndroid() {
             project.extensions.configure(BaseExtension::class.java) {
-                it.sourceSets.all { sourceSet ->
+                it.sourceSets.configureEach { sourceSet ->
                     @Suppress("DEPRECATION")
                     val sourceSetName =
                         if (isKmpProject) {
