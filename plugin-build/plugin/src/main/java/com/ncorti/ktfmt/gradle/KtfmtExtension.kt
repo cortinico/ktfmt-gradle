@@ -123,7 +123,7 @@ public abstract class KtfmtExtension {
         internal const val DEFAULT_REMOVE_UNUSED_IMPORTS: Boolean = true
         internal const val DEFAULT_DEBUGGING_PRINT_OPTS: Boolean = false
         internal val DEFAULT_TRAILING_COMMAS_STRATEGY: TrailingCommaManagementStrategy =
-            TrailingCommaManagementStrategy.NONE
+            TrailingCommaManagementStrategy.ONLY_ADD
         internal const val DEFAULT_USE_CLASSLOADER_ISOLATION: Boolean = false
         internal val DEFAULT_SRC_SET_PATH_EXCLUSION_PATTERN =
             Regex("^(.*[\\\\/])?build([\\\\/].*)?\$")
