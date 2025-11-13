@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm")
     id("com.ncorti.ktfmt.gradle")
     id("com.google.devtools.ksp") version "2.3.0"
-    id("app.cash.sqldelight") version "2.1.0"
+    id("app.cash.sqldelight") version "2.2.1"
 }
 
 ktfmt { kotlinLangStyle() }
