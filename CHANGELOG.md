@@ -5,6 +5,7 @@ Please add your entries according to this format.
 
 ## Unreleased
 - Use lazy configuration APIs to improve Gradle's configuration caching (#478)
+- Fix the default (Meta) style to match the default style of ktfmt itself (#480)
 
 ## Version 0.25.0 _(2025-10-23)_
 - Print the paths of files ktfmt failed to analyze instead of only how many files failed to be analyzed (#470) 
