@@ -49,14 +49,14 @@ internal object KtfmtPluginUtils {
 
         // When running together with compileKotlin, ktfmt tasks should have precedence as
         // they're editing the source code
-        project.tasks.withType(KotlinCompile::class.java).all {
+        project.tasks.withType(KotlinCompile::class.java).configureEach {
             it.mustRunAfter(srcCheckTask, srcFormatTask)
         }
 
         topLevelFormat.configure { task -> task.dependsOn(srcFormatTask) }
         topLevelCheck.configure { task -> task.dependsOn(srcCheckTask) }
 
-        project.plugins.withType(LifecycleBasePlugin::class.java) {
+        project.plugins.withType(LifecycleBasePlugin::class.java).configureEach {
             project.tasks.named(LifecycleBasePlugin.CHECK_TASK_NAME).configure { task ->
                 task.dependsOn(srcCheckTask)
             }
@@ -92,14 +92,14 @@ internal object KtfmtPluginUtils {
                 it.setIncludes(KtfmtPlugin.defaultIncludes)
             }
 
-        project.tasks.withType(KotlinCompile::class.java).all {
+        project.tasks.withType(KotlinCompile::class.java).configureEach {
             it.mustRunAfter(scriptCheckTask, scriptFormatTask)
         }
 
         topLevelFormat.configure { task -> task.dependsOn(scriptFormatTask) }
         topLevelCheck.configure { task -> task.dependsOn(scriptCheckTask) }
 
-        project.plugins.withType(LifecycleBasePlugin::class.java) {
+        project.plugins.withType(LifecycleBasePlugin::class.java).configureEach {
             project.tasks.named(LifecycleBasePlugin.CHECK_TASK_NAME).configure { task ->
                 task.dependsOn(scriptCheckTask)
             }

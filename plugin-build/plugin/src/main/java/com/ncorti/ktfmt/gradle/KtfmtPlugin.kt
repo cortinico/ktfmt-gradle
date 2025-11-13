@@ -32,15 +32,15 @@ public abstract class KtfmtPlugin : Plugin<Project> {
 
         // setup to pull in ktfmt separately to run on an isolated classloader
         val ktFmt =
-            project.configurations.create("ktfmt").apply {
-                attributes.apply {
+            project.configurations.register("ktfmt") { configuration ->
+                configuration.attributes.apply {
                     attribute(
                         Usage.USAGE_ATTRIBUTE,
                         project.objects.named(Usage::class.java, Usage.JAVA_RUNTIME),
                     )
                 }
-                isVisible = false
-                isCanBeConsumed = false
+                configuration.isVisible = false
+                configuration.isCanBeConsumed = false
             }
 
         val resourceUri =
@@ -77,7 +77,7 @@ public abstract class KtfmtPlugin : Plugin<Project> {
     private fun applyKtfmt(project: Project, ktfmtExtension: KtfmtExtension) {
         val extension = project.extensions.getByType(KotlinProjectExtension::class.java)
         createScriptsTasks(project, project.projectDir, topLevelFormat, topLevelCheck)
-        extension.sourceSets.all {
+        extension.sourceSets.configureEach {
             createTasksForSourceSet(
                 project,
                 it.name,
@@ -102,12 +102,12 @@ public abstract class KtfmtPlugin : Plugin<Project> {
         val hasAndroidKmpLibraryPlugin =
             project.plugins.hasPlugin("com.android.kotlin.multiplatform.library")
 
-        extension.sourceSets.all {
+        extension.sourceSets.configureEach {
             val name = "kmp ${it.name}"
             if (!hasAndroidKmpLibraryPlugin && it.name.startsWith("android")) {
                 // We'll delegate Android Task Creation to the applyKtfmtToAndroidProject function
                 // below
-                return@all
+                return@configureEach
             }
             createTasksForSourceSet(
                 project,
@@ -119,7 +119,7 @@ public abstract class KtfmtPlugin : Plugin<Project> {
             )
         }
 
-        extension.targets.all { kotlinTarget ->
+        extension.targets.configureEach { kotlinTarget ->
             if (kotlinTarget.platformType == KotlinPlatformType.androidJvm) {
                 applyKtfmtToAndroidProject(
                     project,
