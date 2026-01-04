@@ -5,6 +5,9 @@ import com.ncorti.ktfmt.gradle.util.KtfmtUtils
 import com.ncorti.ktfmt.gradle.util.i
 import javax.inject.Inject
 import org.gradle.api.file.ProjectLayout
+import org.gradle.api.file.RegularFile
+import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.Internal
 
 /** ktfmt-gradle Format task. Replaces input file content with its formatted equivalent. */
 public abstract class KtfmtFormatTask @Inject public constructor(layout: ProjectLayout) :
@@ -13,6 +16,8 @@ public abstract class KtfmtFormatTask @Inject public constructor(layout: Project
     init {
         group = KtfmtUtils.GROUP_FORMATTING
     }
+
+    @get:Internal override val output: Provider<RegularFile> = defaultOutput
 
     final override val reformatFiles: Boolean = true
 

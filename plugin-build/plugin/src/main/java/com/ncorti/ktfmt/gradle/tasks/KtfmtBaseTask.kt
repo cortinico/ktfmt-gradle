@@ -23,7 +23,6 @@ import org.gradle.api.tasks.IgnoreEmptyDirectories
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
@@ -61,9 +60,11 @@ public abstract class KtfmtBaseTask(private val layout: ProjectLayout) : SourceT
     @SkipWhenEmpty
     override fun getSource(): FileTree = super.getSource()
 
-    @get:OutputFile
-    public val output: Provider<RegularFile> =
-        layout.buildDirectory.file("ktfmt/${this.name}/output.txt")
+    @get:Internal
+    protected val defaultOutput: Provider<RegularFile>
+        get() = layout.buildDirectory.file("ktfmt/${this.name}/output.txt")
+
+    @get:Internal public abstract val output: Provider<RegularFile>
 
     @get:Inject internal abstract val workerExecutor: WorkerExecutor
 
