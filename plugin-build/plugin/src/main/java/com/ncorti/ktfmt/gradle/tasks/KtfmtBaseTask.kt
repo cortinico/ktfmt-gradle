@@ -156,5 +156,5 @@ public abstract class KtfmtBaseTask(private val layout: ProjectLayout) : SourceT
     }
 
     private fun writeResultsSummaryToOutput(results: KtfmtResultSummary) =
-        output.get().asFile.writeText(results.prettyPrint())
+        output.get().asFile.apply { parentFile.mkdirs() }.writeText(results.prettyPrint())
 }
