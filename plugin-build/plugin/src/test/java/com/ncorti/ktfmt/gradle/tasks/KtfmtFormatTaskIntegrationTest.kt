@@ -8,7 +8,6 @@ import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.NO_SOURCE
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -69,7 +68,7 @@ internal class KtfmtFormatTaskIntegrationTest {
     }
 
     @Test
-    fun `format task is up to date after subsequent execution`() {
+    fun `format task succeeds after subsequent execution`() {
         tempDir.createTempFile(content = "val answer = 42\n")
         var result =
             GradleRunner.create()
@@ -87,11 +86,11 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .withArguments("ktfmtFormatMain")
                 .build()
 
-        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(UP_TO_DATE)
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
     }
 
     @Test
-    fun `format task is up to date after subsequent execution when formatting`() {
+    fun `format task succeeds after subsequent execution when formatting`() {
         tempDir.createTempFile(content = "val answer=42")
         var result =
             GradleRunner.create()
@@ -116,11 +115,11 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .withPluginClasspath()
                 .withArguments("ktfmtFormatMain")
                 .build()
-        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(UP_TO_DATE)
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
     }
 
     @Test
-    fun `format task is up to executed again after edit`() {
+    fun `format task is executed again after edit`() {
         val tempFile = tempDir.createTempFile(content = "val answer = 42\n")
         var result =
             GradleRunner.create()
@@ -138,7 +137,7 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .withArguments("ktfmtFormatMain")
                 .build()
 
-        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(UP_TO_DATE)
+        assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
 
         // Let's change file content
         tempFile.writeText("val answer=42\n")
