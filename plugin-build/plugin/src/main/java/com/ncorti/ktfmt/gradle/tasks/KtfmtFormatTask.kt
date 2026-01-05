@@ -17,6 +17,7 @@ public abstract class KtfmtFormatTask @Inject public constructor(layout: Project
         group = KtfmtUtils.GROUP_FORMATTING
     }
 
+    /** [Internal] to prevent false UP-TO-DATE states when files are manually reverted. */
     @get:Internal override val output: Provider<RegularFile> = defaultOutput
 
     final override val reformatFiles: Boolean = true

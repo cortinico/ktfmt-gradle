@@ -86,6 +86,8 @@ internal class KtfmtFormatTaskIntegrationTest {
                 .withArguments("ktfmtFormatMain")
                 .build()
 
+        // Expect SUCCESS not UP_TO_DATE: KtfmtFormatTask modifies files in-place,
+        // so we force execution to avoid stale report files causing incorrect skips.
         assertThat(result.task(":ktfmtFormatMain")?.outcome).isEqualTo(SUCCESS)
     }
 
