@@ -31,7 +31,7 @@ internal class KtfmtBaseTaskTest {
         val underTest = project.tasks.getByName("ktfmtFormatMain") as KtfmtBaseTask
 
         val expectedFile = tempDir.resolve("build/ktfmt/ktfmtFormatMain/output.txt").canonicalFile
-        assertThat(underTest.outputs.files.map { it.canonicalFile }).containsExactly(expectedFile)
+        assertThat(underTest.output.get().asFile.canonicalFile).isEqualTo(expectedFile)
     }
 
     @Test
