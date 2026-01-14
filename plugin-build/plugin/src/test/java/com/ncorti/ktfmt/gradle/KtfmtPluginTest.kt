@@ -17,8 +17,12 @@ class KtfmtPluginTest {
         val project = ProjectBuilder.builder().build()
         project.pluginManager.apply("com.ncorti.ktfmt.gradle")
 
-        assertThat(project["ktfmtCheck"].dependsOn).isEmpty()
-        assertThat(project["ktfmtFormat"].dependsOn).isEmpty()
+        // These tasks should exist even if no Kotlin plugin is applied
+        assertThat(project["ktfmtCheckScripts"]).isInstanceOf(KtfmtCheckTask::class.java)
+        assertThat(project["ktfmtFormatScripts"]).isInstanceOf(KtfmtFormatTask::class.java)
+
+        assertThat(project["ktfmtCheck"].dependencies).containsExactly("ktfmtCheckScripts")
+        assertThat(project["ktfmtFormat"].dependencies).containsExactly("ktfmtFormatScripts")
     }
 
     @Test

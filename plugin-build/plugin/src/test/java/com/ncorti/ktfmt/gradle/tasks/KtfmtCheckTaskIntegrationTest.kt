@@ -423,4 +423,34 @@ internal class KtfmtCheckTaskIntegrationTest {
 
         assertThat(result.task(":ktfmtCheckScripts")?.outcome).isEqualTo(SUCCESS)
     }
+
+    @Test
+    fun `format scripts task should validate top-level script file on project without any kotlin plugins`() {
+        val projectDir = tempDir
+        projectDir
+            .resolve("build.gradle.kts")
+            .writeText(
+                """
+                    plugins {
+                        id("com.ncorti.ktfmt.gradle")
+                    }
+                    
+                    repositories {
+                        mavenCentral()
+                    }
+                """
+                    .trimIndent()
+            )
+
+        projectDir.resolve("script.kts").writeText("val x=1")
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(projectDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtCheckScripts")
+                .buildAndFail()
+
+        assertThat(result.output).contains("[ktfmt] Invalid formatting")
+    }
 }
