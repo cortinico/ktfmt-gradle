@@ -59,12 +59,13 @@ public abstract class KtfmtPlugin : Plugin<Project> {
         topLevelFormat = createTopLevelFormatTask(project)
         topLevelCheck = createTopLevelCheckTask(project)
 
+        createScriptsTasks(project, project.projectDir, topLevelFormat, topLevelCheck)
+
         project.plugins.withId("kotlin") { applyKtfmt(project, ktfmtExtension) }
         project.plugins.withId("kotlin-android") {
             if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
                 project.logger.i("Skipping Android task creation, as KMP is applied")
             } else {
-                createScriptsTasks(project, project.projectDir, topLevelFormat, topLevelCheck)
                 applyKtfmtToAndroidProject(project, topLevelFormat, topLevelCheck, ktfmtExtension)
             }
         }
@@ -76,7 +77,6 @@ public abstract class KtfmtPlugin : Plugin<Project> {
 
     private fun applyKtfmt(project: Project, ktfmtExtension: KtfmtExtension) {
         val extension = project.extensions.getByType(KotlinProjectExtension::class.java)
-        createScriptsTasks(project, project.projectDir, topLevelFormat, topLevelCheck)
         extension.sourceSets.configureEach {
             createTasksForSourceSet(
                 project,
@@ -91,7 +91,6 @@ public abstract class KtfmtPlugin : Plugin<Project> {
 
     private fun applyKtfmtToMultiplatformProject(project: Project, ktfmtExtension: KtfmtExtension) {
         val extension = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
-        createScriptsTasks(project, project.projectDir, topLevelFormat, topLevelCheck)
 
         // This plugin doesn't have any Android specific build types or features and the Android
         // target is similar to all other KMP targets. Therefore we can use the regular source

@@ -508,4 +508,35 @@ internal class KtfmtFormatTaskIntegrationTest {
         assertThat(actual).isEqualTo("val answer=42\n")
         assertThat(result.task(":ktfmtFormatScripts")?.outcome).isEqualTo(SUCCESS)
     }
+
+    @Test
+    fun `format scripts task should format top-level script file on project without any kotlin plugins`() {
+        val scriptFile = tempDir.resolve("root-script.kts")
+        scriptFile.writeText("val x=1\n")
+
+        tempDir
+            .resolve("build.gradle.kts")
+            .writeText(
+                """
+                    plugins {
+                        id("com.ncorti.ktfmt.gradle")
+                    }
+                    
+                    repositories {
+                        mavenCentral()
+                    }
+                """
+                    .trimIndent()
+            )
+
+        val result =
+            GradleRunner.create()
+                .withProjectDir(tempDir)
+                .withPluginClasspath()
+                .withArguments("ktfmtFormatScripts")
+                .build()
+
+        assertThat(result.task(":ktfmtFormatScripts")?.outcome).isEqualTo(SUCCESS)
+        assertThat(scriptFile.readText()).isEqualTo("val x = 1\n")
+    }
 }
