@@ -5,6 +5,7 @@ Please add your entries according to this format.
 
 ## Unreleased
 - Bump Kotlin language/api version to 2.0 to support Kotlin 2.3.20+ (#472)
+- Annotate `KtfmtBaseTask` and `KtfmtFormatTask` with `@DisableCachingByDefault` for Gradle 9.4.0 compatibility (#474)
 - Use lazy configuration APIs to improve Gradle's configuration caching (#478)
 - Fix the default (Meta) style to match the default style of ktfmt itself (#480)
 - Fix `ktfmtFormat` task incorrectly skipping execution when files are reverted to an unformatted state (#485)

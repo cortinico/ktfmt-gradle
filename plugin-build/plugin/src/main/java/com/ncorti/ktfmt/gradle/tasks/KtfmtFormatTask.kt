@@ -8,8 +8,10 @@ import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFile
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Internal
+import org.gradle.work.DisableCachingByDefault
 
 /** ktfmt-gradle Format task. Replaces input file content with its formatted equivalent. */
+@DisableCachingByDefault(because = "Formatting tasks modify source files and should not be cached")
 public abstract class KtfmtFormatTask @Inject public constructor(layout: ProjectLayout) :
     KtfmtBaseTask(layout) {
 
