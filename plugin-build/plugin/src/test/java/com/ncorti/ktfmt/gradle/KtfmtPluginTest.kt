@@ -96,7 +96,6 @@ class KtfmtPluginTest {
     fun `plugin is applied correctly to an android application project`() {
         val project = ProjectBuilder.builder().build()
         project.pluginManager.apply("com.android.application")
-        project.pluginManager.apply("org.jetbrains.kotlin.android")
         project.pluginManager.apply("com.ncorti.ktfmt.gradle")
 
         assertDoesNotThrow {
