@@ -7,7 +7,7 @@ junit = "6.0.3"
 kotlin = "2.2.20"
 ktfmt-plugin = "0.23.0"
 ktfmt = "0.62"
-pluginPublish = "2.0.0"
+pluginPublish = "2.1.0"
 truth = "1.4.5"
 
 [plugins]
