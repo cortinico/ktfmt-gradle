@@ -4,6 +4,7 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+- Bump Kotlin language/api version to 2.0 to support Kotlin 2.3.20+ (#472)
 - Use lazy configuration APIs to improve Gradle's configuration caching (#478)
 - Fix the default (Meta) style to match the default style of ktfmt itself (#480)
 - Fix `ktfmtFormat` task incorrectly skipping execution when files are reverted to an unformatted state (#485)
