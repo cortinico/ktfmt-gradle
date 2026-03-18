@@ -15,8 +15,8 @@ java {
 
 kotlin {
     compilerOptions {
-        apiVersion.set(KotlinVersion.fromVersion("1.8"))
-        languageVersion.set(KotlinVersion.fromVersion("1.8"))
+        apiVersion.set(KotlinVersion.fromVersion("2.0"))
+        languageVersion.set(KotlinVersion.fromVersion("2.0"))
         jvmTarget = JvmTarget.JVM_17
     }
 
