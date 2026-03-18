@@ -26,14 +26,14 @@ internal class KtfmtDifferTest {
     fun `computeDiff with deleted line returns valid diff`() {
         val originalContent =
             """
-                    |val a = "So long,"
-                    |val b = "and thanks for all the fish!"
-                    """
+            |val a = "So long,"
+            |val b = "and thanks for all the fish!"
+            """
                 .trimMargin()
         val reformattedCode =
             """
-                |val a = "So long,"
-                """
+            |val a = "So long,"
+            """
                 .trimMargin()
 
         val inputFile = createTempFile(content = originalContent)
@@ -49,13 +49,13 @@ internal class KtfmtDifferTest {
     fun `computeDiff with added line returns valid diff`() {
         val originalContent =
             """
-                |val a = "So long,"
+            |val a = "So long,"
             """
                 .trimMargin()
         val reformattedCode =
             """
-                |val a = "So long,"
-                |val b = "and thanks for all the fish!"
+            |val a = "So long,"
+            |val b = "and thanks for all the fish!"
             """
                 .trimMargin()
 
@@ -72,14 +72,14 @@ internal class KtfmtDifferTest {
     fun `computeDiff with changed line returns valid diff`() {
         val originalContent =
             """
-                  |  val a = "So long,"
-                  |val b = "and thanks for all the fish!"
+            |  val a = "So long,"
+            |val b = "and thanks for all the fish!"
             """
                 .trimMargin()
         val reformattedCode =
             """
-                |val a = "So long,"
-                |val b = "and thanks for all the fish!"
+            |val a = "So long,"
+            |val b = "and thanks for all the fish!"
             """
                 .trimMargin()
 
@@ -96,16 +96,16 @@ internal class KtfmtDifferTest {
     fun `computeDiff with multiple changed lines returns multiple entries`() {
         val originalContent =
             """
-                   |   val a = "So long,"
-                   |val b = "and thanks!"
-                   | val c = "for all the fish!"
+            |   val a = "So long,"
+            |val b = "and thanks!"
+            | val c = "for all the fish!"
             """
                 .trimMargin()
         val reformattedCode =
             """
-                |val a = "So long,"
-                |val b = "and thanks!"
-                |val c = "for all the fish!"
+            |val a = "So long,"
+            |val b = "and thanks!"
+            |val c = "for all the fish!"
             """
                 .trimMargin()
 

@@ -278,7 +278,7 @@ internal class KtfmtFormatTaskIntegrationTest {
             |tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask>("customFormatTask") {
             |    source = fileTree("src/main/java")
             |}
-        """
+            """
                 .trimMargin()
         )
 
@@ -364,7 +364,7 @@ internal class KtfmtFormatTaskIntegrationTest {
             |    sourceSets.main { kotlin.setSrcDirs(listOf("src")) }
             |    sourceSets.test { kotlin.setSrcDirs(listOf("test")) }
             |}
-        """
+            """
                 .trimMargin()
         )
 
@@ -390,7 +390,7 @@ internal class KtfmtFormatTaskIntegrationTest {
         tempDir.appendToBuildGradle(
             """
             |kotlin { sourceSets.main { kotlin.srcDirs("build/main") } }
-        """
+            """
                 .trimMargin()
         )
 
@@ -416,7 +416,7 @@ internal class KtfmtFormatTaskIntegrationTest {
             |kotlin { sourceSets.main { kotlin.srcDirs("build/generated") } }
             |
             |ktfmt { srcSetPathExclusionPattern.set(Regex("customRules.*")) }
-        """
+            """
                 .trimMargin()
         )
 
@@ -439,7 +439,7 @@ internal class KtfmtFormatTaskIntegrationTest {
         tempDir.appendToBuildGradle(
             """
             |ktfmt { srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*")) }
-        """
+            """
                 .trimMargin()
         )
 
@@ -518,13 +518,13 @@ internal class KtfmtFormatTaskIntegrationTest {
             .resolve("build.gradle.kts")
             .writeText(
                 """
-                    plugins {
-                        id("com.ncorti.ktfmt.gradle")
-                    }
-                    
-                    repositories {
-                        mavenCentral()
-                    }
+                plugins {
+                    id("com.ncorti.ktfmt.gradle")
+                }
+
+                repositories {
+                    mavenCentral()
+                }
                 """
                     .trimIndent()
             )

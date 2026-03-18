@@ -303,7 +303,7 @@ internal class KtfmtCheckTaskIntegrationTest {
             |    sourceSets.main { kotlin.setSrcDirs(listOf("src")) }
             |    sourceSets.test { kotlin.setSrcDirs(listOf("test")) }
             |}
-        """
+            """
                 .trimMargin()
         )
 
@@ -326,7 +326,7 @@ internal class KtfmtCheckTaskIntegrationTest {
         tempDir.appendToBuildGradle(
             """
             |kotlin { sourceSets.main { kotlin.srcDirs("build/main") } }
-        """
+            """
                 .trimMargin()
         )
 
@@ -350,7 +350,7 @@ internal class KtfmtCheckTaskIntegrationTest {
             |kotlin { sourceSets.main { kotlin.srcDirs("build/generated") } }
             |
             |ktfmt { srcSetPathExclusionPattern.set(Regex("customRules.*")) }
-        """
+            """
                 .trimMargin()
         )
 
@@ -373,7 +373,7 @@ internal class KtfmtCheckTaskIntegrationTest {
         tempDir.appendToBuildGradle(
             """
             |ktfmt { srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*")) }
-        """
+            """
                 .trimMargin()
         )
 
@@ -431,13 +431,13 @@ internal class KtfmtCheckTaskIntegrationTest {
             .resolve("build.gradle.kts")
             .writeText(
                 """
-                    plugins {
-                        id("com.ncorti.ktfmt.gradle")
-                    }
-                    
-                    repositories {
-                        mavenCentral()
-                    }
+                plugins {
+                    id("com.ncorti.ktfmt.gradle")
+                }
+
+                repositories {
+                    mavenCentral()
+                }
                 """
                     .trimIndent()
             )
