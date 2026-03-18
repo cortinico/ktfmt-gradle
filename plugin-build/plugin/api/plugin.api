@@ -48,6 +48,7 @@ public final class com/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy : jav
 	public static final field COMPLETE Lcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;
 	public static final field NONE Lcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;
 	public static final field ONLY_ADD Lcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;
 	public static fun values ()[Lcom/ncorti/ktfmt/gradle/TrailingCommaManagementStrategy;
 }
