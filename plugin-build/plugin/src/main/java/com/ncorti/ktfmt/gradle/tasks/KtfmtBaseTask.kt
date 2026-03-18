@@ -28,10 +28,12 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SkipWhenEmpty
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
+import org.gradle.work.DisableCachingByDefault
 import org.gradle.api.tasks.options.Option
 import org.gradle.workers.WorkerExecutor
 
 /** ktfmt-gradle base Gradle tasks. Contains methods to properly process a single file with ktfmt */
+@DisableCachingByDefault(because = "Subclasses define their own caching strategy")
 @Suppress("LeakingThis")
 public abstract class KtfmtBaseTask(private val layout: ProjectLayout) : SourceTask() {
 
