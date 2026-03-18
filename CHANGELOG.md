@@ -4,12 +4,16 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
-- Bump Kotlin language/api version to 2.0 to support Kotlin 2.3.20+ (#472)
-- Annotate `KtfmtBaseTask` and `KtfmtFormatTask` with `@DisableCachingByDefault` for Gradle 9.4.0 compatibility (#474)
+
+## Version 0.26.0 _(2026-03-18)_
 - Use lazy configuration APIs to improve Gradle's configuration caching (#478)
 - Fix the default (Meta) style to match the default style of ktfmt itself (#480)
 - Fix `ktfmtFormat` task incorrectly skipping execution when files are reverted to an unformatted state (#485)
 - Ensure `ktfmtCheckScripts` and `ktfmtFormatScripts` are correctly registered even in projects without Kotlin plugins (#486)
+- Kotlin to 2.3.20
+- Gradle to 9.4.0
+- AGP to 8.13.2
+- KtFmt to 0.62
 
 ## Version 0.25.0 _(2025-10-23)_
 - Print the paths of files ktfmt failed to analyze instead of only how many files failed to be analyzed (#470) 
