@@ -19,22 +19,20 @@ internal class KtfmtFormatResultTest {
         )
 
     @TestFactory
-    fun testSerialize() =
-        testPairs.map { (result, serializedString) ->
-            DynamicTest.dynamicTest("Should serialize $result") {
-                val actual = result.serialize()
+    fun testSerialize() = testPairs.map { (result, serializedString) ->
+        DynamicTest.dynamicTest("Should serialize $result") {
+            val actual = result.serialize()
 
-                assertThat(actual).isEqualTo(serializedString)
-            }
+            assertThat(actual).isEqualTo(serializedString)
         }
+    }
 
     @TestFactory
-    fun testDeserialize() =
-        testPairs.map { (result, serializedString) ->
-            DynamicTest.dynamicTest("Should serialize $result") {
-                val actual = KtfmtFormatResult.parse(serializedString)
+    fun testDeserialize() = testPairs.map { (result, serializedString) ->
+        DynamicTest.dynamicTest("Should serialize $result") {
+            val actual = KtfmtFormatResult.parse(serializedString)
 
-                assertThat(actual).isEqualTo(result)
-            }
+            assertThat(actual).isEqualTo(result)
         }
+    }
 }
