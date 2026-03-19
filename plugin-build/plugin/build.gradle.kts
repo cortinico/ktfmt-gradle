@@ -92,12 +92,11 @@ signing {
 
 tasks.withType<Test> { useJUnitPlatform() }
 
-val persistKtfmtVersion by
-    tasks.registering {
-        inputs.property("ktfmtVersion", libs.ktfmt)
-        outputs.files(layout.buildDirectory.file("ktfmt-version.txt"))
-        doLast { outputs.files.singleFile.writeText(inputs.properties["ktfmtVersion"].toString()) }
-    }
+val persistKtfmtVersion by tasks.registering {
+    inputs.property("ktfmtVersion", libs.ktfmt)
+    outputs.files(layout.buildDirectory.file("ktfmt-version.txt"))
+    doLast { outputs.files.singleFile.writeText(inputs.properties["ktfmtVersion"].toString()) }
+}
 
 tasks.named<ProcessResources>("processResources") {
     from(persistKtfmtVersion) { into("com/ncorti/ktfmt/gradle") }
