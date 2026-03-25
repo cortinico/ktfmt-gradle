@@ -31,7 +31,7 @@ internal object KtfmtAndroidUtils {
             createTasksForSourceSet(
                 project,
                 sourceSetName,
-                project.files(*srcDirs.toTypedArray()),
+                project.files(srcDirs),
                 ktfmtExtension,
                 topLevelFormat,
                 topLevelCheck,
