@@ -3,7 +3,7 @@ import app.cash.sqldelight.gradle.VerifyMigrationTask
 plugins {
     kotlin("jvm")
     id("com.ncorti.ktfmt.gradle")
-    id("com.google.devtools.ksp") version "2.3.6"
+    id("com.google.devtools.ksp") version "2.3.7"
     id("app.cash.sqldelight") version "2.3.2"
 }
 
