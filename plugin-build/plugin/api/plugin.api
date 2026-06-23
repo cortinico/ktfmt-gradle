@@ -60,6 +60,7 @@ public abstract class com/ncorti/ktfmt/gradle/tasks/KtfmtBaseTask : org/gradle/a
 	public abstract fun getIncludeOnly ()Lorg/gradle/api/provider/Property;
 	public abstract fun getKtfmtClasspath ()Lorg/gradle/api/file/ConfigurableFileCollection;
 	public abstract fun getOutput ()Lorg/gradle/api/provider/Provider;
+	public abstract fun getProcessIsolationJvmArgs ()Lorg/gradle/api/provider/ListProperty;
 	public abstract fun getReformatFiles ()Z
 	public fun getSource ()Lorg/gradle/api/file/FileTree;
 	public abstract fun getUseClassloaderIsolation ()Lorg/gradle/api/provider/Property;
