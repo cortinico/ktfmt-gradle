@@ -16,6 +16,7 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileTree
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFile
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Classpath
@@ -55,6 +56,8 @@ public abstract class KtfmtBaseTask(private val layout: ProjectLayout) : SourceT
     public abstract val includeOnly: Property<String>
 
     @get:Input public abstract val useClassloaderIsolation: Property<Boolean>
+
+    @get:Input public abstract val processIsolationJvmArgs: ListProperty<String>
 
     @PathSensitive(PathSensitivity.RELATIVE)
     @InputFiles
@@ -100,7 +103,10 @@ public abstract class KtfmtBaseTask(private val layout: ProjectLayout) : SourceT
             if (useClassloaderIsolation.get()) {
                 workerExecutor.classLoaderIsolation { it.classpath.from(ktfmtClasspath) }
             } else {
-                workerExecutor.processIsolation { it.classpath.from(ktfmtClasspath) }
+                workerExecutor.processIsolation { workerSpec ->
+                    workerSpec.classpath.from(ktfmtClasspath)
+                    workerSpec.forkOptions { it.jvmArgs(processIsolationJvmArgs.get()) }
+                }
             }
 
         val includedFiles = getIncludedFiles()
