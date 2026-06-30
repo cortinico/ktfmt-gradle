@@ -1,5 +1,5 @@
 [versions]
-agp = "9.1.0"
+agp = "9.2.1"
 binaryCompatibilityValidator = "0.18.1"
 detekt = "1.23.8"
 diffUtils = "4.17"
@@ -12,7 +12,6 @@ truth = "1.4.5"
 
 [plugins]
 android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
-android-library = { id = "com.android.library", version.ref = "agp" }
 binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibilityValidator" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
