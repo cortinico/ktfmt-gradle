@@ -62,13 +62,19 @@ public abstract class KtfmtPlugin : Plugin<Project> {
         createScriptsTasks(project, project.projectDir, topLevelFormat, topLevelCheck)
 
         project.plugins.withId("kotlin") { applyKtfmt(project, ktfmtExtension) }
-        project.plugins.withId("kotlin-android") {
+
+        val applyAndroidKtfmt = {
             if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
                 project.logger.i("Skipping Android task creation, as KMP is applied")
             } else {
                 applyKtfmtToAndroidProject(project, topLevelFormat, topLevelCheck, ktfmtExtension)
             }
         }
+        project.plugins.withId("com.android.application") { applyAndroidKtfmt() }
+        project.plugins.withId("com.android.library") { applyAndroidKtfmt() }
+        project.plugins.withId("com.android.test") { applyAndroidKtfmt() }
+        project.plugins.withId("com.android.dynamic-feature") { applyAndroidKtfmt() }
+
         project.plugins.withId("org.jetbrains.kotlin.js") { applyKtfmt(project, ktfmtExtension) }
         project.plugins.withId("org.jetbrains.kotlin.multiplatform") {
             applyKtfmtToMultiplatformProject(project, ktfmtExtension)

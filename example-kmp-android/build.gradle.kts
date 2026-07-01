@@ -8,7 +8,7 @@ kotlin {
     jvmToolchain(17)
     jvm()
 
-    androidLibrary {
+    android {
         namespace = "com.ncorti.example.ktfmt"
         compileSdk = 33
         minSdk = 33
