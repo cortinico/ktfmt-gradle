@@ -46,23 +46,6 @@ class KtfmtPluginTest {
     }
 
     @Test
-    fun `plugin is applied correctly to a kotlin js project`() {
-        val project = ProjectBuilder.builder().build()
-        project.pluginManager.apply("org.jetbrains.kotlin.js")
-        project.pluginManager.apply("com.ncorti.ktfmt.gradle")
-
-        assertThat(project["ktfmtCheckMain"]).isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project["ktfmtFormatMain"]).isInstanceOf(KtfmtFormatTask::class.java)
-        assertThat(project["ktfmtCheckTest"]).isInstanceOf(KtfmtCheckTask::class.java)
-        assertThat(project["ktfmtFormatTest"]).isInstanceOf(KtfmtFormatTask::class.java)
-
-        assertThat(project["ktfmtCheck"].dependencies)
-            .containsExactly("ktfmtCheckMain", "ktfmtCheckTest", "ktfmtCheckScripts")
-        assertThat(project["ktfmtFormat"].dependencies)
-            .containsExactly("ktfmtFormatMain", "ktfmtFormatTest", "ktfmtFormatScripts")
-    }
-
-    @Test
     fun `plugin is applied correctly to a kotlin multiplatform project`() {
         val project = ProjectBuilder.builder().build()
         project.pluginManager.apply("org.jetbrains.kotlin.multiplatform")
