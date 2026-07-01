@@ -5,6 +5,8 @@ Please add your entries according to this format.
 
 ## Unreleased
 - Add support for configuring JVM arguments in process isolation (#509)
+- Add support for AGP 9.x
+- AGP to 9.2.1
 
 ## Version 0.26.0 _(2026-03-18)_
 - Bump Kotlin language/api version to 2.0 to support Kotlin 2.3.20+ (#472)
