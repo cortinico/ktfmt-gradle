@@ -28,7 +28,7 @@ kotlin {
  * dependencies into TestKit plugin classpath via [PluginUnderTestMetadata] to make them available
  * for testing.
  */
-val integrationTestRuntime: Configuration by configurations.creating
+val integrationTestRuntime = configurations.create("integrationTestRuntime")
 
 integrationTestRuntime.apply {
     extendsFrom(configurations.getByName("compileOnly"))
@@ -92,11 +92,12 @@ signing {
 
 tasks.withType<Test> { useJUnitPlatform() }
 
-val persistKtfmtVersion by tasks.registering {
-    inputs.property("ktfmtVersion", libs.ktfmt)
-    outputs.files(layout.buildDirectory.file("ktfmt-version.txt"))
-    doLast { outputs.files.singleFile.writeText(inputs.properties["ktfmtVersion"].toString()) }
-}
+val persistKtfmtVersion =
+    tasks.register("persistKtfmtVersion") {
+        inputs.property("ktfmtVersion", libs.ktfmt)
+        outputs.files(layout.buildDirectory.file("ktfmt-version.txt"))
+        doLast { outputs.files.singleFile.writeText(inputs.properties["ktfmtVersion"].toString()) }
+    }
 
 tasks.named<ProcessResources>("processResources") {
     from(persistKtfmtVersion) { into("com/ncorti/ktfmt/gradle") }
