@@ -1,3 +1,4 @@
+import org.gradle.plugin.compatibility.compatibility
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
@@ -77,6 +78,8 @@ gradlePlugin {
             displayName = property("DISPLAY_NAME").toString()
             description = property("DESCRIPTION").toString()
             tags = listOf("ktfmt", "kotlin", "formatter", "reformat", "style", "code", "linter")
+
+            compatibility { features { configurationCache = true } }
         }
     }
 
