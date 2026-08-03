@@ -4,9 +4,15 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+
+## Version 0.27.0 _(2026-08-03)_
 - Add support for configuring JVM arguments in process isolation (#509)
 - Add support for AGP 9.x
-- AGP to 9.2.1
+- Declare Configuration Cache compatibility (#518)
+- Kotlin to 2.4.10
+- Gradle to 9.6.1
+- AGP to 9.3.1
+- KtFmt to 0.64
 
 ## Version 0.26.0 _(2026-03-18)_
 - Bump Kotlin language/api version to 2.0 to support Kotlin 2.3.20+ (#472)
