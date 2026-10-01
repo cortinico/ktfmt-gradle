@@ -72,11 +72,8 @@ internal object KtfmtPluginUtils {
         val checkTaskName = "${TASK_NAME_CHECK}Scripts"
         val formatTaskName = "${TASK_NAME_FORMAT}Scripts"
 
-        val scriptFiles =
-            project
-                .fileTree(projectDir)
-                .filter { it.extension == "kts" }
-                .filter { it.parentFile == projectDir }
+        // Use an include pattern so script discovery skips unrelated subdirectory contents.
+        val scriptFiles = project.fileTree(projectDir) { it.include("*.kts") }
 
         val scriptCheckTask =
             project.tasks.register(checkTaskName, KtfmtCheckTask::class.java) {
