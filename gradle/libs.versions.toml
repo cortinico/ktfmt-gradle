@@ -6,7 +6,7 @@ diffUtils = "4.17"
 junit = "6.1.3"
 kotlin = "2.4.21"
 ktfmt-plugin = "0.26.0"
-ktfmt = "0.64"
+ktfmt = "0.65"
 pluginPublish = "2.2.1"
 truth = "1.4.5"
 
@@ -26,4 +26,4 @@ jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 jupiter-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 diffUtils = { module = "io.github.java-diff-utils:java-diff-utils", version.ref = "diffUtils" }
-ktfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }
+ktfmt = { module = "org.jetbrains.kotlinx:ktfmt", version.ref = "ktfmt" }
