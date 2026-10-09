@@ -1,8 +1,10 @@
 package com.ncorti.ktfmt.gradle.tasks.worker
 
-import com.facebook.ktfmt.format.Formatter
-import com.facebook.ktfmt.format.FormattingOptions
-import com.facebook.ktfmt.format.TrailingCommaManagementStrategy
+import org.jetbrains.kotlinx.ktfmt.format.Formatter
+import org.jetbrains.kotlinx.ktfmt.format.FormattingOptions
+import org.jetbrains.kotlinx.ktfmt.format.KotlinCode
+import org.jetbrains.kotlinx.ktfmt.format.TrailingCommaManagementStrategy
+import org.jetbrains.kotlinx.ktfmt.format.kotlinFileType
 import com.ncorti.ktfmt.gradle.FormattingOptionsBean
 import com.ncorti.ktfmt.gradle.TrailingCommaManagementStrategy as TrailingCommaStrategyBean
 import com.ncorti.ktfmt.gradle.tasks.worker.KtfmtFormatResult.KtfmtFormatFailure
@@ -27,7 +29,7 @@ import org.gradle.workers.WorkParameters
 /**
  * Gradle [WorkAction] to format a single Kotlin file using ktfmt.
  *
- * This class is the ONLY class that should use classes from ktfmt (`com.facebook.ktfmt`) to
+ * This class is the ONLY class that should use classes from ktfmt (`org.jetbrains.kotlinx.ktfmt`) to
  * maintain classloader isolation.
  *
  * ktfmt is a `compileOnly` dependency which will result in ClassNotFound exceptions should it be
@@ -69,7 +71,10 @@ internal abstract class KtfmtWorkAction : WorkAction<KtfmtWorkAction.KtfmtWorkPa
         return runCatching {
                 val originalContent = sourceFile.readText()
 
-                val formattedContent = Formatter.format(formattingOptions, originalContent)
+                val formattedContent = Formatter.format(
+                        formattingOptions,
+                        KotlinCode(originalContent, sourceFile.kotlinFileType),
+                    )
 
                 if (originalContent == formattedContent) {
                     logger.i("Valid formatting for: $sourceFile")
