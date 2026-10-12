@@ -4,6 +4,7 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+- Migrate to ktfmt 0.65, which moved to the `org.jetbrains.kotlinx:ktfmt` coordinates and the `org.jetbrains.kotlinx.ktfmt` package. This fixes `Could not initialize class ...format.Parser` failures with Kotlin 2.4.20
 - Fix `ktfmt*Scripts` tasks failing with "Could not read path" under `--parallel` by no longer walking subdirectories ([#525](https://github.com/cortinico/ktfmt-gradle/issues/525))
 
 ## Version 0.27.0 _(2026-08-03)_
