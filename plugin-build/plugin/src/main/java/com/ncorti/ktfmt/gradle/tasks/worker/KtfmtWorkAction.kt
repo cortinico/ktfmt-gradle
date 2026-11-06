@@ -69,29 +69,29 @@ internal abstract class KtfmtWorkAction : WorkAction<KtfmtWorkAction.KtfmtWorkPa
         logger.d("Checking format for $sourceFile")
 
         return runCatching {
-                val originalContent = sourceFile.readText()
+            val originalContent = sourceFile.readText()
 
-                val formattedContent =
-                    Formatter.format(
-                        formattingOptions,
-                        KotlinCode(originalContent, sourceFile.kotlinFileType),
-                    )
+            val formattedContent =
+                Formatter.format(
+                    formattingOptions,
+                    KotlinCode(originalContent, sourceFile.kotlinFileType),
+                )
 
-                if (originalContent == formattedContent) {
-                    logger.i("Valid formatting for: $sourceFile")
-                    return@runCatching KtfmtFormatSuccess(sourceFile, true)
-                }
-
-                if (reformatFiles) {
-                    logger.i("Reformatting $sourceFile")
-                    sourceFile.writeText(formattedContent, Charset.defaultCharset())
-                    return@runCatching KtfmtFormatSuccess(sourceFile, false)
-                }
-
-                logger.e("Invalid formatting for: $sourceFile")
-                KtfmtDiffer.printDiff(KtfmtDiffer.computeDiff(sourceFile, formattedContent), logger)
-                KtfmtFormatSuccess(sourceFile, false)
+            if (originalContent == formattedContent) {
+                logger.i("Valid formatting for: $sourceFile")
+                return@runCatching KtfmtFormatSuccess(sourceFile, true)
             }
+
+            if (reformatFiles) {
+                logger.i("Reformatting $sourceFile")
+                sourceFile.writeText(formattedContent, Charset.defaultCharset())
+                return@runCatching KtfmtFormatSuccess(sourceFile, false)
+            }
+
+            logger.e("Invalid formatting for: $sourceFile")
+            KtfmtDiffer.printDiff(KtfmtDiffer.computeDiff(sourceFile, formattedContent), logger)
+            KtfmtFormatSuccess(sourceFile, false)
+        }
             .onFailure {
                 // When running with --debug, print the full stacktrace for debugging purposes
                 logger.e("Failed to format file: $sourceFile (reason = ${it.message})")
