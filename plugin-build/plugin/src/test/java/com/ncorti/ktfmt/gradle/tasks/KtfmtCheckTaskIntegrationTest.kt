@@ -63,7 +63,7 @@ internal class KtfmtCheckTaskIntegrationTest {
                 ````
             }
             """
-                .trimIndent()
+                .trimIndent(),
         )
 
         val result =
@@ -285,7 +285,7 @@ internal class KtfmtCheckTaskIntegrationTest {
             |    source = fileTree("src/main/java")
             |}
             """
-                .trimMargin()
+                .trimMargin(),
         )
 
         GradleRunner.create()
@@ -304,7 +304,7 @@ internal class KtfmtCheckTaskIntegrationTest {
             |    sourceSets.test { kotlin.setSrcDirs(listOf("test")) }
             |}
             """
-                .trimMargin()
+                .trimMargin(),
         )
 
         tempDir.createTempFile("val answer = 42\n", path = "src/someFolder")
@@ -327,7 +327,7 @@ internal class KtfmtCheckTaskIntegrationTest {
             """
             |kotlin { sourceSets.main { kotlin.srcDirs("build/main") } }
             """
-                .trimMargin()
+                .trimMargin(),
         )
 
         tempDir.createTempFile(content = "val answer=42\n", path = "build/main")
@@ -351,7 +351,7 @@ internal class KtfmtCheckTaskIntegrationTest {
             |
             |ktfmt { srcSetPathExclusionPattern.set(Regex("customRules.*")) }
             """
-                .trimMargin()
+                .trimMargin(),
         )
 
         tempDir.createTempFile(content = "val answer=42\n", path = "build/generated/main")
@@ -374,7 +374,7 @@ internal class KtfmtCheckTaskIntegrationTest {
             """
             |ktfmt { srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*")) }
             """
-                .trimMargin()
+                .trimMargin(),
         )
 
         tempDir.createTempFile(content = "val answer=42\n")
@@ -439,7 +439,7 @@ internal class KtfmtCheckTaskIntegrationTest {
                     mavenCentral()
                 }
                 """
-                    .trimIndent()
+                    .trimIndent(),
             )
 
         projectDir.resolve("script.kts").writeText("val x=1")

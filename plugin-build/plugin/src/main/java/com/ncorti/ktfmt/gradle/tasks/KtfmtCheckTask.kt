@@ -31,7 +31,7 @@ public abstract class KtfmtCheckTask @Inject public constructor(private val layo
                 }
             val invalidFilesSize = resultSummary.invalidFormattedFiles.size
             error(
-                "[ktfmt] Found $invalidFilesSize files that are not properly formatted:\n$fileList"
+                "[ktfmt] Found $invalidFilesSize files that are not properly formatted:\n$fileList",
             )
         }
 

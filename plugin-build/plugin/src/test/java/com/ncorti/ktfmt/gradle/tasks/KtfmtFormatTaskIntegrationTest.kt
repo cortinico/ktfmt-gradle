@@ -279,7 +279,7 @@ internal class KtfmtFormatTaskIntegrationTest {
             |    source = fileTree("src/main/java")
             |}
             """
-                .trimMargin()
+                .trimMargin(),
         )
 
         GradleRunner.create()
@@ -300,7 +300,7 @@ internal class KtfmtFormatTaskIntegrationTest {
                     |println("HelloWorld2")
                     |}
                     """
-                        .trimMargin()
+                        .trimMargin(),
             )
 
         tempDir.appendToBuildGradle("ktfmt { kotlinLangStyle() }")
@@ -333,7 +333,7 @@ internal class KtfmtFormatTaskIntegrationTest {
                     |println("HelloWorld2")
                     |}
                     """
-                        .trimMargin()
+                        .trimMargin(),
             )
 
         tempDir.appendToBuildGradle("ktfmt { googleStyle() }")
@@ -365,7 +365,7 @@ internal class KtfmtFormatTaskIntegrationTest {
             |    sourceSets.test { kotlin.setSrcDirs(listOf("test")) }
             |}
             """
-                .trimMargin()
+                .trimMargin(),
         )
 
         val sourceFile = tempDir.createTempFile("val answer =  42\n", path = "src/someFolder")
@@ -391,7 +391,7 @@ internal class KtfmtFormatTaskIntegrationTest {
             """
             |kotlin { sourceSets.main { kotlin.srcDirs("build/main") } }
             """
-                .trimMargin()
+                .trimMargin(),
         )
 
         val file = tempDir.createTempFile(content = "val answer=42\n", path = "build/main")
@@ -417,7 +417,7 @@ internal class KtfmtFormatTaskIntegrationTest {
             |
             |ktfmt { srcSetPathExclusionPattern.set(Regex("customRules.*")) }
             """
-                .trimMargin()
+                .trimMargin(),
         )
 
         val file =
@@ -440,7 +440,7 @@ internal class KtfmtFormatTaskIntegrationTest {
             """
             |ktfmt { srcSetPathExclusionPattern.set(Regex(".*[\\\\/]main[\\\\/].*")) }
             """
-                .trimMargin()
+                .trimMargin(),
         )
 
         tempDir.createTempFile(content = "val answer=42\n")
@@ -526,7 +526,7 @@ internal class KtfmtFormatTaskIntegrationTest {
                     mavenCentral()
                 }
                 """
-                    .trimIndent()
+                    .trimIndent(),
             )
 
         val result =
