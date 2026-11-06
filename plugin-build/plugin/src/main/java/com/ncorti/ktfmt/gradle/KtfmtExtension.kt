@@ -82,7 +82,7 @@ public abstract class KtfmtExtension {
         set(value) {
             trailingCommaManagementStrategy.set(
                 if (value) TrailingCommaManagementStrategy.COMPLETE
-                else TrailingCommaManagementStrategy.NONE
+                else TrailingCommaManagementStrategy.NONE,
             )
         }
         get() = trailingCommaManagementStrategy.get() != TrailingCommaManagementStrategy.NONE

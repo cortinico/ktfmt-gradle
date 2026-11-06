@@ -128,7 +128,7 @@ public abstract class KtfmtBaseTask(private val layout: ProjectLayout) : SourceT
         val includedFiles =
             IncludedFilesParser.parse(includeOnly.get(), layout.projectDirectory.asFile)
         logger.d(
-            "Preparing to format: includeOnly=${includeOnly.orNull}, includedFiles = $includedFiles"
+            "Preparing to format: includeOnly=${includeOnly.orNull}, includedFiles = $includedFiles",
         )
         return includedFiles
     }
