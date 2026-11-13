@@ -357,6 +357,76 @@ internal class KtfmtFormatTaskIntegrationTest {
     }
 
     @Test
+    fun `should preserve lambda line breaks by default`() {
+        val file =
+            tempDir.createTempFile(
+                content =
+                    """
+                    |fun someFun(){
+                    |listOf(1).forEach {
+                    |println(it)
+                    |}
+                    |}
+                    """
+                        .trimMargin(),
+            )
+
+        GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("ktfmtFormatMain")
+            .forwardOutput()
+            .build()
+
+        assertThat(file.readText())
+            .isEqualTo(
+                """
+                |fun someFun() {
+                |    listOf(1).forEach {
+                |        println(it)
+                |    }
+                |}
+                |"""
+                    .trimMargin(),
+            )
+    }
+
+    @Test
+    fun `should collapse lambda line breaks when preserveLambdaBreaks is false`() {
+        val file =
+            tempDir.createTempFile(
+                content =
+                    """
+                    |fun someFun(){
+                    |listOf(1).forEach {
+                    |println(it)
+                    |}
+                    |}
+                    """
+                        .trimMargin(),
+            )
+
+        tempDir.appendToBuildGradle("ktfmt { preserveLambdaBreaks.set(false) }")
+
+        GradleRunner.create()
+            .withProjectDir(tempDir)
+            .withPluginClasspath()
+            .withArguments("ktfmtFormatMain")
+            .forwardOutput()
+            .build()
+
+        assertThat(file.readText())
+            .isEqualTo(
+                """
+                |fun someFun() {
+                |    listOf(1).forEach { println(it) }
+                |}
+                |"""
+                    .trimMargin(),
+            )
+    }
+
+    @Test
     fun `format task should detect the source and test files in a flattened project structure and format them`() {
         tempDir.appendToBuildGradle(
             """

@@ -112,6 +112,8 @@ ktfmt {
     continuationIndent.set(8)
     // Whether ktfmt should remove imports that are not used.
     removeUnusedImports.set(false)
+    // Whether ktfmt should preserve user-authored line breaks inside lambda bodies.
+    preserveLambdaBreaks.set(true)
     // Whether ktfmt should automatically add/remove trailing commas.
     // This will be one of the options in the enum com.ncorti.ktfmt.gradle.TrailingCommaManagementStrategy.
     trailingCommaManagementStrategy.set(NONE)
