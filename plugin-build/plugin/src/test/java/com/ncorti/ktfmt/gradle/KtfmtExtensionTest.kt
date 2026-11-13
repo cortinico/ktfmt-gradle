@@ -5,6 +5,7 @@ import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_BLOCK_INDENT
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_CONTINUATION_INDENT
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_DEBUGGING_PRINT_OPTS
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_MAX_WIDTH
+import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_PRESERVE_LAMBDA_BREAKS
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_REMOVE_UNUSED_IMPORTS
 import com.ncorti.ktfmt.gradle.KtfmtExtension.Companion.DEFAULT_USE_CLASSLOADER_ISOLATION
 import org.gradle.testfixtures.ProjectBuilder
@@ -38,6 +39,13 @@ class KtfmtExtensionTest {
         val extension = createExtension()
 
         assertThat(extension.removeUnusedImports.get()).isEqualTo(DEFAULT_REMOVE_UNUSED_IMPORTS)
+    }
+
+    @Test
+    fun `preserveLambdaBreaks has default value`() {
+        val extension = createExtension()
+
+        assertThat(extension.preserveLambdaBreaks.get()).isEqualTo(DEFAULT_PRESERVE_LAMBDA_BREAKS)
     }
 
     @Test
@@ -84,6 +92,7 @@ class KtfmtExtensionTest {
         extension.blockIndent.set(43)
         extension.continuationIndent.set(44)
         extension.removeUnusedImports.set(false)
+        extension.preserveLambdaBreaks.set(false)
         extension.trailingCommaManagementStrategy.set(TrailingCommaManagementStrategy.COMPLETE)
         extension.debuggingPrintOpsAfterFormatting.set(true)
 
@@ -93,6 +102,7 @@ class KtfmtExtensionTest {
         assertThat(bean.blockIndent).isEqualTo(43)
         assertThat(bean.continuationIndent).isEqualTo(44)
         assertThat(bean.removeUnusedImports).isEqualTo(false)
+        assertThat(bean.preserveLambdaBreaks).isEqualTo(false)
         assertThat(bean.trailingCommaManagementStrategy)
             .isEqualTo(TrailingCommaManagementStrategy.COMPLETE)
         assertThat(bean.debuggingPrintOpsAfterFormatting).isEqualTo(true)

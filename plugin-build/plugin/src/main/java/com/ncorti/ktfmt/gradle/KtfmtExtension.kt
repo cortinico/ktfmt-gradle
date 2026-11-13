@@ -10,6 +10,7 @@ public abstract class KtfmtExtension {
         blockIndent.convention(DEFAULT_BLOCK_INDENT)
         continuationIndent.convention(DEFAULT_CONTINUATION_INDENT)
         removeUnusedImports.convention(DEFAULT_REMOVE_UNUSED_IMPORTS)
+        preserveLambdaBreaks.convention(DEFAULT_PRESERVE_LAMBDA_BREAKS)
         debuggingPrintOpsAfterFormatting.convention(DEFAULT_DEBUGGING_PRINT_OPTS)
         trailingCommaManagementStrategy.convention(DEFAULT_TRAILING_COMMAS_STRATEGY)
         srcSetPathExclusionPattern.convention(DEFAULT_SRC_SET_PATH_EXCLUSION_PATTERN)
@@ -52,6 +53,9 @@ public abstract class KtfmtExtension {
 
     /** Whether ktfmt should remove imports that are not used. */
     public abstract val removeUnusedImports: Property<Boolean>
+
+    /** Whether ktfmt should preserve user-authored line breaks inside lambda bodies. */
+    public abstract val preserveLambdaBreaks: Property<Boolean>
 
     /**
      * Regex to define what sourceSets paths should not be formatted
@@ -113,6 +117,7 @@ public abstract class KtfmtExtension {
             continuationIndent = continuationIndent.get(),
             trailingCommaManagementStrategy = trailingCommaManagementStrategy.get(),
             removeUnusedImports = removeUnusedImports.get(),
+            preserveLambdaBreaks = preserveLambdaBreaks.get(),
             debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting.get(),
         )
 
@@ -121,6 +126,7 @@ public abstract class KtfmtExtension {
         internal const val DEFAULT_BLOCK_INDENT: Int = 2
         internal const val DEFAULT_CONTINUATION_INDENT: Int = 4
         internal const val DEFAULT_REMOVE_UNUSED_IMPORTS: Boolean = true
+        internal const val DEFAULT_PRESERVE_LAMBDA_BREAKS: Boolean = true
         internal const val DEFAULT_DEBUGGING_PRINT_OPTS: Boolean = false
         internal val DEFAULT_TRAILING_COMMAS_STRATEGY: TrailingCommaManagementStrategy =
             TrailingCommaManagementStrategy.ONLY_ADD

@@ -120,6 +120,7 @@ internal abstract class KtfmtWorkAction : WorkAction<KtfmtWorkAction.KtfmtWorkPa
             trailingCommaManagementStrategy =
                 trailingCommaManagementStrategy.toTrailingCommaManagementStrategy(),
             removeUnusedImports = removeUnusedImports,
+            preserveLambdaBreaks = preserveLambdaBreaks,
             debuggingPrintOpsAfterFormatting = debuggingPrintOpsAfterFormatting,
         )
 
