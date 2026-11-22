@@ -4,6 +4,7 @@ This file follows [Keepachangelog](https://keepachangelog.com/) format.
 Please add your entries according to this format.
 
 ## Unreleased
+- Add support for preserveLambdaBreaks formatting option (#532)
 
 ## Version 0.28.0 _(2026-11-06)_
 - Migrate to ktfmt 0.65, which moved to the `org.jetbrains.kotlinx:ktfmt` coordinates and the `org.jetbrains.kotlinx.ktfmt` package. This fixes `Could not initialize class ...format.Parser` failures with Kotlin 2.4.20
